@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "487698693373",
+    "project_id": "ctse-assignment-b44cd",
+    "storage_bucket": "ctse-assignment-b44cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487698693373:android:6e17d78fcbbb7e82fe9294",
+        "android_client_info": {
+          "package_name": "com.sliitcommunity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487698693373-fdtv5kcivk74uur59pp7pc9vq4e4sohl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sliitcommunity",
+            "certificate_hash": "5cd4b92c924881b0bf5cb18f0a4c2a495d903d95"
+          }
+        },
+        {
+          "client_id": "487698693373-2kgq52qfhfhjo01stqdhomics2s852fd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKBCTqA_NKe4e_MXtfbxWgRaUQ03LTbqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487698693373-2kgq52qfhfhjo01stqdhomics2s852fd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
