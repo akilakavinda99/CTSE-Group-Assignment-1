@@ -3,6 +3,7 @@ import firestore from '@react-native-firebase/firestore';
 export const checkForDocument = async (collectionName, docId) => {
   try {
     const documentReference = firestore().collection(collectionName).doc(docId);
+
     const document = await documentReference.get();
     return document.exists;
   } catch (error) {

@@ -4,9 +4,12 @@ export const SCREEN_WIDTH = Dimensions.get('window').width;
 export const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export const AppLayout = {
-  flexBox: {
-    justifyContent: 'flex-start',
+  flexColumnCentered: {
+    flex: 1,
     alignItems: 'center',
-    flexDirection: 'row',
+  },
+  centered: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 };

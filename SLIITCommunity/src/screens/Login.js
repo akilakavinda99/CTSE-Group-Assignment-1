@@ -6,7 +6,7 @@ import TextInputComponent from '../components/commonComponents/textInputComponen
 import {validateEmail, validatePassword} from '../constants/validations';
 import {loginService} from '../services/loginService';
 
-const Login = () => {
+const Login = ({navigation}) => {
   // const [email, setEmail] = useState('akilakavinda9@gmail.com');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -36,6 +36,9 @@ const Login = () => {
       toastComponent('Fill all the inputs');
     }
   };
+  const goreg = () => {
+    navigation.navigate('Register');
+  };
   return (
     <View>
       <Text>Login</Text>
@@ -52,6 +55,7 @@ const Login = () => {
         onChange={handleEmailChange}
       />
       <Button title="reg" onPress={handleSubmit}></Button>
+      <Button title="goreg" onPress={goreg}></Button>
     </View>
   );
 };
