@@ -2,7 +2,10 @@ import React from 'react';
 import {TextInput, Text, View, TouchableOpacity} from 'react-native';
 import {primaryColors} from '../../styles/colors';
 
-const TwoText = ({firstText, secondText}) => {
+const TwoText = ({firstText, secondText, onPress}) => {
+  const handlePress = () => {
+    onPress();
+  };
   return (
     <View
       style={{
@@ -17,7 +20,7 @@ const TwoText = ({firstText, secondText}) => {
         }}>
         {firstText}
       </Text>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handlePress}>
         <Text
           style={{
             color: primaryColors.primaryBlue,
