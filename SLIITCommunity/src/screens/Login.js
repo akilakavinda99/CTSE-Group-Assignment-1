@@ -10,12 +10,29 @@ const Login = () => {
 
     firestore()
       .collection('Users')
-      .add({
-        name: 'Ada Lovelace',
-        age: 30,
-      })
-      .then(() => {
-        console.log('User added!');
+      .doc('ABC')
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          console.log('Document with ID ABC already exists');
+        } else {
+          firestore()
+            .collection('Users')
+            .doc('ABC')
+            .set(
+              {
+                name: 'Ada Lovelace',
+                age: 30,
+              },
+              {merge: false},
+            )
+            .then(() => {
+              console.log('Data added successfully');
+            })
+            .catch(error => {
+              console.log('Error adding data: ', error);
+            });
+        }
       });
   };
   return (

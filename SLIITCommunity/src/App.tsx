@@ -26,7 +26,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {NavigationContainer} from '@react-navigation/native';
-import RootNavigations from './src/navigations/RootNavigations';
+import RootNavigations from './navigations/RootNavigations';
 
 type SectionProps = PropsWithChildren<{
   title: string;
