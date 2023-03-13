@@ -4,6 +4,7 @@ import Login from '../screens/Login';
 import Register from '../screens/Register';
 import NewNotice from '../screens/Notices/NewNotice';
 import OnboardingScreen from '../screens/onboardingScreens/onboardingScreen';
+import BottomNavTest from '../screens/BottomNavTest';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +18,7 @@ const RootNavigations = () => {
       />
       <Stack.Screen
         name="Login"
-        component={NewNotice}
+        component={BottomNavTest}
         options={{headerShown: false}}
       />
       <Stack.Screen
