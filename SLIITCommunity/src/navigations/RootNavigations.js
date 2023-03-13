@@ -2,6 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
+import NewNotice from '../screens/Notices/NewNotice';
 
 const Stack = createNativeStackNavigator();
 
@@ -10,7 +11,7 @@ const RootNavigations = () => {
     <Stack.Navigator>
       <Stack.Screen
         name="Login"
-        component={Login}
+        component={NewNotice}
         options={{headerShown: false}}
       />
       <Stack.Screen
