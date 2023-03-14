@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { NavigationContainer } from '@react-navigation/native';
 
 const Screen1 = () => {
   return <View style={styles.screen1} />;
@@ -51,38 +50,38 @@ export default function BottomNavTest() {
   };
 
   return (
-      <CurvedBottomBar.Navigator
-        type="UP"
-        style={styles.bottomBar}
-        shadowStyle={styles.shawdow}
-        height={55}
-        circleWidth={50}
-        bgColor="white"
-        initialRouteName="title1"
-        borderTopLeftRight
-        renderCircle={({ selectedTab, navigate }) => (
-          <Animated.View style={styles.btnCircleUp}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => Alert.alert('Click Action')}
-            >
-              <Ionicons name={'apps-sharp'} color="gray" size={25} />
-            </TouchableOpacity>
-          </Animated.View>
-        )}
-        tabBar={renderTabBar}
-      >
-        <CurvedBottomBar.Screen
-          name="title1"
-          position="LEFT"
-          component={() => <Screen1 />}
-        />
-        <CurvedBottomBar.Screen
-          name="title2"
-          component={() => <Screen2 />}
-          position="RIGHT"
-        />
-      </CurvedBottomBar.Navigator>
+    <CurvedBottomBar.Navigator
+      type="UP"
+      style={styles.bottomBar}
+      shadowStyle={styles.shawdow}
+      height={55}
+      circleWidth={50}
+      bgColor="white"
+      initialRouteName="title1"
+      borderTopLeftRight
+      renderCircle={({ selectedTab, navigate }) => (
+        <Animated.View style={styles.btnCircleUp}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => Alert.alert('Click Action')}
+          >
+            <Ionicons name={'apps-sharp'} color="gray" size={25} />
+          </TouchableOpacity>
+        </Animated.View>
+      )}
+      tabBar={renderTabBar}
+    >
+      <CurvedBottomBar.Screen
+        name="title1"
+        position="LEFT"
+        component={() => <Screen1 />}
+      />
+      <CurvedBottomBar.Screen
+        name="title2"
+        component={() => <Screen2 />}
+        position="RIGHT"
+      />
+    </CurvedBottomBar.Navigator>
   );
 }
 
