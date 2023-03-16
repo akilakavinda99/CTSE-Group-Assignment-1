@@ -6,6 +6,7 @@ import NewNotice from '../screens/Notices/NewNotice';
 import OnboardingScreen from '../screens/onboardingScreens/onboardingScreen';
 import BottomNavTest from '../screens/BottomNavTest';
 import NewEvent from '../screens/EventManagement/AddEvent';
+import AddLostOrFound from '../screens/lostAndFoundScreens/addLostOrFound';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,11 @@ const RootNavigations = () => {
       <Stack.Screen
         name="NewEvent"
         component={NewEvent}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AddLostOrFound"
+        component={AddLostOrFound}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
