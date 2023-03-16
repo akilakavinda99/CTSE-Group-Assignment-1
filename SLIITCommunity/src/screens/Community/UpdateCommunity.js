@@ -18,7 +18,7 @@ import {primaryColors} from '../../styles/colors';
 import {SelectList} from 'react-native-dropdown-select-list';
 import { addDocument } from "../../services/firebaseServices";
 
-const NewCommunity = () => {
+const UpdateCommunity = () => {
   const richText = useRef();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -39,34 +39,34 @@ const NewCommunity = () => {
 
   const handleSubmit = async () => {
     if (title.trim() === '') {
-      Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Community Title can not be empty❗',
-        });
-      return;
-    }
-    if (selected.trim() === '') {
-      Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Faculty can not be empty❗',
-        });
-      return;
-    }
-    if (description.trim() === '') {
-      Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Description can not be empty❗',
-        });
-      return;
-    }
+        Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: 'Community Title can not be empty❗',
+          });
+        return;
+      }
+      if (selected.trim() === '') {
+        Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: 'Faculty can not be empty❗',
+          });
+        return;
+      }
+      if (description.trim() === '') {
+        Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: 'Description can not be empty❗',
+          });
+        return;
+      }
     const res = await addDocument("communities", {
         title,
         faculty:selected,
         description: description,
-        created_at: new Date().toDateString(),
+        updated_at: new Date().toDateString(),
     });
     console.log(res);
 }
@@ -75,7 +75,7 @@ const NewCommunity = () => {
     <>
       <View style={styles.container}>
         <SafeAreaView style={[AppLayout.flexColumnCentered, styles.mainView]}>
-          <Text style={styles.headingStyle}>Create a Community</Text>
+          <Text style={styles.headingStyle}>Update Community</Text>
           <TextInput
             value={title}
             onChangeText={setTitle}
@@ -111,6 +111,7 @@ const NewCommunity = () => {
                   onChange={text => {
                     setDescription(text);
                   }}
+                  placeholderTextColor="black"
                   initialHeight={200}
                   placeholder={'Enter Community Description'}
                   initialContentHTML={''}
@@ -124,9 +125,16 @@ const NewCommunity = () => {
 
             <View style={{marginBottom: 20}}>
               <Button
-                title="Create"
+                title="Update"
                 color="#242d66"
                 onPress={handleSubmit}
+              />
+            </View>
+
+            <View style={{marginBottom: 20}}>
+              <Button
+                title="Delete"
+                color="#c13a34"
               />
             </View>
 
@@ -195,12 +203,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: 'red',
     color: 'black',
-  },
-  image: {
-    flex: 1,
-    width: '100%',
-    position: 'relative',
-  },
+  }
 });
 
-export default NewCommunity;
+export default UpdateCommunity;

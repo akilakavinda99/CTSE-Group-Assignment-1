@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import { View, Text, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { actions, RichEditor, RichToolbar } from "react-native-pell-rich-editor";
+import ButtonComponent from "../../components/commonComponents/buttonComponent";
+import { addDocument } from "../../services/firebaseServices";
 import { AppLayout, SCREEN_HEIGHT } from '../../styles/appStyles';
 import { primaryColors } from '../../styles/colors';
 
@@ -9,6 +11,17 @@ const NewNotice = () => {
     const [subject, setSubject] = useState("");
     const [newNotice, setNewNotice] = useState("");
     const [isFocused, setIsFocused] = useState(false);
+
+    const handleSubmit = async () => {
+        const res = await addDocument("notices", {
+            owner: "admin",
+            community: "SLIIT",
+            subject,
+            notice: newNotice,
+            date: new Date().toDateString(),
+        });
+        console.log(res);
+    }
 
     return (
         <SafeAreaView style={[AppLayout.flexColumnCentered, styles.mainView]}>
@@ -46,6 +59,7 @@ const NewNotice = () => {
                 // iconMap={{ [actions.heading1]: ({ tintColor }) => (<Text style={[{ color: tintColor }]}>H1</Text>), }}
                 />
             }
+            <ButtonComponent buttonText="Post" onPress={handleSubmit} />
 
         </SafeAreaView>
     );
@@ -53,10 +67,11 @@ const NewNotice = () => {
 
 const styles = StyleSheet.create({
     mainView: {
-        // height: SCREEN_HEIGHT,
+        height: SCREEN_HEIGHT,
         marginLeft: 16,
         marginRight: 16,
         marginTop: SCREEN_HEIGHT / 15,
+        marginBottom: SCREEN_HEIGHT / 15,
     },
     headingStyle: {
         fontSize: 30,
@@ -75,7 +90,7 @@ const styles = StyleSheet.create({
     },
     textEditor: {
         backgroundColor: '#E8E8E8',
-        
+
     },
     scrollView: {
         width: "100%",
