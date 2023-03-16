@@ -5,6 +5,7 @@ import Register from '../screens/Register';
 import NewNotice from '../screens/Notices/NewNotice';
 import OnboardingScreen from '../screens/onboardingScreens/onboardingScreen';
 import BottomNavTest from '../screens/BottomNavTest';
+import NewEvent from '../screens/EventManagement/AddEvent';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,11 @@ const RootNavigations = () => {
       <Stack.Screen
         name="Register"
         component={Register}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="NewEvent"
+        component={NewEvent}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
