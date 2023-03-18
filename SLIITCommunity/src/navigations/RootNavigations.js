@@ -7,6 +7,7 @@ import OnboardingScreen from '../screens/onboardingScreens/onboardingScreen';
 import Home from '../screens/Home';
 import NewEvent from '../screens/EventManagement/AddEvent';
 import ViewNotice from '../screens/Notices/ViewNotice';
+import AddLostOrFound from '../screens/lostAndFoundScreens/addLostOrFound';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +21,7 @@ const RootNavigations = () => {
       /> */}
       <Stack.Screen
         name="Login"
-        component={Home}
+        component={Login}
         options={{ headerShown: false }}
       />
       <Stack.Screen
