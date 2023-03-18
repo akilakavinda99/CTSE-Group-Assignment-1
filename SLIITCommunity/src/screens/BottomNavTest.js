@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import NewNotice from './Notices/NewNotice';
+import ViewAllNotices from './Notices/ViewAllNotices';
 
 const Screen1 = () => {
   return <View style={styles.screen1} />;
@@ -22,8 +24,8 @@ export default function BottomNavTest() {
     let icon = '';
 
     switch (routeName) {
-      case 'title1':
-        icon = 'home-outline';
+      case 'Notices':
+        icon = 'notifications-outline';
         break;
       case 'title2':
         icon = 'settings-outline';
@@ -59,22 +61,40 @@ export default function BottomNavTest() {
       bgColor="white"
       initialRouteName="title1"
       borderTopLeftRight
-      renderCircle={({ selectedTab, navigate }) => (
-        <Animated.View style={styles.btnCircleUp}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => Alert.alert('Click Action')}
-          >
-            <Ionicons name={'apps-sharp'} color="gray" size={25} />
-          </TouchableOpacity>
-        </Animated.View>
-      )}
+      renderCircle={({ selectedTab, navigate }) => {
+        switch (selectedTab) {
+          case 'Notices':
+            return (
+              <Animated.View style={styles.btnCircleUp}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    navigate('NewNotice');
+                  }}
+                >
+                  <Ionicons name={'add-outline'} color="gray" size={40} />
+                </TouchableOpacity>
+              </Animated.View>
+            );
+          default:
+            return (
+              <Animated.View style={styles.btnCircleUp}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => Alert.alert('Click Action')}
+                >
+                  <Ionicons name={'apps-sharp'} color="gray" size={25} />
+                </TouchableOpacity>
+              </Animated.View>
+            );
+        }
+      }}
       tabBar={renderTabBar}
     >
       <CurvedBottomBar.Screen
-        name="title1"
+        name="Notices"
         position="LEFT"
-        component={() => <Screen1 />}
+        component={() => <ViewAllNotices />}
       />
       <CurvedBottomBar.Screen
         name="title2"
