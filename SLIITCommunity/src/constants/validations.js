@@ -22,7 +22,7 @@ export const validateITNumber = s => {
 };
 
 export const requiredValidation = s => {
-  if (s.length == 0) {
+  if (s.length == 0 || s == undefined) {
     return 'Required field';
   } else {
     return null;

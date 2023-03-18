@@ -8,6 +8,10 @@ import ButtonComponent from '../components/commonComponents/buttonComponent';
 import TwoText from '../components/loginRegisterComponents/twoText';
 import {AppLayout, SCREEN_HEIGHT} from '../styles/appStyles';
 import {primaryColors} from '../styles/colors';
+import {getDocumentsByField} from '../services/firebaseServices';
+import collectionNames from '../constants/collectionNames';
+import {storeDataInAsync} from '../constants/asyncStore';
+import asyncStoreKeys from '../constants/asyncStoreKeys';
 
 const Login = ({navigation}) => {
   const [password, setPassword] = useState('');
@@ -36,6 +40,18 @@ const Login = ({navigation}) => {
         toastComponent(login.message, true);
       } else {
         console.log(login.login);
+        const userDocument = await getDocumentsByField(
+          collectionNames.USER_COLLECTION,
+          'email',
+          email,
+        );
+        // console.log('THis is user', userDocument);
+        await storeDataInAsync(
+          asyncStoreKeys.IT_NUMBER,
+          userDocument[0].itNumber,
+        );
+
+        navigation.navigate('AddLostOrFound');
       }
     } else {
       toastComponent('Fill all the inputs');
@@ -44,6 +60,7 @@ const Login = ({navigation}) => {
   const goreg = () => {
     navigation.navigate('Register');
   };
+
   return (
     <View style={[AppLayout.flexColumnCentered, loginStyles.mainView]}>
       {loading ? (
