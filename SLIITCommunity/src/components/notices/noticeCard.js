@@ -9,7 +9,7 @@ const NoticeCard = ({ notice}) => {
     return (
         <TouchableOpacity style={styles.mainView}
             onPress={() => {
-                navigation.navigate("ViewNotice", {
+                navigation.navigate("View Notice", {
                     notice: notice,
                 });
             }}>

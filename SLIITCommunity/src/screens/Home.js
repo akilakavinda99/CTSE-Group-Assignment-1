@@ -69,7 +69,7 @@ export default function Home() {
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
-                    navigate('NewNotice');
+                    navigate('New Notice');
                   }}
                 >
                   <Ionicons name={'add-outline'} color="gray" size={40} />

@@ -40,14 +40,14 @@ const RootNavigations = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="NewNotice"
+        name="New Notice"
         component={NewNotice}
-        options={{headerShown: false}}
+        options={{headerShown: true}}
       />
       <Stack.Screen
-        name="ViewNotice"
+        name="View Notice"
         component={ViewNotice}
-        options={{headerShown: false}}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="AddLostOrFound"
