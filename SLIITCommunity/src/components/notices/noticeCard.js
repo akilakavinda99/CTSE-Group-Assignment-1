@@ -1,15 +1,22 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { View, Text, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SCREEN_WIDTH } from '../../styles/appStyles';
 
-const NoticeCard = ({notice}) => {
+const NoticeCard = ({ notice}) => {
+    const navigation = useNavigation();
 
     return (
-        <View style={styles.mainView}>
+        <TouchableOpacity style={styles.mainView}
+            onPress={() => {
+                navigation.navigate("ViewNotice", {
+                    notice: notice,
+                });
+            }}>
             <Text style={styles.subject}>{notice.subject}</Text>
+            <Text style={styles.notice}>{notice.community}</Text>
             <Text style={styles.addedDate}>{notice.dateTime}</Text>
-            {/* <Text style={styles.notice}>{notice.notice}</Text> */}
-        </View>
+        </TouchableOpacity>
     );
 }
 
@@ -20,6 +27,9 @@ const styles = StyleSheet.create({
         width: "100%",
         // marginBottom: 10,
         padding: 10,
+        backgroundColor: "#fff",
+        marginTop: 10,
+        borderRadius: 10,
     },
     subject: {
         width: "100%",

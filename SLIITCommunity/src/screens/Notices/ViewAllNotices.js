@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Platform, KeyboardAvoidingView, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from "react-native";
-import NoticeSection from '../../components/notices/noticeSection';
-import { groupDocumets } from '../../services/commonFunctions';
-import { getDocuments } from '../../services/firebaseServices';
-import { AppLayout } from '../../styles/appStyles';
+import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import NoticeCard from '../../components/notices/noticeCard';
+import { getDocumentOrderBy, getDocuments } from '../../services/firebaseServices';
 import { primaryColors } from '../../styles/colors';
 
 const ViewAllNotices = () => {
@@ -11,10 +9,9 @@ const ViewAllNotices = () => {
     const [refreshing, setRefreshing] = useState(false);
 
     const getNotices = () => {
-        getDocuments('notices', 'community')
+        getDocumentOrderBy('notices', 'dateTime', 'desc')
             .then((res) => {
-                let groupedRes = groupDocumets(res, 'community');
-                setNotices(groupedRes);
+                setNotices(res);
             })
             .catch((err) => {
                 console.log(err);
@@ -36,7 +33,7 @@ const ViewAllNotices = () => {
     return (
         <SafeAreaView style={styles.mainView}>
             <ScrollView
-                style={{ width: "100%" }}
+                style={styles.scrollView}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -45,13 +42,13 @@ const ViewAllNotices = () => {
                 }
             >
                 {
-                    Object.entries(notices).map((notice, index) => {
+                    notices.map((notice, index) => {
                         return (
-                            <NoticeSection key={index} community={notice[0]} notices={notice[1]} />
+                            <NoticeCard key={index} notice={notice} />
                         )
                     })
                 }
-                <View style={{ height: 80 }} />
+                <View style={{ height: 90 }} />
             </ScrollView>
         </SafeAreaView>
     );
@@ -59,9 +56,12 @@ const ViewAllNotices = () => {
 
 const styles = StyleSheet.create({
     mainView: {
-        paddingHorizontal: 16,
         backgroundColor: primaryColors.background,
         height: "100%",
+    },
+    scrollView: {
+        width: "100%",
+        paddingHorizontal: 16,
     },
 });
 

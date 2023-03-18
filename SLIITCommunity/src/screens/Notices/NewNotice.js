@@ -4,10 +4,11 @@ import { actions, RichEditor, RichToolbar } from "react-native-pell-rich-editor"
 import ButtonComponent from "../../components/commonComponents/buttonComponent";
 import { getDateAndTime } from "../../services/commonFunctions";
 import { addDocument } from "../../services/firebaseServices";
+import { sendNotification } from "../../services/notificationServices";
 import { AppLayout, SCREEN_HEIGHT } from '../../styles/appStyles';
 import { primaryColors } from '../../styles/colors';
 
-const NewNotice = () => {
+const NewNotice = ({ navigation }) => {
     const richText = useRef();
     const [subject, setSubject] = useState("");
     const [newNotice, setNewNotice] = useState("");
@@ -21,8 +22,14 @@ const NewNotice = () => {
             notice: newNotice,
             dateTime: getDateAndTime(),
         });
+        // console.log(res);
+        const community = "SLIIT";
+        sendNotification('New Notice from ' + community, subject, [
+            "cSNI_a9bRl632Bjvi_2daC:APA91bHHaQa0WxyoJNp5zrXUwLhXz3AMTqVqbYBaK4w5hq8vOlXIMkWMFJEJ1OGWMj3RCKg9Yg-11_8kmuYHGygLHn4MD0hZUTE3iwU5MJRtFMYcL2jCRP21DWv4qSf2ZvVpYLxewYuW",
+            "cXXikM7cSFe-gvbyNvAD8A:APA91bGe0u9MJVhzFX7ESIwXycx05a7ZD1hGFGal29KFtHb6h3auJQVbG9xYNK8gkH7Re4LrcaNSdYDz5v0RIP7C6B4-7k3mo_V6QMAeGKlguu6Rc0YZDGMHLZhreBZVr8mC8HlrnzgJ"
+        ])
 
-        console.log(res);
+        navigation.navigate('Home');
     }
 
     return (
@@ -62,7 +69,7 @@ const NewNotice = () => {
                 // iconMap={{ [actions.heading1]: ({ tintColor }) => (<Text style={[{ color: tintColor }]}>H1</Text>), }}
                 />
             }
-            { !isFocused && <View style={{ height: 40 }} />}
+            {!isFocused && <View style={{ height: 40 }} />}
             <ButtonComponent buttonText="Post" onPress={handleSubmit} />
 
         </SafeAreaView>
@@ -72,8 +79,7 @@ const NewNotice = () => {
 const styles = StyleSheet.create({
     mainView: {
         paddingHorizontal: 16,
-        paddingTop: SCREEN_HEIGHT / 25,
-        paddingBottom: 40,
+        paddingVertical: 40,
         backgroundColor: primaryColors.background,
         height: "100%",
         // alignItems: "center",
