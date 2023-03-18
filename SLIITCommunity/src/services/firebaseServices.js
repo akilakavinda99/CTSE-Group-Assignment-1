@@ -49,6 +49,32 @@ export const getDocument = async (collectionName, docId) => {
   }
 };
 
+export const getDocumentOrderBy = async (collectionName, orderBy, arrange) => {
+  try {
+    const getDocs = await firestore()
+      .collection(collectionName)
+      .orderBy(orderBy, arrange)
+      .get();
+    return getDocs.docs.map((doc) => doc.data());
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+export const getDocumentGroupBy = async (collectionName, groupBy) => {
+  try {
+    const getDocs = await firestore()
+      .collection(collectionName)
+      .groupBy(groupBy)
+      .get();
+    return getDocs.docs.map((doc) => doc.data());
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
 export const updateDocument = async (collectionName, docId, data) => {
   try {
     const updateDoc = await firestore()
