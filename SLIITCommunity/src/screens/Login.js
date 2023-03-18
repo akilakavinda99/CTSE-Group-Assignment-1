@@ -1,19 +1,19 @@
-import React, {useState} from 'react';
-import {Text, View, Button, StyleSheet, ActivityIndicator} from 'react-native';
-import {toastComponent} from '../components/commonComponents/toastComponent';
+import React, { useEffect, useState } from 'react';
+import { Text, View, Button, StyleSheet, ActivityIndicator } from 'react-native';
+import { toastComponent } from '../components/commonComponents/toastComponent';
 import TextInputComponent from '../components/commonComponents/textInputComponent';
-import {validateEmail, validatePassword} from '../constants/validations';
-import {loginService} from '../services/loginService';
+import { validateEmail, validatePassword } from '../constants/validations';
+import { loginService } from '../services/loginService';
 import ButtonComponent from '../components/commonComponents/buttonComponent';
 import TwoText from '../components/loginRegisterComponents/twoText';
-import {AppLayout, SCREEN_HEIGHT} from '../styles/appStyles';
-import {primaryColors} from '../styles/colors';
-import {getDocumentsByField} from '../services/firebaseServices';
+import { AppLayout, SCREEN_HEIGHT } from '../styles/appStyles';
+import { primaryColors } from '../styles/colors';
+import { getDocumentsByField } from '../services/firebaseServices';
 import collectionNames from '../constants/collectionNames';
-import {storeDataInAsync} from '../constants/asyncStore';
+import { getDataFromAsync, storeDataInAsync } from '../constants/asyncStore';
 import asyncStoreKeys from '../constants/asyncStoreKeys';
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -51,7 +51,7 @@ const Login = ({navigation}) => {
           userDocument[0].itNumber,
         );
 
-        navigation.navigate('AddLostOrFound');
+        navigation.navigate('Home');
       }
     } else {
       toastComponent('Fill all the inputs');
@@ -60,6 +60,14 @@ const Login = ({navigation}) => {
   const goreg = () => {
     navigation.navigate('Register');
   };
+
+  useEffect(() => {
+    getDataFromAsync(asyncStoreKeys.IT_NUMBER).then(itNumber => {
+      if (itNumber) {
+        navigation.navigate('Home');
+      }
+    });
+  }, []);
 
   return (
     <View style={[AppLayout.flexColumnCentered, loginStyles.mainView]}>

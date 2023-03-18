@@ -19,7 +19,7 @@ const Screen2 = () => {
   return <View style={styles.screen2} />;
 };
 
-export default function BottomNavTest() {
+export default function Home() {
   const _renderIcon = (routeName, selectedTab) => {
     let icon = '';
 
@@ -69,7 +69,7 @@ export default function BottomNavTest() {
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
-                    navigate('NewNotice');
+                    navigate('New Notice');
                   }}
                 >
                   <Ionicons name={'add-outline'} color="gray" size={40} />

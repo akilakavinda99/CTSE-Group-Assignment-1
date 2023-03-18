@@ -12,6 +12,7 @@ const ViewAllNotices = () => {
         getDocumentOrderBy('notices', 'dateTime', 'desc')
             .then((res) => {
                 setNotices(res);
+                // console.log(res);
             })
             .catch((err) => {
                 console.log(err);

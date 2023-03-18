@@ -4,9 +4,10 @@ import Login from '../screens/Login';
 import Register from '../screens/Register';
 import NewNotice from '../screens/Notices/NewNotice';
 import OnboardingScreen from '../screens/onboardingScreens/onboardingScreen';
-import BottomNavTest from '../screens/BottomNavTest';
+import Home from '../screens/Home';
 import NewEvent from '../screens/EventManagement/AddEvent';
 import ViewNotice from '../screens/Notices/ViewNotice';
+import AddLostOrFound from '../screens/lostAndFoundScreens/addLostOrFound';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,8 +21,8 @@ const RootNavigations = () => {
       /> */}
       <Stack.Screen
         name="Login"
-        component={BottomNavTest}
-        options={{headerShown: false}}
+        component={Login}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Register"
@@ -35,18 +36,18 @@ const RootNavigations = () => {
       />
       <Stack.Screen
         name="Home"
-        component={BottomNavTest}
-        options={{headerShown: false}}
+        component={Home}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="NewNotice"
+        name="New Notice"
         component={NewNotice}
-        options={{headerShown: false}}
+        options={{headerShown: true}}
       />
       <Stack.Screen
-        name="ViewNotice"
+        name="View Notice"
         component={ViewNotice}
-        options={{headerShown: false}}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="AddLostOrFound"
