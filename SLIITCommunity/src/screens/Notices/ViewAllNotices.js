@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { View, Text, TextInput, Platform, KeyboardAvoidingView, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import NoticeSection from '../../components/notices/noticeSection';
 import { groupDocumets } from '../../services/commonFunctions';
 import { getDocuments } from '../../services/firebaseServices';
@@ -8,8 +8,9 @@ import { primaryColors } from '../../styles/colors';
 
 const ViewAllNotices = () => {
     const [notices, setNotices] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
-    useEffect(() => {
+    const getNotices = () => {
         getDocuments('notices', 'community')
             .then((res) => {
                 let groupedRes = groupDocumets(res, 'community');
@@ -18,11 +19,31 @@ const ViewAllNotices = () => {
             .catch((err) => {
                 console.log(err);
             });
+    }
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        getNotices();
+        setRefreshing(false);
+    }
+
+    useEffect(() => {
+        onRefresh();
     }, []);
+
+
 
     return (
         <SafeAreaView style={styles.mainView}>
-            <ScrollView style={{ width: "100%" }}>
+            <ScrollView
+                style={{ width: "100%" }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            >
                 {
                     Object.entries(notices).map((notice, index) => {
                         return (
@@ -30,6 +51,7 @@ const ViewAllNotices = () => {
                         )
                     })
                 }
+                <View style={{ height: 80 }} />
             </ScrollView>
         </SafeAreaView>
     );
@@ -38,7 +60,6 @@ const ViewAllNotices = () => {
 const styles = StyleSheet.create({
     mainView: {
         paddingHorizontal: 16,
-        padding: 10,
         backgroundColor: primaryColors.background,
         height: "100%",
     },
