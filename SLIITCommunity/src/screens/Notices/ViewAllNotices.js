@@ -4,6 +4,7 @@ import NoticeSection from '../../components/notices/noticeSection';
 import { groupDocumets } from '../../services/commonFunctions';
 import { getDocuments } from '../../services/firebaseServices';
 import { AppLayout } from '../../styles/appStyles';
+import { primaryColors } from '../../styles/colors';
 
 const ViewAllNotices = () => {
     const [notices, setNotices] = useState([]);
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     mainView: {
         paddingHorizontal: 16,
         padding: 10,
-        backgroundColor: "#E4EAFF",
+        backgroundColor: primaryColors.background,
         height: "100%",
     },
 });

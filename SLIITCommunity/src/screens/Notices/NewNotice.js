@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { View, Text, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { actions, RichEditor, RichToolbar } from "react-native-pell-rich-editor";
 import ButtonComponent from "../../components/commonComponents/buttonComponent";
+import { getDateAndTime } from "../../services/commonFunctions";
 import { addDocument } from "../../services/firebaseServices";
 import { AppLayout, SCREEN_HEIGHT } from '../../styles/appStyles';
 import { primaryColors } from '../../styles/colors';
@@ -18,14 +19,15 @@ const NewNotice = () => {
             community: "SLIIT",
             subject,
             notice: newNotice,
-            date: new Date().toDateString(),
+            dateTime: getDateAndTime(),
         });
+
         console.log(res);
     }
 
     return (
-        <SafeAreaView style={[AppLayout.flexColumnCentered, styles.mainView]}>
-            <Text style={styles.headingStyle}>New Notice</Text>
+        <SafeAreaView style={styles.mainView}>
+            {/* <Text style={styles.headingStyle}>New Notice</Text> */}
             <TextInput
                 value={subject}
                 onChangeText={setSubject}
@@ -33,14 +35,15 @@ const NewNotice = () => {
                 style={styles.subject}
             />
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1, width: "100%" }}>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ width: "100%" }}>
                     <View style={styles.textEditorView}>
                         <RichEditor
                             ref={richText}
                             onChange={text => {
                                 setNewNotice(text);
                             }}
-                            initialHeight={200}
+                            initialHeight={250}
+                            // height={100}
                             placeholder={"Notice..."}
                             initialContentHTML={""}
                             editorStyle={styles.textEditor}
@@ -59,6 +62,7 @@ const NewNotice = () => {
                 // iconMap={{ [actions.heading1]: ({ tintColor }) => (<Text style={[{ color: tintColor }]}>H1</Text>), }}
                 />
             }
+            { !isFocused && <View style={{ height: 40 }} />}
             <ButtonComponent buttonText="Post" onPress={handleSubmit} />
 
         </SafeAreaView>
@@ -67,11 +71,12 @@ const NewNotice = () => {
 
 const styles = StyleSheet.create({
     mainView: {
-        height: SCREEN_HEIGHT,
-        marginLeft: 16,
-        marginRight: 16,
-        marginTop: SCREEN_HEIGHT / 15,
-        marginBottom: SCREEN_HEIGHT / 15,
+        paddingHorizontal: 16,
+        paddingTop: SCREEN_HEIGHT / 25,
+        paddingBottom: 40,
+        backgroundColor: primaryColors.background,
+        height: "100%",
+        // alignItems: "center",
     },
     headingStyle: {
         fontSize: 30,
@@ -80,28 +85,23 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     textEditorView: {
-        width: 343,
+        width: "100%",
         borderRadius: 8,
     },
     textEditorContainer: {
-        width: "100%",
         borderRadius: 8,
-        fontSize: 10,
     },
     textEditor: {
-        backgroundColor: '#E8E8E8',
-
-    },
-    scrollView: {
-        width: "100%",
+        backgroundColor: '#fff',
     },
     subject: {
-        width: 343,
-        height: 45,
-        paddingLeft: 15,
+        width: "100%",
+        height: 40,
+        paddingLeft: 10,
         marginBottom: 16,
-        backgroundColor: '#E8E8E8',
         borderRadius: 8,
+        fontSize: 16,
+        backgroundColor: "#fff",
     }
 });
 
