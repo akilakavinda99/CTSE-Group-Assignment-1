@@ -1,5 +1,5 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import NewNotice from '../screens/Notices/NewNotice';
@@ -21,32 +21,37 @@ const RootNavigations = () => {
       <Stack.Screen
         name="Login"
         component={BottomNavTest}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Register"
         component={Register}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="NewEvent"
         component={NewEvent}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Home"
         component={BottomNavTest}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="NewNotice"
         component={NewNotice}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="ViewNotice"
         component={ViewNotice}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AddLostOrFound"
+        component={AddLostOrFound}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
