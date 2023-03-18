@@ -4,7 +4,7 @@ import Login from '../screens/Login';
 import Register from '../screens/Register';
 import NewNotice from '../screens/Notices/NewNotice';
 import OnboardingScreen from '../screens/onboardingScreens/onboardingScreen';
-import BottomNavTest from '../screens/BottomNavTest';
+import Home from '../screens/Home';
 import NewEvent from '../screens/EventManagement/AddEvent';
 import ViewNotice from '../screens/Notices/ViewNotice';
 
@@ -20,7 +20,7 @@ const RootNavigations = () => {
       /> */}
       <Stack.Screen
         name="Login"
-        component={BottomNavTest}
+        component={Home}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -35,7 +35,7 @@ const RootNavigations = () => {
       />
       <Stack.Screen
         name="Home"
-        component={BottomNavTest}
+        component={Home}
         options={{ headerShown: false }}
       />
       <Stack.Screen

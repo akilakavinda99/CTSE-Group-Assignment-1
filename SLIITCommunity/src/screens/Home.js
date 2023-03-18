@@ -19,7 +19,7 @@ const Screen2 = () => {
   return <View style={styles.screen2} />;
 };
 
-export default function BottomNavTest() {
+export default function Home() {
   const _renderIcon = (routeName, selectedTab) => {
     let icon = '';
 
