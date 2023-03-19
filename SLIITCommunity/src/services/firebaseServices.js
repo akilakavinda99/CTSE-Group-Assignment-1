@@ -42,7 +42,7 @@ export const getDocument = async (collectionName, docId) => {
       .collection(collectionName)
       .doc(docId)
       .get();
-    return getDoc.data();
+    return { ...getDoc.data(), id: getDoc.id };
   } catch (error) {
     console.log(error);
     return {};
@@ -70,7 +70,9 @@ export const getDocumentGroupBy = async (collectionName, groupBy) => {
       .collection(collectionName)
       .groupBy(groupBy)
       .get();
-    return getDocs.docs.map((doc) => doc.data());
+    return getDocs.docs.map((doc) => {
+      return { ...doc.data(), id: doc.id };
+    });
   } catch (error) {
     console.log(error);
     return [];

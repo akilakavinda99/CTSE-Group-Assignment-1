@@ -19,7 +19,7 @@ const Screen2 = () => {
   return <View style={styles.screen2} />;
 };
 
-export default function Home() {
+export default function Home({ screen }) {
   const _renderIcon = (routeName, selectedTab) => {
     let icon = '';
 
@@ -59,7 +59,7 @@ export default function Home() {
       height={55}
       circleWidth={50}
       bgColor="white"
-      initialRouteName="title1"
+      initialRouteName={screen}
       borderTopLeftRight
       renderCircle={({ selectedTab, navigate }) => {
         switch (selectedTab) {

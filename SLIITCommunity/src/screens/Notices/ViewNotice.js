@@ -20,11 +20,15 @@ const ViewNotice = ({ route }) => {
             setSignedInUser(data);
         });
 
+    const editNotice = () => {
+        navigation.navigate('Edit Notice', { notice });
+    }
+
     const handleDelete = () => {
         deleteDocument('notices', notice.id)
             .then(() => {
                 toastComponent("Notice deleted successfully!", false);
-                navigation.navigate('Home');
+                navigation.navigate('Home', { screen: 'Notices' });
             })
             .catch((err) => {
                 toastComponent("Error deleting notice!", true);
@@ -66,7 +70,7 @@ const ViewNotice = ({ route }) => {
                 {
                     signedInUser === owner &&
                     <View style={styles.modifyButtons}>
-                        <ButtonComponent onPress={() => { }} buttonText="Edit" />
+                        <ButtonComponent onPress={editNotice} buttonText="Edit" />
                         <ButtonComponent onPress={removeNotice} buttonText="Remove" />
                     </View>
 

@@ -8,6 +8,7 @@ import Home from '../screens/Home';
 import NewEvent from '../screens/EventManagement/AddEvent';
 import ViewNotice from '../screens/Notices/ViewNotice';
 import AddLostOrFound from '../screens/lostAndFoundScreens/addLostOrFound';
+import UpdateNotice from '../screens/Notices/UpdateNotice';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,11 @@ const RootNavigations = () => {
       <Stack.Screen
         name="View Notice"
         component={ViewNotice}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="Edit Notice"
+        component={UpdateNotice}
         options={{headerShown: true}}
       />
       <Stack.Screen
