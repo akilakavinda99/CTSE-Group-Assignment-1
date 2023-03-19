@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import Loading from '../../components/commonComponents/loading';
 import NoticeCard from '../../components/notices/noticeCard';
-import { getDocumentOrderBy, getDocuments } from '../../services/firebaseServices';
+import { getDocumentOrderBy } from '../../services/firebaseServices';
 import { primaryColors } from '../../styles/colors';
 
 const ViewAllNotices = () => {
@@ -29,8 +30,6 @@ const ViewAllNotices = () => {
         onRefresh();
     }, []);
 
-
-
     return (
         <SafeAreaView style={styles.mainView}>
             <ScrollView
@@ -42,7 +41,7 @@ const ViewAllNotices = () => {
                     />
                 }
             >
-                {
+                {refreshing ? <Loading /> :
                     notices.map((notice, index) => {
                         return (
                             <NoticeCard key={index} notice={notice} />

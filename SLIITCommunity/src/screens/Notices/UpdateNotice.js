@@ -1,50 +1,35 @@
 import React, { useRef, useState } from "react";
-import { View, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { View, Text, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { RichEditor, RichToolbar } from "react-native-pell-rich-editor";
 import ButtonComponent from "../../components/commonComponents/buttonComponent";
 import Loading from "../../components/commonComponents/loading";
 import { toastComponent } from "../../components/commonComponents/toastComponent";
-import { getDataFromAsync } from "../../constants/asyncStore";
-import asyncStoreKeys from "../../constants/asyncStoreKeys";
 import { getDateAndTime } from "../../services/commonFunctions";
-import { addDocument } from "../../services/firebaseServices";
-import { sendNotification } from "../../services/notificationServices";
+import { updateDocument } from "../../services/firebaseServices";
 import { primaryColors } from '../../styles/colors';
 
-const NewNotice = ({ navigation, community }) => {
+const UpdateNotice = ({ route, navigation }) => {
+    const notice = route.params.notice;
     const richText = useRef();
-    const [subject, setSubject] = useState("");
-    const [newNotice, setNewNotice] = useState("");
+    const [subject, setSubject] = useState(notice.subject);
+    const [newNotice, setNewNotice] = useState(notice.notice);
     const [isFocused, setIsFocused] = useState(false);
-    const [signedInUser, setSignedInUser] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-
-    getDataFromAsync(asyncStoreKeys.IT_NUMBER)
-        .then((data) => {
-            setSignedInUser(data);
-        });
 
     const handleSubmit = async () => {
         setIsLoading(true);
-        const res = await addDocument("notices", {
-            owner: signedInUser,
-            community: community,
+        const res = await updateDocument("notices", notice.id, {
             subject,
             notice: newNotice,
             dateTime: getDateAndTime(),
         });
         // console.log(res);
-
         setIsLoading(false);
-        if (res.status) {
-            // sendNotification('New Notice from ' + community, subject, [
-            //     "cSNI_a9bRl632Bjvi_2daC:APA91bHHaQa0WxyoJNp5zrXUwLhXz3AMTqVqbYBaK4w5hq8vOlXIMkWMFJEJ1OGWMj3RCKg9Yg-11_8kmuYHGygLHn4MD0hZUTE3iwU5MJRtFMYcL2jCRP21DWv4qSf2ZvVpYLxewYuW",
-            //     "cXXikM7cSFe-gvbyNvAD8A:APA91bGe0u9MJVhzFX7ESIwXycx05a7ZD1hGFGal29KFtHb6h3auJQVbG9xYNK8gkH7Re4LrcaNSdYDz5v0RIP7C6B4-7k3mo_V6QMAeGKlguu6Rc0YZDGMHLZhreBZVr8mC8HlrnzgJ"
-            // ])
-            toastComponent("Notice added successfully!", false);
+        if (res) {
+            toastComponent("Notice updated successfully!", false);
             navigation.navigate('Home', { screen: 'Notices' });
         } else {
-            toastComponent("Error while adding notice!", true);
+            toastComponent("Error updating notice!", true);
         }
     }
 
@@ -69,7 +54,7 @@ const NewNotice = ({ navigation, community }) => {
                                     initialHeight={250}
                                     // height={100}
                                     placeholder={"Notice..."}
-                                    initialContentHTML={""}
+                                    initialContentHTML={newNotice}
                                     editorStyle={styles.textEditor}
                                     containerStyle={styles.textEditorContainer}
                                     onFocus={() => setIsFocused(true)}
@@ -87,7 +72,7 @@ const NewNotice = ({ navigation, community }) => {
                         />
                     }
                     {!isFocused && <View style={{ height: 40 }} />}
-                    <ButtonComponent buttonText="Post" onPress={handleSubmit} />
+                    <ButtonComponent buttonText="Update" onPress={handleSubmit} />
                 </View>
             }
         </SafeAreaView>
@@ -129,4 +114,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default NewNotice;
+export default UpdateNotice;
