@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react'
+import React, { useState } from 'react'
 import { Alert, View, Text, SafeAreaView, StyleSheet, ScrollView } from 'react-native'
 import { RichEditor } from 'react-native-pell-rich-editor';
 import ButtonComponent from '../../components/commonComponents/buttonComponent';
+import Loading from '../../components/commonComponents/loading';
 import { toastComponent } from '../../components/commonComponents/toastComponent';
 import { getDataFromAsync } from '../../constants/asyncStore';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
@@ -10,8 +11,9 @@ import { deleteDocument } from '../../services/firebaseServices';
 import { primaryColors } from '../../styles/colors';
 
 const ViewNotice = ({ route }) => {
+    const [signedInUser, setSignedInUser] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const navigation = useNavigation();
-    const [signedInUser, setSignedInUser] = React.useState("");
     const notice = route.params.notice;
     const owner = notice.owner;
 
@@ -25,12 +27,15 @@ const ViewNotice = ({ route }) => {
     }
 
     const handleDelete = () => {
+        setIsLoading(true);
         deleteDocument('notices', notice.id)
             .then(() => {
+                setIsLoading(false);
                 toastComponent("Notice deleted successfully!", false);
                 navigation.navigate('Home', { screen: 'Notices' });
             })
             .catch((err) => {
+                setIsLoading(false);
                 toastComponent("Error deleting notice!", true);
                 console.log(err);
             });
@@ -49,33 +54,35 @@ const ViewNotice = ({ route }) => {
 
     return (
         <SafeAreaView style={styles.mainView}>
-            <View style={styles.bodyCard}>
-                <Text style={styles.subject}>{notice.subject}</Text>
-                <Text style={styles.community}>{notice.community}</Text>
-                <Text style={styles.dateTime}>{notice.dateTime}</Text>
-                <ScrollView contentContainerStyle={styles.scrollView}>
-                    <View style={styles.textEditorView}>
-                        <RichEditor
-                            onChange={text => {
-                                setNewNotice(text);
-                            }}
-                            initialHeight={250}
-                            disabled={true}
-                            initialContentHTML={notice.notice}
-                            editorStyle={styles.textEditor}
-                            containerStyle={styles.textEditorContainer}
-                        />
-                    </View>
-                </ScrollView>
-                {
-                    signedInUser === owner &&
-                    <View style={styles.modifyButtons}>
-                        <ButtonComponent onPress={editNotice} buttonText="Edit" />
-                        <ButtonComponent onPress={removeNotice} buttonText="Remove" />
-                    </View>
+            {isLoading ? <Loading /> :
+                <View style={styles.bodyCard}>
+                    <Text style={styles.subject}>{notice.subject}</Text>
+                    <Text style={styles.community}>{notice.community}</Text>
+                    <Text style={styles.dateTime}>{notice.dateTime}</Text>
+                    <ScrollView contentContainerStyle={styles.scrollView}>
+                        <View style={styles.textEditorView}>
+                            <RichEditor
+                                onChange={text => {
+                                    setNewNotice(text);
+                                }}
+                                initialHeight={250}
+                                disabled={true}
+                                initialContentHTML={notice.notice}
+                                editorStyle={styles.textEditor}
+                                containerStyle={styles.textEditorContainer}
+                            />
+                        </View>
+                    </ScrollView>
+                    {
+                        signedInUser === owner &&
+                        <View style={styles.modifyButtons}>
+                            <ButtonComponent onPress={editNotice} buttonText="Edit" />
+                            <ButtonComponent onPress={removeNotice} buttonText="Remove" />
+                        </View>
 
-                }
-            </View>
+                    }
+                </View>
+            }
         </SafeAreaView>
     )
 }

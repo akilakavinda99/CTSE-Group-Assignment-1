@@ -17,10 +17,10 @@ export const addDocument = async (collectionName, data) => {
     const addDoc = await firestore()
       .collection(collectionName)
       .add(data);
-    return addDoc;
+    return {status: true, id: addDoc.id};
   } catch (error) {
     console.log(error);
-    return error;
+    return {status: false, error: error};
   }
 };
 
