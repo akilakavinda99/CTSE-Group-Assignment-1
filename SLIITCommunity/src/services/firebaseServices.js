@@ -14,9 +14,7 @@ export const checkForDocument = async (collectionName, docId) => {
 
 export const addDocument = async (collectionName, data) => {
   try {
-    const addDoc = await firestore()
-      .collection(collectionName)
-      .add(data);
+    const addDoc = await firestore().collection(collectionName).add(data);
     return {status: true, id: addDoc.id};
   } catch (error) {
     console.log(error);
@@ -24,12 +22,10 @@ export const addDocument = async (collectionName, data) => {
   }
 };
 
-export const getDocuments = async (collectionName) => {
+export const getDocuments = async collectionName => {
   try {
-    const getDocs = await firestore()
-      .collection(collectionName)
-      .get();
-    return getDocs.docs.map((doc) => doc.data());
+    const getDocs = await firestore().collection(collectionName).get();
+    return getDocs.docs.map(doc => doc.data());
   } catch (error) {
     console.log(error);
     return [];
@@ -38,11 +34,8 @@ export const getDocuments = async (collectionName) => {
 
 export const getDocument = async (collectionName, docId) => {
   try {
-    const getDoc = firestore()
-      .collection(collectionName)
-      .doc(docId)
-      .get();
-    return { ...getDoc.data(), id: getDoc.id };
+    const getDoc = firestore().collection(collectionName).doc(docId).get();
+    return {...getDoc.data(), id: getDoc.id};
   } catch (error) {
     console.log(error);
     return {};
@@ -55,8 +48,8 @@ export const getDocumentOrderBy = async (collectionName, orderBy, arrange) => {
       .collection(collectionName)
       .orderBy(orderBy, arrange)
       .get();
-    return getDocs.docs.map((doc) => {
-      return { ...doc.data(), id: doc.id };
+    return getDocs.docs.map(doc => {
+      return {...doc.data(), id: doc.id};
     });
   } catch (error) {
     console.log(error);
@@ -70,8 +63,8 @@ export const getDocumentGroupBy = async (collectionName, groupBy) => {
       .collection(collectionName)
       .groupBy(groupBy)
       .get();
-    return getDocs.docs.map((doc) => {
-      return { ...doc.data(), id: doc.id };
+    return getDocs.docs.map(doc => {
+      return {...doc.data(), id: doc.id};
     });
   } catch (error) {
     console.log(error);
@@ -111,7 +104,7 @@ export const getDocumentsByField = async (collectionName, fieldName, value) => {
       .collection(collectionName)
       .where(fieldName, '==', value)
       .get();
-    return getDocs.docs.map((doc) => doc.data());
+    return getDocs.docs.map(doc => doc.data());
   } catch (error) {
     console.log(error);
     return [];
@@ -132,5 +125,24 @@ export const addDocumentWithCustomID = async (
   } catch (error) {
     console.log(error);
     return false;
+  }
+};
+
+export const getDocumentsByFieldWithId = async (
+  collectionName,
+  fieldName,
+  value,
+) => {
+  try {
+    const getDocs = await firestore()
+      .collection(collectionName)
+      .where(fieldName, '==', value)
+      .get();
+    return getDocs.docs.map(doc => {
+      return {data: doc.data(), id: doc.id};
+    });
+  } catch (error) {
+    console.log(error);
+    return [];
   }
 };
