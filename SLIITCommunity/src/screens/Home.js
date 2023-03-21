@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ViewAllCommunities from './Community/ViewAllCommunities';
 import NewNotice from './Notices/NewNotice';
 import ViewAllNotices from './Notices/ViewAllNotices';
 
@@ -27,8 +28,8 @@ export default function Home({ screen }) {
       case 'Notices':
         icon = 'notifications-outline';
         break;
-      case 'title2':
-        icon = 'settings-outline';
+      case 'Communities':
+        icon = 'people-outline';
         break;
     }
 
@@ -76,6 +77,19 @@ export default function Home({ screen }) {
                 </TouchableOpacity>
               </Animated.View>
             );
+            case 'Communities':
+              return (
+                <Animated.View style={styles.btnCircleUp}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      navigate('NewCommunity');
+                    }}
+                  >
+                    <Ionicons name={'add-outline'} color="gray" size={40} />
+                  </TouchableOpacity>
+                </Animated.View>
+              );  
           default:
             return (
               <Animated.View style={styles.btnCircleUp}>
@@ -97,8 +111,8 @@ export default function Home({ screen }) {
         component={() => <ViewAllNotices />}
       />
       <CurvedBottomBar.Screen
-        name="title2"
-        component={() => <Screen2 />}
+        name="Communities"
+        component={() => <ViewAllCommunities />}
         position="RIGHT"
       />
     </CurvedBottomBar.Navigator>

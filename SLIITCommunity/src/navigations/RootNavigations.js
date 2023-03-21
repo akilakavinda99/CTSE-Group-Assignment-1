@@ -9,6 +9,9 @@ import NewEvent from '../screens/EventManagement/AddEvent';
 import ViewNotice from '../screens/Notices/ViewNotice';
 import AddLostOrFound from '../screens/lostAndFoundScreens/addLostOrFound';
 import UpdateNotice from '../screens/Notices/UpdateNotice';
+import NewCommunity from '../screens/Community/NewCommunity';
+import ViewAllCommunities from '../screens/Community/ViewAllCommunities';
+import ViewCommunity from '../screens/Community/ViewCommunity';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +41,21 @@ const RootNavigations = () => {
       <Stack.Screen
         name="Home"
         component={Home}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="NewCommunity"
+        component={NewCommunity}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ViewAllCommunities"
+        component={ViewAllCommunities}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ViewCommunity"
+        component={ViewCommunity}
         options={{ headerShown: false }}
       />
       <Stack.Screen
