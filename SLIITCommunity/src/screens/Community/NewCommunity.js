@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -14,16 +14,24 @@ import {
 import {RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import Toast from 'react-native-toast-message';
 import {AppLayout, SCREEN_HEIGHT} from '../../styles/appStyles';
+import asyncStoreKeys from '../../constants/asyncStoreKeys';
+import {getDataFromAsync} from '../../constants/asyncStore';
 import {primaryColors} from '../../styles/colors';
 import {SelectList} from 'react-native-dropdown-select-list';
 import { addDocument } from "../../services/firebaseServices";
+import {toastComponent} from '../../components/commonComponents/toastComponent';
 
-const NewCommunity = () => {
+const NewCommunity = ({ navigation }) => {
   const richText = useRef();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [itNumber, setItNumber] = useState();
   const [selected, setSelected] = React.useState('');
+  
+  const gohome = () => {
+    navigation.navigate('Home');
+  };
 
   const data = [
     {key: '1', value: 'All'},
@@ -36,6 +44,16 @@ const NewCommunity = () => {
     {key: '8', value: 'School of Hospitality & Culinary'},
     {key: '9', value: 'Graduate Studies & Researches'},
   ];
+
+
+  useEffect(() => {
+    async function getItnumber() {
+      const itNumber = await getDataFromAsync(asyncStoreKeys.IT_NUMBER);
+      setItNumber(itNumber);
+    }
+    getItnumber();
+  }, []);
+
 
   const handleSubmit = async () => {
     if (title.trim() === '') {
@@ -66,9 +84,12 @@ const NewCommunity = () => {
         title,
         faculty:selected,
         description: description,
+        itNumber,
         created_at: new Date().toDateString(),
+        
     });
-    console.log(res);
+    toastComponent('Community added successfully!');
+    navigation.navigate('Home', { screen: 'Communities' });
 }
 
   return (
@@ -133,7 +154,7 @@ const NewCommunity = () => {
             <Button
               title="Back"
               color="#ffad00"
-              onPress={() => Alert.alert('Simple Button pressed')}
+              onPress={gohome}
             />
           </ScrollView>
 
