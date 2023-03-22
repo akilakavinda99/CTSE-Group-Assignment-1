@@ -1,23 +1,27 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { RichEditor, RichToolbar } from "react-native-pell-rich-editor";
+import { SelectList } from 'react-native-dropdown-select-list'
 import ButtonComponent from "../../components/commonComponents/buttonComponent";
 import Loading from "../../components/commonComponents/loading";
 import { toastComponent } from "../../components/commonComponents/toastComponent";
 import { getDataFromAsync } from "../../constants/asyncStore";
 import asyncStoreKeys from "../../constants/asyncStoreKeys";
-import { getDateAndTime } from "../../services/commonFunctions";
-import { addDocument } from "../../services/firebaseServices";
+import { filterFields, getDateAndTime } from "../../services/commonFunctions";
+import { addDocument, getDocumentsByField } from "../../services/firebaseServices";
 import { sendNotification } from "../../services/notificationServices";
 import { primaryColors } from '../../styles/colors';
 
-const NewNotice = ({ navigation, community }) => {
+const NewNotice = ({ navigation }) => {
     const richText = useRef();
-    const [subject, setSubject] = useState("");
-    const [newNotice, setNewNotice] = useState("");
     const [isFocused, setIsFocused] = useState(false);
     const [signedInUser, setSignedInUser] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [communities, setCommunities] = useState([]);
+
+    const [subject, setSubject] = useState("");
+    const [newNotice, setNewNotice] = useState("");
+    const [community, setCommunity] = useState("");
 
     getDataFromAsync(asyncStoreKeys.IT_NUMBER)
         .then((data) => {
@@ -48,6 +52,25 @@ const NewNotice = ({ navigation, community }) => {
         }
     }
 
+    const selectCommunity = (val) => {
+        const com = communities.filter((item) => item.key === val);
+        setCommunity(com[0].value);
+    }
+
+    useEffect(() => {
+        getDocumentsByField("communities", "itNumber", signedInUser)
+            .then((res) => {
+                let filtered = [];
+                res.forEach((item, key) => {
+                    filtered.push({
+                        key: key,
+                        value: item.title,
+                    });
+                });
+                setCommunities(filtered);
+            });
+    }, [signedInUser]);
+
     return (
         <SafeAreaView style={{ width: "100%", height: "100%" }}>
             {isLoading ? <Loading /> :
@@ -57,6 +80,14 @@ const NewNotice = ({ navigation, community }) => {
                         onChangeText={setSubject}
                         placeholder={"Subject"}
                         style={styles.subject}
+                    />
+                    <SelectList
+                        setSelected={selectCommunity}
+                        data={communities}
+                        placeholder="Select Community"
+                        boxStyles={styles.selectListBox}
+                        inputStyles={{ fontSize: 16, color: community == "" ? '#999' : '#000' }}
+                        dropdownStyles={styles.selectListDropdown}
                     />
                     <ScrollView contentContainerStyle={styles.scrollView}>
                         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ width: "100%" }}>
@@ -126,7 +157,28 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         fontSize: 16,
         backgroundColor: "#fff",
-    }
+    },
+    selectListBox: {
+        width: "100%",
+        height: 40,
+        backgroundColor: '#fff',
+        borderColor: '#fff',
+        paddingHorizontal: 10,
+        paddingVertical: 0,
+        alignItems: 'center',
+        marginBottom: 16,
+        borderRadius: 8,
+        fontSize: 16,
+    },
+    selectListDropdown: {
+        // height: 200,
+        backgroundColor: '#fff',
+        borderColor: '#fff',
+        marginBottom: 16,
+        borderRadius: 8,
+        fontSize: 16,
+    },
+
 });
 
 export default NewNotice;
