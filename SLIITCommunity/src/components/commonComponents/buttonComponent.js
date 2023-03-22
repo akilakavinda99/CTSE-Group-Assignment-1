@@ -3,7 +3,7 @@ import {TextInput, Text, View, TouchableOpacity} from 'react-native';
 import {AppLayout} from '../../styles/appStyles';
 import {primaryColors} from '../../styles/colors';
 
-const ButtonComponent = ({onPress, buttonText}) => {
+const ButtonComponent = ({onPress, buttonText, backgroundColor}) => {
   const handlePress = () => {
     onPress();
   };
@@ -16,13 +16,14 @@ const ButtonComponent = ({onPress, buttonText}) => {
           width: '100%',
           height: 50,
           borderRadius: 100,
-          backgroundColor: primaryColors.primaryBlue,
+          backgroundColor: backgroundColor,
         },
       ]}>
       <Text
         style={{
           fontSize: 16,
           color: 'white',
+          fontWeight: 800
         }}>
         {buttonText}
       </Text>

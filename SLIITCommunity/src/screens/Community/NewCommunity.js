@@ -2,7 +2,6 @@ import React, {useRef, useEffect, useState} from 'react';
 import {
   View,
   Text,
-  Alert,
   Button,
   TextInput,
   Platform,
@@ -17,18 +16,19 @@ import {AppLayout, SCREEN_HEIGHT} from '../../styles/appStyles';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
 import {getDataFromAsync} from '../../constants/asyncStore';
 import {primaryColors} from '../../styles/colors';
+import ButtonComponent from '../../components/commonComponents/buttonComponent';
 import {SelectList} from 'react-native-dropdown-select-list';
-import { addDocument } from "../../services/firebaseServices";
+import {addDocument} from '../../services/firebaseServices';
 import {toastComponent} from '../../components/commonComponents/toastComponent';
 
-const NewCommunity = ({ navigation }) => {
+const NewCommunity = ({navigation}) => {
   const richText = useRef();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [itNumber, setItNumber] = useState();
   const [selected, setSelected] = React.useState('');
-  
+
   const gohome = () => {
     navigation.navigate('Home');
   };
@@ -45,7 +45,6 @@ const NewCommunity = ({ navigation }) => {
     {key: '9', value: 'Graduate Studies & Researches'},
   ];
 
-
   useEffect(() => {
     async function getItnumber() {
       const itNumber = await getDataFromAsync(asyncStoreKeys.IT_NUMBER);
@@ -54,43 +53,41 @@ const NewCommunity = ({ navigation }) => {
     getItnumber();
   }, []);
 
-
   const handleSubmit = async () => {
     if (title.trim() === '') {
       Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Community Title can not be empty❗',
-        });
+        type: 'error',
+        text1: 'Error',
+        text2: 'Community Title can not be empty❗',
+      });
       return;
     }
     if (selected.trim() === '') {
       Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Faculty can not be empty❗',
-        });
+        type: 'error',
+        text1: 'Error',
+        text2: 'Faculty can not be empty❗',
+      });
       return;
     }
     if (description.trim() === '') {
       Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Description can not be empty❗',
-        });
+        type: 'error',
+        text1: 'Error',
+        text2: 'Description can not be empty❗',
+      });
       return;
     }
-    const res = await addDocument("communities", {
-        title,
-        faculty:selected,
-        description: description,
-        itNumber,
-        created_at: new Date().toDateString(),
-        
+    const res = await addDocument('communities', {
+      title,
+      faculty: selected,
+      description: description,
+      itNumber,
+      created_at: new Date().toDateString(),
     });
     toastComponent('Community added successfully!');
-    navigation.navigate('Home', { screen: 'Communities' });
-}
+    navigation.navigate('Home', {screen: 'Communities'});
+  };
 
   return (
     <>
@@ -109,7 +106,7 @@ const NewCommunity = ({ navigation }) => {
               borderRadius: 8,
               borderColor: '#E8E8E8',
               backgroundColor: '#E8E8E8',
-              width: 343,
+              width: 330,
               height: 45,
               paddingLeft: 15,
             }}
@@ -121,18 +118,18 @@ const NewCommunity = ({ navigation }) => {
             data={data}
             save="value"
           />
-
+          <View style={{marginBottom: 20}}></View>
           <ScrollView contentContainerStyle={styles.scrollView}>
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              style={{flex: 1, width: '100%'}}>
+              style={{width: '100%'}}>
               <View style={styles.textEditorView}>
                 <RichEditor
                   ref={richText}
                   onChange={text => {
                     setDescription(text);
                   }}
-                  initialHeight={200}
+                  initialHeight={250}
                   placeholder={'Enter Community Description'}
                   initialContentHTML={''}
                   editorStyle={styles.textEditor}
@@ -143,19 +140,13 @@ const NewCommunity = ({ navigation }) => {
               </View>
             </KeyboardAvoidingView>
 
-            <View style={{marginBottom: 20}}>
-              <Button
-                title="Create"
-                color="#242d66"
-                onPress={handleSubmit}
-              />
+            <View style={{marginBottom: 10}}>
+              <ButtonComponent backgroundColor="#242D66" buttonText="Create Community" onPress={handleSubmit} />
             </View>
-
-            <Button
-              title="Back"
-              color="#ffad00"
-              onPress={gohome}
-            />
+            <View> 
+              <ButtonComponent backgroundColor="#58595a" buttonText="Cancel" onPress={gohome} />
+            </View>
+            
           </ScrollView>
 
           {isFocused && (
@@ -187,7 +178,7 @@ const styles = StyleSheet.create({
   headingStyle: {
     fontSize: 30,
     color: primaryColors.primaryBlue,
-    fontWeight: 800,
+    fontWeight: 900,
     marginBottom: 50,
   },
   textEditorView: {
@@ -204,11 +195,10 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: '100%',
-    marginTop: 16,
     marginBottom: 0,
   },
   title: {
-    width: 343,
+    width: 330,
     height: 45,
     paddingLeft: 15,
     marginBottom: 16,

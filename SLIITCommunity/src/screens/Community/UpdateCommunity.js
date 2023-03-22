@@ -2,8 +2,6 @@ import React, {useRef, useState} from 'react';
 import {
   View,
   Text,
-  Alert,
-  Button,
   TextInput,
   Platform,
   KeyboardAvoidingView,
@@ -12,18 +10,23 @@ import {
   StyleSheet,
 } from 'react-native';
 import {RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
-import Toast from 'react-native-toast-message';
-import {AppLayout, SCREEN_HEIGHT} from '../../styles/appStyles';
-import {primaryColors} from '../../styles/colors';
+import ButtonComponent from '../../components/commonComponents/buttonComponent';
+import Loading from '../../components/commonComponents/loading';
+import {toastComponent} from '../../components/commonComponents/toastComponent';
+import {getDateAndTime} from '../../services/commonFunctions';
 import {SelectList} from 'react-native-dropdown-select-list';
-import { addDocument } from "../../services/firebaseServices";
+import {AppLayout, SCREEN_HEIGHT} from '../../styles/appStyles';
+import {updateDocument} from '../../services/firebaseServices';
+import {primaryColors} from '../../styles/colors';
 
-const UpdateCommunity = () => {
+const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
+  const communities = route.params.communities;
   const richText = useRef();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState(communities.title);
+  const [newDescription, setnewDescription] = useState(communities.description);
+  const [faculty, setFaculty] = React.useState(communities.faculty);
   const [isFocused, setIsFocused] = useState(false);
-  const [selected, setSelected] = React.useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const data = [
     {key: '1', value: 'All'},
@@ -38,44 +41,29 @@ const UpdateCommunity = () => {
   ];
 
   const handleSubmit = async () => {
-    if (title.trim() === '') {
-        Toast.show({
-            type: 'error',
-            text1: 'Error',
-            text2: 'Community Title can not be empty❗',
-          });
-        return;
-      }
-      if (selected.trim() === '') {
-        Toast.show({
-            type: 'error',
-            text1: 'Error',
-            text2: 'Faculty can not be empty❗',
-          });
-        return;
-      }
-      if (description.trim() === '') {
-        Toast.show({
-            type: 'error',
-            text1: 'Error',
-            text2: 'Description can not be empty❗',
-          });
-        return;
-      }
-    const res = await addDocument("communities", {
-        title,
-        faculty:selected,
-        description: description,
-        updated_at: new Date().toDateString(),
+    setIsLoading(true);
+    const res = await updateDocument('communities', communities.id, {
+      title,
+      faculty: faculty,
+      description: newDescription,
+      created_at: getDateAndTime(),
     });
-    console.log(res);
-}
+    setIsLoading(false);
+    if (res) {
+      toastComponent('Community updated successfully!', false);
+      navigation.navigate('Home', {screen: 'Communities'});
+    } else {
+      toastComponent('Error updating Community!', true);
+    }
+  };
 
   return (
-    <>
-      <View style={styles.container}>
-        <SafeAreaView style={[AppLayout.flexColumnCentered, styles.mainView]}>
-          <Text style={styles.headingStyle}>Update Community</Text>
+    <SafeAreaView style={{width: '100%', height: '100%'}}>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <View style={styles.mainView}>
+          <Text style={styles.headingStyle}>Update {title}</Text>
           <TextInput
             value={title}
             onChangeText={setTitle}
@@ -88,33 +76,34 @@ const UpdateCommunity = () => {
               borderRadius: 8,
               borderColor: '#E8E8E8',
               backgroundColor: '#E8E8E8',
-              width: 343,
+              width: 330,
               height: 45,
               paddingLeft: 15,
             }}
             dropdownItemStyles={{marginHorizontal: 10}}
             dropdownTextStyles={{color: 'black'}}
-            setSelected={setSelected}
-            placeholder={'Select a Faculty'}
+            setSelected={setFaculty}
+            
             maxHeight={150}
             data={data}
             save="value"
+            value={faculty}
           />
 
+          <View style={{marginBottom: 20}}></View>
           <ScrollView contentContainerStyle={styles.scrollView}>
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              style={{flex: 1, width: '100%'}}>
+              style={{width: '100%'}}>
               <View style={styles.textEditorView}>
                 <RichEditor
                   ref={richText}
                   onChange={text => {
-                    setDescription(text);
+                    setnewDescription(text);
                   }}
-                  placeholderTextColor="black"
-                  initialHeight={200}
+                  initialHeight={250}
                   placeholder={'Enter Community Description'}
-                  initialContentHTML={''}
+                  initialContentHTML={newDescription}
                   editorStyle={styles.textEditor}
                   containerStyle={styles.textEditorContainer}
                   onFocus={() => setIsFocused(true)}
@@ -123,39 +112,27 @@ const UpdateCommunity = () => {
               </View>
             </KeyboardAvoidingView>
 
-            <View style={{marginBottom: 20}}>
-              <Button
-                title="Update"
-                color="#242d66"
+            <View style={{marginBottom: 10}}>
+              <ButtonComponent
+                backgroundColor="#ffad00"
+                buttonText="Update Community"
                 onPress={handleSubmit}
               />
             </View>
-
-            <View style={{marginBottom: 20}}>
-              <Button
-                title="Delete"
-                color="#c13a34"
+            <View style={{marginBottom: 10}}>
+              <ButtonComponent
+                backgroundColor="#58595a"
+                buttonText="Cancel"
+                onPress={() => goBack()}
               />
             </View>
-
-            <Button
-              title="Back"
-              color="#ffad00"
-              onPress={() => Alert.alert('Simple Button pressed')}
-            />
           </ScrollView>
 
-          {isFocused && (
-            <RichToolbar
-              editor={richText}
-              // actions={[actions.setBold, actions.setItalic, actions.setUnderline, actions.heading1,]}
-              // iconMap={{ [actions.heading1]: ({ tintColor }) => (<Text style={[{ color: tintColor }]}>H1</Text>), }}
-            />
-          )}
-        </SafeAreaView>
-        <Toast />
-      </View>
-    </>
+          {isFocused && <RichToolbar editor={richText} />}
+          {!isFocused && <View style={{height: 40}} />}
+        </View>
+      )}
+    </SafeAreaView>
   );
 };
 
@@ -167,35 +144,31 @@ const styles = StyleSheet.create({
   },
   mainView: {
     // height: SCREEN_HEIGHT,
-    marginLeft: 16,
-    marginRight: 16,
-    marginTop: SCREEN_HEIGHT / 15,
+    paddingHorizontal: 16,
+        paddingVertical: 40,
+    height: "100%",
+
   },
   headingStyle: {
     fontSize: 30,
     color: primaryColors.primaryBlue,
-    fontWeight: 800,
+    fontWeight: 900,
     marginBottom: 50,
+    textAlign: 'center',
   },
   textEditorView: {
-    width: 330,
+    width: '100%',
     borderRadius: 8,
     marginBottom: 30,
   },
   textEditorContainer: {
-    width: '100%',
     borderRadius: 8,
   },
   textEditor: {
     backgroundColor: '#E8E8E8',
   },
-  scrollView: {
-    width: '100%',
-    marginTop: 16,
-    marginBottom: 0,
-  },
   title: {
-    width: 343,
+    width: 330,
     height: 45,
     paddingLeft: 15,
     marginBottom: 16,
@@ -203,7 +176,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: 'red',
     color: 'black',
-  }
+  },
+  scrollView: {
+    width: '100%',
+    marginBottom: 0,
+  },
 });
 
 export default UpdateCommunity;

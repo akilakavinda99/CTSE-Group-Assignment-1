@@ -10,7 +10,7 @@ import asyncStoreKeys from '../../constants/asyncStoreKeys';
 import { deleteDocument } from '../../services/firebaseServices';
 import { primaryColors } from '../../styles/colors';
 
-const ViewCommunity = ({ route }) => {
+const ViewCommunity = ({ route, navigation: {goBack} }) => {
     const [signedInUser, setSignedInUser] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const navigation = useNavigation();
@@ -23,7 +23,7 @@ const ViewCommunity = ({ route }) => {
         });
 
     const editCommunity = () => {
-        navigation.navigate('Edit Community', { communities });
+        navigation.navigate('UpdateCommunity', { communities });
     }
 
     const handleDelete = () => {
@@ -44,7 +44,6 @@ const ViewCommunity = ({ route }) => {
         Alert.alert('Are you sure?', 'You will not be able to recover this community!', [
             {
                 text: 'Cancel',
-                //   onPress: () => console.log('Cancel Pressed'),
                 style: 'cancel',
             },
             { text: 'Yes', onPress: () => handleDelete() },
@@ -55,8 +54,8 @@ const ViewCommunity = ({ route }) => {
         <SafeAreaView style={styles.mainView}>
             {isLoading ? <Loading /> :
                 <View style={styles.bodyCard}>
-                    <Text style={styles.subject}>{communities.title}</Text>
-                    <Text style={styles.community}>{communities.faculty}</Text>
+                    <Text style={styles.title}>{communities.title}</Text>
+                    <Text style={styles.faculty}>Faculty of {communities.faculty}</Text>
                     <Text style={styles.dateTime}>{communities.created_at}</Text>
                     <ScrollView contentContainerStyle={styles.scrollView}>
                         <View style={styles.textEditorView}>
@@ -75,8 +74,9 @@ const ViewCommunity = ({ route }) => {
                     {
                         signedInUser === itNumber &&
                         <View style={styles.modifyButtons}>
-                            <ButtonComponent onPress={editCommunity} buttonText="Edit" />
-                            <ButtonComponent style={{backgroundColor:'red'}} onPress={removeCommunity} buttonText="Remove" />
+                            <ButtonComponent backgroundColor="#242D66" onPress={editCommunity} buttonText="Update Community" />
+                            <ButtonComponent backgroundColor="#e3463d" onPress={removeCommunity} buttonText="Remove" />
+                            <ButtonComponent backgroundColor="#58595a" onPress={() => goBack()} buttonText="Back" />
                         </View>
 
                     }
@@ -108,18 +108,19 @@ const styles = StyleSheet.create({
     textEditor: {
         backgroundColor: '#fff',
     },
-    subject: {
+    title: {
         width: "100%",
-        fontSize: 20,
-        fontWeight: "bold",
+        fontSize: 25,
+        fontWeight: 900,
         marginBottom: 10,
+        marginTop: 20,
         textAlign: "center",
         color: primaryColors.primaryBlue
     },
-    community: {
+    faculty: {
         width: "100%",
         fontSize: 16,
-        fontWeight: "bold",
+        fontWeight:900,
         textAlign: "center",
         color: primaryColors.primaryYellow
     },
