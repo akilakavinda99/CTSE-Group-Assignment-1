@@ -56,7 +56,7 @@ const ViewAllCommunities = () => {
 
 const styles = StyleSheet.create({
     mainView: {
-        backgroundColor: primaryColors.background,
+        backgroundColor: '#ffeec9',
         height: "100%",
     },
     scrollView: {
