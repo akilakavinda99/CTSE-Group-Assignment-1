@@ -120,10 +120,10 @@ const NewCommunity = ({navigation}) => {
           />
           <View style={{marginBottom: 20}}></View>
           <ScrollView contentContainerStyle={styles.scrollView}>
-            <KeyboardAvoidingView
+            {/* <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              style={{width: '100%'}}>
-              <View style={styles.textEditorView}>
+              style={{width: '100%'}}> */}
+              <View style={styles.textEditorView }>
                 <RichEditor
                   ref={richText}
                   onChange={text => {
@@ -138,12 +138,12 @@ const NewCommunity = ({navigation}) => {
                   onBlur={() => setIsFocused(false)}
                 />
               </View>
-            </KeyboardAvoidingView>
+            {/* </KeyboardAvoidingView> */}
 
             <View style={{marginBottom: 10}}>
               <ButtonComponent backgroundColor="#242D66" buttonText="Create Community" onPress={handleSubmit} />
             </View>
-            <View> 
+            <View style={{marginBottom: 10}}> 
               <ButtonComponent backgroundColor="#58595a" buttonText="Cancel" onPress={gohome} />
             </View>
             
