@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import { primaryColors } from '../../styles/colors';
 
 const CommunityCard = ({ communities }) => {
     const navigation = useNavigation();
@@ -21,15 +22,26 @@ const CommunityCard = ({ communities }) => {
 
 const styles = StyleSheet.create({
     mainView: {
-        // flex: 1,
-        // width: SCREEN_WIDTH,
         width: "100%",
-        // marginBottom: 10,
         padding: 10,
         backgroundColor: "#fff",
         marginTop: 10,
         borderRadius: 10,
-    },
+        ...Platform.select({
+          ios: {
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.2,
+            shadowRadius: 2,
+          },
+          android: {
+            elevation: 3,
+          },
+        }),
+      },
     title: {
         width: "100%",
         fontSize: 16,
@@ -39,9 +51,11 @@ const styles = StyleSheet.create({
         width: "100%",
         fontSize: 11,
     },
-    facult: {
+    faculty: {
         width: "100%",
         fontSize: 12,
+        fontWeight: 800,
+        color: primaryColors.primaryYellow
     }
 });
 
