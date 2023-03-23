@@ -3,7 +3,7 @@ import {TextInput, Text, View, TouchableOpacity} from 'react-native';
 import {AppLayout} from '../../styles/appStyles';
 import {primaryColors} from '../../styles/colors';
 
-const ButtonComponent = ({onPress, buttonText, backgroundColor}) => {
+const ButtonComponent = ({onPress, buttonText, backgroundColor, width}) => {
   const handlePress = () => {
     onPress();
   };
@@ -13,7 +13,7 @@ const ButtonComponent = ({onPress, buttonText, backgroundColor}) => {
       style={[
         AppLayout.centered,
         {
-          width: '100%',
+          width: width ? width : '100%',
           height: 50,
           borderRadius: 100,
           backgroundColor: backgroundColor,
