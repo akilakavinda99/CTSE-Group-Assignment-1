@@ -25,16 +25,16 @@ const MyDateTimePicker = () => {
 
   return (
     <View>
-      <View style={styles.container}>
-      <TextInputComponent
-        rightIcon="calendar"
-        placeholder="Select Date"
-        marginBottom={20}
-        value={selectedDate.toLocaleDateString()}
+      <View>
+        <TextInputComponent
+          rightIcon="calendar"
+          placeholder="Select Date"
+          marginBottom={20}
+          value={selectedDate.toLocaleDateString()}
         >
         </TextInputComponent>
         <Icon style={styles.icon} name="calendar" size={20} color="#000" onPress={showDatePicker} />
-        </View>
+      </View>
 
       {isDatePickerVisible && (
         <DateTimePicker
