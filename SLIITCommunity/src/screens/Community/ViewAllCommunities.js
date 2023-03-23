@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
+import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, Dimensions } from "react-native";
 import Loading from '../../components/commonComponents/loading';
 import CommunityCard from '../../components/communities/communityCard';
 import { getDocumentOrderBy } from '../../services/firebaseServices';
@@ -34,6 +34,8 @@ const ViewAllCommunities = () => {
     onRefresh();
   }, []);
 
+  const windowWidth = Dimensions.get('window').width;
+
   return (
     <SafeAreaView style={styles.mainView}>
       {loading ? (
@@ -53,9 +55,17 @@ const ViewAllCommunities = () => {
           ]}
         >
           {communities.length > 0 ? (
-            communities.map((community, index) => {
-              return <CommunityCard key={index} communities={community} />;
-            })
+            <View style={{ flexWrap: 'wrap', flexDirection: 'row' }}>
+              {communities.map((community, index) => {
+                return (
+                  <CommunityCard
+                    key={index}
+                    communities={community}
+                    style={{ width: windowWidth / 2 }}
+                  />
+                );
+              })}
+            </View>
           ) : (
             <View style={styles.emptyView}>
               <Text style={styles.emptyText}>Oops!</Text>
@@ -68,7 +78,6 @@ const ViewAllCommunities = () => {
               />
             </View>
           )}
-          <View style={{ height: 90 }} />
         </ScrollView>
       )}
     </SafeAreaView>
@@ -96,7 +105,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 900,
     color: primaryColors.darkGrey,
-    marginTop: 20,
+    marginTop: 5,
   },
 });
 

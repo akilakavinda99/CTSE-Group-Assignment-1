@@ -2,8 +2,9 @@ import React, {useRef, useEffect, useState} from 'react';
 import {
   View,
   Text,
-  Button,
+  TouchableOpacity,
   TextInput,
+  Image,
   Platform,
   KeyboardAvoidingView,
   SafeAreaView,
@@ -15,6 +16,10 @@ import Toast from 'react-native-toast-message';
 import {AppLayout, SCREEN_HEIGHT} from '../../styles/appStyles';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
 import {getDataFromAsync} from '../../constants/asyncStore';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {createTwoButtonAlert} from '../../components/commonComponents/alertComponent';
+import {imageUploadService} from '../../services/imageUploadService';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {primaryColors} from '../../styles/colors';
 import ButtonComponent from '../../components/commonComponents/buttonComponent';
 import {SelectList} from 'react-native-dropdown-select-list';
@@ -22,6 +27,8 @@ import {addDocument} from '../../services/firebaseServices';
 import {toastComponent} from '../../components/commonComponents/toastComponent';
 
 const NewCommunity = ({navigation}) => {
+
+  const [image, setImage] = useState('');
   const richText = useRef();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -31,6 +38,42 @@ const NewCommunity = ({navigation}) => {
 
   const gohome = () => {
     navigation.navigate('Home');
+  };
+
+  const launchAlert = () => {
+    createTwoButtonAlert(
+      'Select Camera or Gallery',
+      'Where do you want to select a image?',
+      'From Gallery',
+      'From Camera',
+      fromGallery,
+      fromCamera,
+    );
+  };
+
+  const fromCamera = async () => {
+    const options = {
+      mediaType: 'photo',
+      cameraType: 'back',
+      includeBase64: true,
+      maxWidth: 1080,
+      maxHeight: 960,
+      quality: 0.5,
+    };
+    const result = await launchCamera(options);
+    setImage(result.assets[0].uri);
+  };
+
+  const fromGallery = async () => {
+    const options = {
+      mediaType: 'photo',
+      includeBase64: true,
+      maxWidth: 1080,
+      maxHeight: 960,
+      quality: 0.5,
+    };
+    const result = await launchImageLibrary(options);
+    setImage(result.assets[0].uri);
   };
 
   const data = [
@@ -78,11 +121,23 @@ const NewCommunity = ({navigation}) => {
       });
       return;
     }
+    if (image.trim() === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Image can not be empty❗',
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    const url = await imageUploadService(title, image);
     const res = await addDocument('communities', {
       title,
       faculty: selected,
       description: description,
       itNumber,
+      image: url,
       created_at: new Date().toDateString(),
     });
     toastComponent('Community added successfully!');
@@ -129,7 +184,7 @@ const NewCommunity = ({navigation}) => {
                   onChange={text => {
                     setDescription(text);
                   }}
-                  initialHeight={250}
+                  initialHeight={150}
                   placeholder={'Enter Community Description'}
                   initialContentHTML={''}
                   editorStyle={styles.textEditor}
@@ -140,6 +195,35 @@ const NewCommunity = ({navigation}) => {
               </View>
             {/* </KeyboardAvoidingView> */}
 
+            {isFocused && (
+              <RichToolbar style={{height: 30}} editor={richText} />
+            )}
+            {!isFocused && <View style={{height: 0}} />}
+
+            <TouchableOpacity
+              style={[
+                styles.imagePicker,
+                image == ''
+                  ? {
+                      flex: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }
+                  : {},
+              ]}
+              onPress={launchAlert}>
+              {image == '' ? <Icon name="image-area" size={50} /> : <></>}
+              {image && (
+                <Image
+                  key={new Date().getTime()}
+                  source={{uri: image}}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
+              )}
+            </TouchableOpacity>
+
+
             <View style={{marginBottom: 10}}>
               <ButtonComponent backgroundColor="#242D66" buttonText="Create Community" onPress={handleSubmit} />
             </View>
@@ -148,14 +232,6 @@ const NewCommunity = ({navigation}) => {
             </View>
             
           </ScrollView>
-
-          {isFocused && (
-            <RichToolbar
-              editor={richText}
-              // actions={[actions.setBold, actions.setItalic, actions.setUnderline, actions.heading1,]}
-              // iconMap={{ [actions.heading1]: ({ tintColor }) => (<Text style={[{ color: tintColor }]}>H1</Text>), }}
-            />
-          )}
         </SafeAreaView>
         <Toast />
       </View>
@@ -184,10 +260,10 @@ const styles = StyleSheet.create({
   textEditorView: {
     width: 330,
     borderRadius: 8,
-    marginBottom: 30,
   },
   textEditorContainer: {
     width: '100%',
+    
     borderRadius: 8,
   },
   textEditor: {
@@ -204,13 +280,33 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     backgroundColor: '#E8E8E8',
     borderRadius: 8,
-    borderColor: 'red',
     color: 'black',
   },
+  imagePicker: {
+    height: 150,
+    margin:16,
+    borderStyle: 'dashed',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 30,
+  },
+  modelView: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 100,
+    height: 500,
+    backgroundColor: 'grey',
+  },
+  modelStyles: {
+    width: 100,
+    height: 500,
+    alignItems: 'center',
+    backgroundColor: 'grey',
+  },
   image: {
-    flex: 1,
     width: '100%',
-    position: 'relative',
+    height: '100%',
+    borderRadius: 30,
   },
 });
 
