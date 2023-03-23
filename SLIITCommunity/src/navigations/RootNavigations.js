@@ -12,6 +12,7 @@ import UpdateNotice from '../screens/Notices/UpdateNotice';
 import NewCommunity from '../screens/Community/NewCommunity';
 import ViewAllCommunities from '../screens/Community/ViewAllCommunities';
 import ViewCommunity from '../screens/Community/ViewCommunity';
+import UpdateCommunity from '../screens/Community/UpdateCommunity';
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +52,11 @@ const RootNavigations = () => {
       <Stack.Screen
         name="ViewAllCommunities"
         component={ViewAllCommunities}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="UpdateCommunity"
+        component={UpdateCommunity}
         options={{ headerShown: false }}
       />
       <Stack.Screen
