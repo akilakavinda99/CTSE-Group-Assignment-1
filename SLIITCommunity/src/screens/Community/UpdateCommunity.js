@@ -1,24 +1,40 @@
-import React, { useRef, useState } from "react";
-import { View, Text, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet } from "react-native";
-import { RichEditor, RichToolbar } from "react-native-pell-rich-editor";
-import ButtonComponent from "../../components/commonComponents/buttonComponent";
-import Loading from "../../components/commonComponents/loading";
-import { toastComponent } from "../../components/commonComponents/toastComponent";
+import React, {useRef, useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Platform,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import {RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
+import ButtonComponent from '../../components/commonComponents/buttonComponent';
+import Loading from '../../components/commonComponents/loading';
+import {toastComponent} from '../../components/commonComponents/toastComponent';
 import Toast from 'react-native-toast-message';
-import { getDateAndTime } from "../../services/commonFunctions";
+import {getDateAndTime} from '../../services/commonFunctions';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {createTwoButtonAlert} from '../../components/commonComponents/alertComponent';
+import {imageUploadService} from '../../services/imageUploadService';
 import {SelectList} from 'react-native-dropdown-select-list';
-import { updateDocument } from "../../services/firebaseServices";
-import { primaryColors } from '../../styles/colors';
+import {updateDocument} from '../../services/firebaseServices';
+import {primaryColors} from '../../styles/colors';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
   const communities = route.params.communities;
+  const [image, setImage] = useState(communities.image);
   const richText = useRef();
   const [title, setTitle] = useState(communities.title);
   const [newDescription, setNewDescription] = useState(communities.description);
   const [faculty, setFaculty] = React.useState(communities.faculty);
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+console.log(communities)
   const data = [
     {key: '1', value: 'All'},
     {key: '2', value: 'Computing'},
@@ -31,35 +47,82 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
     {key: '9', value: 'Graduate Studies & Researches'},
   ];
 
+  const launchAlert = () => {
+    createTwoButtonAlert(
+      'Select Camera or Gallery',
+      'Where do you want to select a image?',
+      'From Gallery',
+      'From Camera',
+      fromGallery,
+      fromCamera,
+    );
+  };
+
+  const fromCamera = async () => {
+    const options = {
+      mediaType: 'photo',
+      cameraType: 'back',
+      includeBase64: true,
+      maxWidth: 1080,
+      maxHeight: 960,
+      quality: 0.5,
+    };
+    const result = await launchCamera(options);
+    setImage(result.assets[0].uri);
+  };
+
+  const fromGallery = async () => {
+    const options = {
+      mediaType: 'photo',
+      includeBase64: true,
+      maxWidth: 1080,
+      maxHeight: 960,
+      quality: 0.5,
+    };
+    const result = await launchImageLibrary(options);
+    setImage(result.assets[0].uri);
+  };
+
   const handleSubmit = async () => {
     if (title.trim() === '') {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Community Title can not be empty❗',
-        });
-        return;
-      }
-      if (faculty.trim() === '') {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Faculty can not be empty❗',
-        });
-        return;
-      }
-      if (newDescription.trim() === '') {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Description can not be empty❗',
-        });
-        return;
-      }
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Community Title can not be empty❗',
+      });
+      return;
+    }
+    if (faculty.trim() === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Faculty can not be empty❗',
+      });
+      return;
+    }
+    if (newDescription.trim() === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Description can not be empty❗',
+      });
+      return;
+    }
+    if (image.trim() === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Image can not be empty❗',
+      });
+      return;
+    }
+
     setIsLoading(true);
+    const url = await imageUploadService(title, image);
     const res = await updateDocument('communities', communities.id, {
       title,
       faculty: faculty,
+      image: url,
       description: newDescription,
       created_at: getDateAndTime(),
     });
@@ -70,7 +133,6 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
     } else {
       toastComponent('Error updating Community!', true);
     }
-
   };
 
   return (
@@ -99,8 +161,8 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
             dropdownItemStyles={{marginHorizontal: 10}}
             dropdownTextStyles={{color: 'black'}}
             setSelected={setFaculty}
-            
             maxHeight={150}
+            placeholder={faculty}
             data={data}
             save="value"
             value={faculty}
@@ -111,23 +173,52 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
             {/* <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               style={{width: '100%'}}> */}
-              <View style={styles.textEditorView}>
-                <RichEditor
-                  ref={richText}
-                  onChange={text => {
-                    setNewDescription(text);
-                  }}
-                  initialHeight={250}
-                  placeholder={'Enter Community Description'}
-                  initialContentHTML={newDescription}
-                  editorStyle={styles.textEditor}
-                  containerStyle={styles.textEditorContainer}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                />
-              </View>
+            <View style={styles.textEditorView}>
+              <RichEditor
+                ref={richText}
+                onChange={text => {
+                  setNewDescription(text);
+                }}
+                initialHeight={150}
+                placeholder={'Enter Community Description'}
+                initialContentHTML={newDescription}
+                editorStyle={styles.textEditor}
+                containerStyle={styles.textEditorContainer}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+              />
+            </View>
 
-              <View style={{marginBottom: 10}}>
+            {isFocused && (
+              <RichToolbar style={{height: 30}} editor={richText} />
+            )}
+            {!isFocused && <View style={{height: 0}} />}
+
+            <TouchableOpacity
+              style={[
+                styles.imagePicker,
+                image == ''
+                  ? {
+                      flex: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }
+                  : {},
+              ]}
+              onPress={launchAlert}>
+              {image == '' ? <Icon name="image-area" size={50} /> : <></>}
+              {image && (
+                <Image
+                  key={new Date().getTime()}
+                  source={{uri: image}}
+                  style={styles.image}
+                  resizeMode="cover"
+
+                />
+              )}
+            </TouchableOpacity>
+
+            <View style={{marginBottom: 10}}>
               <ButtonComponent
                 backgroundColor="#ffad00"
                 buttonText="Update Community"
@@ -141,14 +232,9 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
                 onPress={() => goBack()}
               />
             </View>
-            
+
             {/* </KeyboardAvoidingView> */}
-
-            
           </ScrollView>
-
-          {isFocused && <RichToolbar editor={richText} />}
-          {!isFocused && <View style={{height: 40}} />}
         </View>
       )}
       <Toast />
@@ -165,31 +251,26 @@ const styles = StyleSheet.create({
   mainView: {
     // height: SCREEN_HEIGHT,
     paddingHorizontal: 16,
-    height: "100%",
-
+    height: '100%',
   },
   headingStyle: {
     fontSize: 30,
     color: primaryColors.primaryBlue,
     fontWeight: 900,
-    marginTop:36,
+    marginTop: 36,
     marginBottom: 50,
     textAlign: 'center',
   },
   textEditorView: {
     width: '100%',
     borderRadius: 8,
-    marginBottom: 30,
-    
   },
   textEditorContainer: {
     borderRadius: 8,
-    height:20
-    
+    height: 20,
   },
   textEditor: {
     backgroundColor: '#E8E8E8',
-    
   },
   title: {
     width: 330,
@@ -204,6 +285,32 @@ const styles = StyleSheet.create({
   scrollView: {
     width: '100%',
     marginBottom: 0,
+  },
+  imagePicker: {
+    height: 150,
+    margin: 16,
+    borderStyle: 'dashed',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 30,
+  },
+  modelView: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 100,
+    height: 500,
+    backgroundColor: 'grey',
+  },
+  modelStyles: {
+    width: 100,
+    height: 500,
+    alignItems: 'center',
+    backgroundColor: 'grey',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 30,
   },
 });
 

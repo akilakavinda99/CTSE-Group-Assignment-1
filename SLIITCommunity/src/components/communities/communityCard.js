@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, StyleSheet, TouchableOpacity, View, Image } from "react-native";
 import { primaryColors } from '../../styles/colors';
 
 const CommunityCard = ({ communities }) => {
@@ -13,19 +13,24 @@ const CommunityCard = ({ communities }) => {
                 communities: communities,
             });
         }}>
-            <Text style={styles.title}>{communities.title}</Text>
-            <Text style={styles.faculty}>{communities.faculty}</Text>
-            <Text style={styles.created_at}>{communities.created_at}</Text>
+            <Image source={{uri: communities.image}} style={styles.image} resizeMode="cover" />
+            <View style={styles.textView}>
+                <Text style={styles.title}>{communities.title.substring(0, 15)}</Text>
+                <Text style={styles.faculty}>{communities.faculty.substring(0, 22)}</Text>
+                {/* <Text style={styles.created_at}>{communities.created_at}</Text> */}
+            </View>
         </TouchableOpacity>
     );
 }
 
 const styles = StyleSheet.create({
     mainView: {
-        width: "100%",
-        padding: 10,
+        width: "47%",
+        height:180,
         backgroundColor: "#fff",
-        marginTop: 10,
+        marginTop: 15,
+        marginRight: 5,
+        marginLeft: 5,
         borderRadius: 10,
         ...Platform.select({
           ios: {
@@ -38,24 +43,39 @@ const styles = StyleSheet.create({
             shadowRadius: 2,
           },
           android: {
-            elevation: 3,
+            elevation: 5,
           },
         }),
       },
+    image: {
+        width: "100%",
+        height: "70%",
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+    },
+    textView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 10,
+    },
     title: {
         width: "100%",
         fontSize: 16,
         fontWeight: "bold",
+        textAlign: "center",
     },
     created_at: {
         width: "100%",
         fontSize: 11,
+        textAlign: "center",
     },
     faculty: {
         width: "100%",
         fontSize: 12,
         fontWeight: 800,
-        color: primaryColors.primaryYellow
+        color: primaryColors.primaryYellow,
+        textAlign: "center",
     }
 });
 
