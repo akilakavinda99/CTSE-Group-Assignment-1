@@ -76,8 +76,8 @@ const ViewNotice = ({ route }) => {
                     {
                         signedInUser === owner &&
                         <View style={styles.modifyButtons}>
-                            <ButtonComponent onPress={editNotice} buttonText="Edit" />
-                            <ButtonComponent onPress={removeNotice} buttonText="Remove" />
+                            <ButtonComponent onPress={editNotice} buttonText="Edit" backgroundColor={primaryColors.primaryBlue} />
+                            <ButtonComponent onPress={removeNotice} buttonText="Remove" backgroundColor={primaryColors.primaryBlue} />
                         </View>
 
                     }

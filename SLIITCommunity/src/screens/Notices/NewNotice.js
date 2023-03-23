@@ -118,7 +118,7 @@ const NewNotice = ({ navigation }) => {
                         />
                     }
                     {!isFocused && <View style={{ height: 40 }} />}
-                    <ButtonComponent buttonText="Post" onPress={handleSubmit} />
+                    <ButtonComponent buttonText="Post" onPress={handleSubmit} backgroundColor={primaryColors.primaryBlue} />
                 </View>
             }
         </SafeAreaView>
