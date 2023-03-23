@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import SearchBar from "react-native-dynamic-search-bar";
 import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import Loading from '../../components/commonComponents/loading';
 import NoticeCard from '../../components/notices/noticeCard';
@@ -7,17 +8,29 @@ import { primaryColors } from '../../styles/colors';
 
 const ViewAllNotices = () => {
     const [notices, setNotices] = useState([]);
+    const [showingNotices, setShowingNotices] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
     const getNotices = () => {
         getDocumentOrderBy('notices', 'dateTime', 'desc')
             .then((res) => {
                 setNotices(res);
+                setShowingNotices(res);
                 // console.log(res);
             })
             .catch((err) => {
                 console.log(err);
             });
+    }
+
+    const onSearch = (text) => {
+        const filteredNotices = notices.filter((notice) => {
+            // fileter by subject and community
+            return notice.subject.toLowerCase().includes(text.toLowerCase()) ||
+                notice.community.toLowerCase().includes(text.toLowerCase());
+        });
+
+        setShowingNotices(filteredNotices);        
     }
 
     const onRefresh = () => {
@@ -32,6 +45,11 @@ const ViewAllNotices = () => {
 
     return (
         <SafeAreaView style={styles.mainView}>
+            <SearchBar
+                placeholder="Search here"
+                // onPress={() => alert("onPress")}
+                onChangeText={onSearch}
+            />
             <ScrollView
                 style={styles.scrollView}
                 refreshControl={
@@ -42,7 +60,7 @@ const ViewAllNotices = () => {
                 }
             >
                 {refreshing ? <Loading /> :
-                    notices.map((notice, index) => {
+                    showingNotices.map((notice, index) => {
                         return (
                             <NoticeCard key={index} notice={notice} />
                         )
@@ -58,10 +76,12 @@ const styles = StyleSheet.create({
     mainView: {
         backgroundColor: primaryColors.background,
         height: "100%",
+        paddingTop: 10,
     },
     scrollView: {
         width: "100%",
         paddingHorizontal: 16,
+        marginTop: 10,
     },
 });
 
