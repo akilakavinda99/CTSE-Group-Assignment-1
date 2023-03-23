@@ -1,29 +1,20 @@
-import React, {useRef, useState} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Platform,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
-import {RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
-import ButtonComponent from '../../components/commonComponents/buttonComponent';
-import Loading from '../../components/commonComponents/loading';
-import {toastComponent} from '../../components/commonComponents/toastComponent';
-import {getDateAndTime} from '../../services/commonFunctions';
+import React, { useRef, useState } from "react";
+import { View, Text, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { RichEditor, RichToolbar } from "react-native-pell-rich-editor";
+import ButtonComponent from "../../components/commonComponents/buttonComponent";
+import Loading from "../../components/commonComponents/loading";
+import { toastComponent } from "../../components/commonComponents/toastComponent";
+import Toast from 'react-native-toast-message';
+import { getDateAndTime } from "../../services/commonFunctions";
 import {SelectList} from 'react-native-dropdown-select-list';
-import {AppLayout, SCREEN_HEIGHT} from '../../styles/appStyles';
-import {updateDocument} from '../../services/firebaseServices';
-import {primaryColors} from '../../styles/colors';
+import { updateDocument } from "../../services/firebaseServices";
+import { primaryColors } from '../../styles/colors';
 
 const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
   const communities = route.params.communities;
   const richText = useRef();
   const [title, setTitle] = useState(communities.title);
-  const [newDescription, setnewDescription] = useState(communities.description);
+  const [newDescription, setNewDescription] = useState(communities.description);
   const [faculty, setFaculty] = React.useState(communities.faculty);
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +32,30 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
   ];
 
   const handleSubmit = async () => {
+    if (title.trim() === '') {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Community Title can not be empty❗',
+        });
+        return;
+      }
+      if (faculty.trim() === '') {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Faculty can not be empty❗',
+        });
+        return;
+      }
+      if (newDescription.trim() === '') {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Description can not be empty❗',
+        });
+        return;
+      }
     setIsLoading(true);
     const res = await updateDocument('communities', communities.id, {
       title,
@@ -55,6 +70,7 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
     } else {
       toastComponent('Error updating Community!', true);
     }
+
   };
 
   return (
@@ -63,7 +79,7 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
         <Loading />
       ) : (
         <View style={styles.mainView}>
-          <Text style={styles.headingStyle}>Update {title}</Text>
+          <Text style={styles.headingStyle}>Update Community</Text>
           <TextInput
             value={title}
             onChangeText={setTitle}
@@ -92,14 +108,14 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
 
           <View style={{marginBottom: 20}}></View>
           <ScrollView contentContainerStyle={styles.scrollView}>
-            <KeyboardAvoidingView
+            {/* <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              style={{width: '100%'}}>
+              style={{width: '100%'}}> */}
               <View style={styles.textEditorView}>
                 <RichEditor
                   ref={richText}
                   onChange={text => {
-                    setnewDescription(text);
+                    setNewDescription(text);
                   }}
                   initialHeight={250}
                   placeholder={'Enter Community Description'}
@@ -110,28 +126,32 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
                   onBlur={() => setIsFocused(false)}
                 />
               </View>
-            </KeyboardAvoidingView>
 
-            <View style={{marginBottom: 10}}>
+              <View style={{marginBottom: 10}}>
               <ButtonComponent
                 backgroundColor="#ffad00"
                 buttonText="Update Community"
                 onPress={handleSubmit}
               />
             </View>
-            <View style={{marginBottom: 10}}>
+            <View style={{marginBottom: 15}}>
               <ButtonComponent
                 backgroundColor="#58595a"
                 buttonText="Cancel"
                 onPress={() => goBack()}
               />
             </View>
+            
+            {/* </KeyboardAvoidingView> */}
+
+            
           </ScrollView>
 
           {isFocused && <RichToolbar editor={richText} />}
           {!isFocused && <View style={{height: 40}} />}
         </View>
       )}
+      <Toast />
     </SafeAreaView>
   );
 };
@@ -145,7 +165,6 @@ const styles = StyleSheet.create({
   mainView: {
     // height: SCREEN_HEIGHT,
     paddingHorizontal: 16,
-        paddingVertical: 40,
     height: "100%",
 
   },
@@ -153,6 +172,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: primaryColors.primaryBlue,
     fontWeight: 900,
+    marginTop:36,
     marginBottom: 50,
     textAlign: 'center',
   },
@@ -160,12 +180,16 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 8,
     marginBottom: 30,
+    
   },
   textEditorContainer: {
     borderRadius: 8,
+    height:20
+    
   },
   textEditor: {
     backgroundColor: '#E8E8E8',
+    
   },
   title: {
     width: 330,
