@@ -22,7 +22,8 @@ const UpdateNotice = ({ route, navigation }) => {
     const notice = route.params.notice;
     const [subject, setSubject] = useState(notice.subject);
     const [newNotice, setNewNotice] = useState(notice.notice);
-    const [community, setCommunity] = useState("");
+    const [community, setCommunity] = useState(notice.community);
+    const [communityId, setCommunityId] = useState("");
 
     getDataFromAsync(asyncStoreKeys.IT_NUMBER)
         .then((data) => {
@@ -33,6 +34,7 @@ const UpdateNotice = ({ route, navigation }) => {
         setIsLoading(true);
         const res = await updateDocument("notices", notice.id, {
             community: community,
+            communityId: communityId,
             subject,
             notice: newNotice,
             dateTime: getDateAndTime(),
@@ -51,6 +53,7 @@ const UpdateNotice = ({ route, navigation }) => {
     const selectCommunity = (val) => {
         const com = communities.filter((item) => item.key === val);
         setCommunity(com[0]?.value);
+        setCommunityId(com[0]?.id);
     }
 
     useEffect(() => {
@@ -61,6 +64,7 @@ const UpdateNotice = ({ route, navigation }) => {
                 res.forEach((item, key) => {
                     filtered.push({
                         key: key,
+                        id: item.id,
                         value: item.title,
                     });
                 });
@@ -82,7 +86,7 @@ const UpdateNotice = ({ route, navigation }) => {
                     <SelectList
                         setSelected={selectCommunity}
                         data={communities}
-                        placeholder="Select Community"
+                        placeholder={community == "" ? "Select Community" : community}
                         boxStyles={styles.selectListBox}
                         inputStyles={{ fontSize: 16, color: community == "" ? '#999' : '#000' }}
                         dropdownStyles={styles.selectListDropdown}

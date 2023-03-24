@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   Animated,
@@ -10,20 +10,14 @@ import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ViewAllCommunities from './Community/ViewAllCommunities';
 import ViewAllEvents from './EventManagement/ViewAllEvents';
-import NewNotice from './Notices/NewNotice';
 import ViewAllNotices from './Notices/ViewAllNotices';
+import Profile from './Profile';
 import * as Animatable from 'react-native-animatable';
-
-
-const Screen1 = () => {
-  return <View style={styles.screen1} />;
-};
-
-const Screen2 = () => {
-  return <View style={styles.screen2} />;
-};
+import ViewLostOrFound from './lostAndFoundScreens/viewLostOrFound';
 
 export default function Home({ screen }) {
+  const [showingTab, setShowingTab] = useState(screen ? screen : 'Notices');
+
   const _renderIcon = (routeName, selectedTab) => {
     let icon = '';
 
@@ -40,6 +34,9 @@ export default function Home({ screen }) {
       case 'Profile':
         icon = 'person-outline';
         break;
+      case 'LostOrFound':
+        icon = 'home-outline';
+        break;
     }
 
     return (
@@ -53,7 +50,10 @@ export default function Home({ screen }) {
   const renderTabBar = ({ routeName, selectedTab, navigate }) => {
     return (
       <TouchableOpacity
-        onPress={() => navigate(routeName)}
+        onPress={() => {
+          navigate(routeName)
+          setShowingTab(routeName)
+        }}
         style={styles.tabbarItem}
       >
         {_renderIcon(routeName, selectedTab)}
@@ -71,6 +71,7 @@ export default function Home({ screen }) {
       bgColor="white"
       initialRouteName={screen}
       borderTopLeftRight
+      screenOptions={{ headerShown: false }}
       renderCircle={({ selectedTab, navigate }) => {
         switch (selectedTab) {
           case 'Notices':
@@ -86,20 +87,20 @@ export default function Home({ screen }) {
                 </TouchableOpacity>
               </Animatable.View>
             );
-            
-            case 'Communities':
-              return (
-                <Animatable.View animation="bounceIn" iterationCount={"infinite"} direction="alternate" style={styles.btnCircleUp}>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                      navigate('New Community');
-                    }}
-                  >
-                    <Ionicons name={'add-outline'} color="white" size={40} />
-                  </TouchableOpacity>
-                </Animatable.View>
-              );  
+
+          case 'Communities':
+            return (
+              <Animatable.View animation="bounceIn" iterationCount={"infinite"} direction="alternate" style={styles.btnCircleUp}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    navigate('New Community');
+                  }}
+                >
+                  <Ionicons name={'add-outline'} color="white" size={40} />
+                </TouchableOpacity>
+              </Animatable.View>
+            );
 
           case 'Events':
             return (
@@ -114,7 +115,7 @@ export default function Home({ screen }) {
                 </TouchableOpacity>
               </Animated.View>
             );
-            
+
           default:
             return (
               <Animated.View style={styles.btnCircleUp}>
@@ -130,7 +131,7 @@ export default function Home({ screen }) {
       }}
       tabBar={renderTabBar}
     >
-      <CurvedBottomBar.Screen style={backgroundColor="red"}
+      <CurvedBottomBar.Screen style={backgroundColor = "red"}
         name="Notices"
         position="LEFT"
         component={() => <ViewAllNotices />}
@@ -141,14 +142,14 @@ export default function Home({ screen }) {
         position="LEFT"
       />
       <CurvedBottomBar.Screen
-        name="Communities"
-        component={() => <ViewAllCommunities />}
+        name="LostOrFound"
+        component={() => <ViewLostOrFound />}
         position="RIGHT"
       />
       <CurvedBottomBar.Screen
-        name="Profile"
+        name="Communities"
+        component={() => <ViewAllCommunities />}
         position="RIGHT"
-        component={() => <Profile />}
       />
     </CurvedBottomBar.Navigator>
   );

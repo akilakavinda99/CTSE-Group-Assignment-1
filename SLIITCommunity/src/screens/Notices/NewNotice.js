@@ -34,6 +34,7 @@ const NewNotice = ({ navigation }) => {
         const res = await addDocument("notices", {
             owner: signedInUser,
             community: community,
+            communityId: communityId,
             subject,
             notice: newNotice,
             dateTime: getDateAndTime(),

@@ -3,13 +3,11 @@ import SearchBar from "react-native-dynamic-search-bar";
 import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
 import Loading from '../../components/commonComponents/AppLoader';
 import NoticeCard from '../../components/notices/noticeCard';
-import { getDocumentOrderBy } from '../../services/firebaseServices';
+import { getDocumentsByFieldWithId } from '../../services/firebaseServices';
 import { primaryColors } from '../../styles/colors';
 import NetCheck from '../../components/commonComponents/netCheck';
-import HorizontalLine from '../../components/commonComponents/horizontalLine';
-import Header from '../../components/commonComponents/header';
 
-const ViewAllNotices = () => {
+const MyNotices = () => {
     const [notices, setNotices] = useState([]);
     const [showingNotices, setShowingNotices] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
@@ -17,7 +15,7 @@ const ViewAllNotices = () => {
 
     const getNotices = async () => {
         setRefreshing(true);
-        getDocumentOrderBy('notices', 'dateTime', 'desc')
+        getDocumentsByFieldWithId('notices', 'owner', 'IT20206284')
             .then((res) => {
                 setNotices(res);
                 setShowingNotices(res);
@@ -52,7 +50,6 @@ const ViewAllNotices = () => {
             <NetCheck />
             {refreshing ? <Loading /> :
                 <>
-                    <Header title={'Notices'} enableBack={false} />
                     <SearchBar
                         placeholder="Search here"
                         // onPress={() => alert("onPress")}
@@ -74,10 +71,7 @@ const ViewAllNotices = () => {
                             // refreshing ? <Loading /> :
                             showingNotices.map((notice, index) => {
                                 return (
-                                    <View key={index}>
-                                        <NoticeCard notice={notice} />
-                                        <HorizontalLine />
-                                    </View>
+                                    <NoticeCard key={index} notice={notice} />
                                 )
                             })
                         }
@@ -91,17 +85,15 @@ const ViewAllNotices = () => {
 
 const styles = StyleSheet.create({
     mainView: {
-        backgroundColor: primaryColors.primaryBlue,
+        backgroundColor: primaryColors.background,
         height: "100%",
+        paddingTop: 10,
     },
     scrollView: {
         width: "100%",
         paddingHorizontal: 16,
         marginTop: 10,
-        backgroundColor: "#fff",
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
     },
 });
 
-export default ViewAllNotices;
+export default MyNotices;

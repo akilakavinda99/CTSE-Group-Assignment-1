@@ -3,23 +3,32 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const Header = ({ title}) => {
+const Header = ({ title, enableBack }) => {
     const navigation = useNavigation();
 
     const goBack = () => {
         navigation.goBack();
     };
 
+    const goProfile = () => {
+        navigation.navigate("Profile");
+    };
+
     return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={goBack}>
-                <Ionicons name="chevron-back-outline" size={30} color="#fff" />
-            </TouchableOpacity>
+        <View style={[
+            styles.container,
+            enableBack ? { justifyContent: "space-between" } : { justifyContent: "space-between" },
+        ]}>
+            {enableBack ? (
+                <TouchableOpacity onPress={goBack}>
+                    <Ionicons name="chevron-back-outline" size={30} color="#fff" />
+                </TouchableOpacity>
+            ) : <View style={{ width: 25 }} />}
             <Text style={styles.headding}>{title}</Text>
-            <View style={{ width: 50 }} />
-            {/* <TouchableOpacity onPress={goBack}>
-                <Ionicons name="ellipsis-horizontal-outline" size={30} color="#fff" />
-            </TouchableOpacity> */}
+            {/* <View style={{ width: 50 }} /> */}
+            <TouchableOpacity onPress={goProfile}>
+                <Ionicons name="person-outline" size={25} color="#fff" />
+            </TouchableOpacity>
         </View>
     );
 }
@@ -33,10 +42,9 @@ const styles = StyleSheet.create({
         height: 55,
         alignItems: "center",
         paddingHorizontal: 15,
-        justifyContent: "space-between",
     },
     headding: {
-        fontSize: 20,
+        fontSize: 24,
         color: "#fff",
         fontWeight: "500",
         marginLeft: 15,
