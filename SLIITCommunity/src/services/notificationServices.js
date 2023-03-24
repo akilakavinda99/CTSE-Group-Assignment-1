@@ -12,6 +12,10 @@ Reffered from:
 
 ***********/
 
+// Collection references
+const communityRef = firestore().collection('communities')
+const userRef = firestore().collection('Users')
+
 // Get the device token
 export const getMessagingToken = async () => {
     const fcmToken = await messaging().getToken();
@@ -35,7 +39,7 @@ export const updateMessagingToken = async (token, itNumber) => {
             await ref.update({
                 messagingToken: token
             });
-        } 
+        }
     } catch (error) {
         console.log(error);
     }
@@ -44,19 +48,14 @@ export const updateMessagingToken = async (token, itNumber) => {
 // Subscribe to a community
 export const subscribeCommunity = async (communityId, itNumber) => {
     try {
-        const ref = firestore()
-            .collection('subscriptions')
-            .doc(communityId)
-        const doc = await ref.get();
-        if (doc._exists) {
-            await ref.update({
-                users: firestore.FieldValue.arrayUnion(itNumber)
-            });
-        } else {
-            await ref.set({
-                users: [itNumber]
-            });
-        }
+        await communityRef.doc(communityId).update({
+            subscribers: firestore.FieldValue.arrayUnion(itNumber)
+        });
+
+        await userRef.doc(itNumber).update({
+            subscribedCommunities: firestore.FieldValue.arrayUnion(communityId)
+        });
+
     } catch (error) {
         console.log(error);
     }
@@ -65,15 +64,13 @@ export const subscribeCommunity = async (communityId, itNumber) => {
 // Unsubscribe from a community
 export const unsubscribeCommunity = async (communityId, itNumber) => {
     try {
-        const ref = firestore()
-            .collection('subscriptions')
-            .doc(communityId)
-        const doc = await ref.get();
-        if (doc._exists) {
-            await ref.update({
-                users: firestore.FieldValue.arrayRemove(itNumber)
-            });
-        }
+        await communityRef.doc(communityId).update({
+            subscribers: firestore.FieldValue.arrayRemove(itNumber)
+        });
+
+        await userRef.doc(itNumber).update({
+            subscribedCommunities: firestore.FieldValue.arrayRemove(communityId)
+        });
     } catch (error) {
         console.log(error);
     }

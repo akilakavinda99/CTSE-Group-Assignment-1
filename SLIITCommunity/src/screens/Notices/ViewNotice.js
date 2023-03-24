@@ -137,6 +137,9 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         flexDirection: 'row',
         flexWrap: 'wrap',
+        borderWidth: 2,
+        borderColor: "#fff",
+        elevation: 10,
     },
     image: {
         width: 100,
