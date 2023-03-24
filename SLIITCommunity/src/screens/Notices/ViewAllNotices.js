@@ -5,6 +5,7 @@ import Loading from '../../components/commonComponents/loading';
 import NoticeCard from '../../components/notices/noticeCard';
 import { getDocumentOrderBy } from '../../services/firebaseServices';
 import { primaryColors } from '../../styles/colors';
+import NetCheck from '../../components/commonComponents/netCheck';
 
 const ViewAllNotices = () => {
     const [notices, setNotices] = useState([]);
@@ -30,7 +31,7 @@ const ViewAllNotices = () => {
                 notice.community.toLowerCase().includes(text.toLowerCase());
         });
 
-        setShowingNotices(filteredNotices);        
+        setShowingNotices(filteredNotices);
     }
 
     const onRefresh = () => {
@@ -45,6 +46,7 @@ const ViewAllNotices = () => {
 
     return (
         <SafeAreaView style={styles.mainView}>
+            <NetCheck />
             <SearchBar
                 placeholder="Search here"
                 // onPress={() => alert("onPress")}
