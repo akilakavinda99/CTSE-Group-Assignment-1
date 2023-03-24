@@ -12,4 +12,10 @@ export const AppLayout = {
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  flexRowBetween: {
+    flex: 1,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
 };

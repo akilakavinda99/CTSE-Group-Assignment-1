@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, RefreshControl} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import LostOrFoundPost from '../../components/lostOrFoundComponents/lostOrFoundPost';
 import {getDataFromAsync} from '../../constants/asyncStore';
@@ -9,8 +16,9 @@ import {
   getDocumentsByField,
   getDocumentsByFieldWithId,
 } from '../../services/firebaseServices';
+import {primaryColors} from '../../styles/colors';
 
-const ViewLostOrFound = () => {
+const ViewLostOrFound = ({navigation}) => {
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -41,7 +49,7 @@ const ViewLostOrFound = () => {
 
   return (
     <View>
-      <Text>Your Items</Text>
+      <Text style={viewMyLostAndFoundStyles.headingStyle}>Your Items</Text>
       <FlatList
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -55,5 +63,16 @@ const ViewLostOrFound = () => {
     </View>
   );
 };
+
+const viewMyLostAndFoundStyles = StyleSheet.create({
+  headingStyle: {
+    fontSize: 30,
+    textAlign: 'center',
+    marginTop: 20,
+    color: primaryColors.primaryBlue,
+    fontWeight: 600,
+    marginBottom: 30,
+  },
+});
 
 export default ViewLostOrFound;

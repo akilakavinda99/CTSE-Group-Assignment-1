@@ -168,7 +168,7 @@ const AddLostOrFound = () => {
               dropdownItemStyles={{marginHorizontal: 10}}
               dropdownTextStyles={{color: 'black'}}
               setSelected={setSelected}
-              placeholder={'Did you lost it or found it?'}
+              placeholder={'Did you lost something or found something ?'}
               maxHeight={100}
               data={data}
               save="value"

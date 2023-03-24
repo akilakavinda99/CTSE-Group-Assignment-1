@@ -28,7 +28,7 @@ const RootNavigations = () => {
       <Stack.Screen
         name="Login"
         component={Login}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Register"
@@ -48,22 +48,22 @@ const RootNavigations = () => {
       <Stack.Screen
         name="Home"
         component={Home}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="New Community"
         component={NewCommunity}
-        options={{ headerShown: true }}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="Update Community"
         component={UpdateCommunity}
-        options={{ headerShown: true }}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="View Community"
         component={ViewCommunity}
-        options={{ headerShown: true }}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="New Notice"
