@@ -12,7 +12,11 @@ import LostOrFoundPost from '../../components/lostOrFoundComponents/lostOrFoundP
 import {getDataFromAsync} from '../../constants/asyncStore';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
 import collectionNames from '../../constants/collectionNames';
-import {getDocuments} from '../../services/firebaseServices';
+import {
+  getDocumentOrderBy,
+  getDocuments,
+} from '../../services/firebaseServices';
+import {primaryColors} from '../../styles/colors';
 
 const AllLostOrFound = () => {
   const [posts, setPosts] = useState([]);
@@ -22,7 +26,11 @@ const AllLostOrFound = () => {
   const getMyLostOrFound = async () => {
     const itNumber = await getDataFromAsync(asyncStoreKeys.IT_NUMBER);
     setid(itNumber);
-    const posts = await getDocuments(collectionNames.LOST_FOUND_COLLECTION);
+    const posts = await getDocumentOrderBy(
+      collectionNames.LOST_FOUND_COLLECTION,
+      'PostedDate',
+      'asc',
+    );
     console.log(posts);
     setPosts(posts);
   };
@@ -38,7 +46,8 @@ const AllLostOrFound = () => {
   }, []);
 
   return (
-    <View>
+    <View style={allLostOrFoundStyles.container}>
+      <Text style={allLostOrFoundStyles.headingStyle}>All Lost Or Found</Text>
       <FlatList
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -52,5 +61,19 @@ const AllLostOrFound = () => {
     </View>
   );
 };
+
+const allLostOrFoundStyles = StyleSheet.create({
+  container: {
+    paddingBottom: 150, // add padding to the bottom of the container
+  },
+  headingStyle: {
+    fontSize: 30,
+    textAlign: 'center',
+    marginTop: 20,
+    color: primaryColors.primaryBlue,
+    fontWeight: 600,
+    marginBottom: 30,
+  },
+});
 
 export default AllLostOrFound;
