@@ -13,6 +13,8 @@ import {AppLayout, SCREEN_HEIGHT} from '../../styles/appStyles';
 
 const ViewSingleLostorFOund = ({route}) => {
   const post = route.params.post;
+  const id = route.params.id;
+
   return (
     <ScrollView>
       <Image
@@ -31,17 +33,21 @@ const ViewSingleLostorFOund = ({route}) => {
           <Text style={viewSingleLostorFOundStyles.type}>
             {post.Type.toUpperCase()}
           </Text>
-          <View>
+          <ScrollView style={{width: '100%', height: 150, marginTop: 30}}>
             <Text style={viewSingleLostorFOundStyles.description}>
               {post.ItemDescription}
             </Text>
-          </View>
+          </ScrollView>
         </View>
-        <View style={viewSingleLostorFOundStyles.buttonWrapper}>
-          <ButtonComponent backgroundColor="blue" buttonText="Edit" />
+        {post.itNumber == id ? (
+          <View style={viewSingleLostorFOundStyles.buttonWrapper}>
+            <ButtonComponent backgroundColor="blue" buttonText="Edit" />
 
-          <ButtonComponent backgroundColor="red" buttonText="Delete" />
-        </View>
+            <ButtonComponent backgroundColor="red" buttonText="Delete" />
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
     </ScrollView>
   );
@@ -80,9 +86,10 @@ const viewSingleLostorFOundStyles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonWrapper: {
-    marginTop: 30,
+    marginTop: SCREEN_HEIGHT / 10,
     marginLeft: 20,
     marginRight: 20,
+    // marginBottom: SCREEN_HEIGHT / 10,
   },
 });
 

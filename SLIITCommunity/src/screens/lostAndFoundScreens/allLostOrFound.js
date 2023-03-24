@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -9,13 +9,19 @@ import {
   RefreshControl,
 } from 'react-native';
 import LostOrFoundPost from '../../components/lostOrFoundComponents/lostOrFoundPost';
+import {getDataFromAsync} from '../../constants/asyncStore';
+import asyncStoreKeys from '../../constants/asyncStoreKeys';
+import collectionNames from '../../constants/collectionNames';
 import {getDocuments} from '../../services/firebaseServices';
 
 const AllLostOrFound = () => {
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [id, setid] = useState('');
 
   const getMyLostOrFound = async () => {
+    const itNumber = await getDataFromAsync(asyncStoreKeys.IT_NUMBER);
+    setid(itNumber);
     const posts = await getDocuments(collectionNames.LOST_FOUND_COLLECTION);
     console.log(posts);
     setPosts(posts);
@@ -39,7 +45,7 @@ const AllLostOrFound = () => {
         }
         data={posts}
         renderItem={({item}) => (
-          <LostOrFoundPost post={item.data} id={item.id} key={item.id} />
+          <LostOrFoundPost post={item} id={id} key={item.id} />
         )}
         keyExtractor={item => item.id}
       />
