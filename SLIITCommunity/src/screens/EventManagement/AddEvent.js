@@ -120,14 +120,14 @@ const AddEvent = () => {
       });
       return;
     }
-    // if (selectedDate === null) {
-    //   Toast.show({
-    //     type: 'error',
-    //     text1: 'Error',
-    //     text2: 'Please select a date',
-    //   });
-    //   return;
-    // }
+    if (selectedDate === null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please select a date',
+      });
+      return;
+    }
     // if (selectedTime === null) {
     //   Toast.show({
     //     type: 'error',
@@ -136,6 +136,8 @@ const AddEvent = () => {
     //   });
     //   return;
     // }
+      console.log("selectedDate", selectedDate);
+
     setIsLoading(true);
     const url = await imageUploadService(title, image);
     const res = addDocument('events', {
@@ -156,11 +158,22 @@ const AddEvent = () => {
     }
   };
 
+  const DateChange = (selectedDate) => {
+    console.log("Date", selectedDate);
+    setSelectedDate(selectedDate);
+  }
+
+  const TimeChange = (selectedTime) => {
+    console.log("Time", selectedTime);
+    setSelectedTime(selectedTime);
+  }
+
   return (
     <SafeAreaView style={{ width: "100%", height: "100%" }}>
       {isLoading ? <Loading /> :
         <View style={styles.container}>
           <SafeAreaView style={[AppLayout.flexColumnCentered, styles.mainView]}>
+            <ScrollView contentContainerStyle={styles.scrollView}>
             <TextInput
               value={title}
               onChangeText={setTitle}
@@ -168,14 +181,14 @@ const AddEvent = () => {
               style={styles.title}
             />
 
-            {/* <MyDateTimePicker
+            <MyDateTimePicker
               value={selectedDate}
-              onchange={setSelectedDate}
+              onchange={DateChange}
             />
 
-            <TimePicker
+            {/* <TimePicker
               value={selectedTime}
-              onchange={setSelectedTime}
+              onchange={TimeChange}
             /> */}
 
             <TextInput
@@ -184,7 +197,6 @@ const AddEvent = () => {
               placeholder={'Enter Event Venue'}
               style={styles.title}
             />
-            <ScrollView contentContainerStyle={styles.scrollView}>
               <View style={styles.textEditorView}>
                 <RichEditor
                   ref={richText}
