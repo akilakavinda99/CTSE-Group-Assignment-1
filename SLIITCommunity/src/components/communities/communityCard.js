@@ -16,6 +16,13 @@ const CommunityCard = ({ communities, index }) => {
             });
         }}>
             <Image source={{uri: communities.image}} style={styles.image} resizeMode="cover" />
+            {/* <View
+            style={{
+              borderBottomWidth: 1,
+              borderStyle: 'dashed',
+              backgroundColor: '#E8E8E8',
+            }}
+          /> */}
             <View style={styles.textView}>
                 <Text style={styles.title}>{communities.title.substring(0, 15)}</Text>
                 <Text style={styles.faculty}>{communities.faculty.substring(0, 22)}</Text>
@@ -30,7 +37,7 @@ const styles = StyleSheet.create({
     mainView: {
         width: "47%",
         height:180,
-        backgroundColor: "#fff",
+        backgroundColor: "#f2f3ff",
         marginTop: 15,
         marginRight: 5,
         marginLeft: 5,
@@ -46,7 +53,7 @@ const styles = StyleSheet.create({
             shadowRadius: 2,
           },
           android: {
-            elevation: 3,
+            elevation: 8,
           },
         }),
       },
