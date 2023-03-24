@@ -9,7 +9,6 @@ import { getDocument } from "../services/firebaseServices";
 import AppLoader from "../components/commonComponents/AppLoader";
 import { useNavigation } from "@react-navigation/native";
 import { toastComponent } from "../components/commonComponents/toastComponent";
-import Header from "../components/commonComponents/header";
 
 const ProfileButton = ({ name, logout }) => {
     const navigate = useNavigation();
@@ -54,7 +53,6 @@ const Profile = () => {
             {loading ?
                 <AppLoader /> :
                 <>
-                    <Header title={'User Profile'} enableBack={true} />
                     <View style={styles.profileView}>
                         <Image
                             style={styles.profileImage}

@@ -8,6 +8,8 @@ import { primaryColors } from '../../styles/colors';
 import NetCheck from '../../components/commonComponents/netCheck';
 import HorizontalLine from '../../components/commonComponents/horizontalLine';
 import Header from '../../components/commonComponents/header';
+import * as Animatable from 'react-native-animatable';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const ViewAllNotices = () => {
     const [notices, setNotices] = useState([]);
@@ -61,28 +63,46 @@ const ViewAllNotices = () => {
                         onClearPress={() => onSearch("")}
                         placeholderTextColor={"#8e8e8e"}
                     />
-                    <ScrollView
-                        style={styles.scrollView}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={refreshing}
-                                getNotices={getNotices}
-                            />
-                        }
-                    >
-                        {
-                            // refreshing ? <Loading /> :
-                            showingNotices.map((notice, index) => {
-                                return (
-                                    <View key={index}>
-                                        <NoticeCard notice={notice} />
-                                        <HorizontalLine />
-                                    </View>
-                                )
-                            })
-                        }
-                        <View style={{ height: 90 }} />
-                    </ScrollView>
+                    {showingNotices.length == 0 ?
+                        <View style={[styles.scrollView, {
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }]}>
+                            <Animatable.Text animation="slideInDown" iterationCount={1} direction="alternate" style={styles.emptyText}>Oops!</Animatable.Text>
+                            <Animatable.Text animation="slideInDown" iterationCount={1} direction="alternate" style={styles.emptyText}>No notice available</Animatable.Text>
+                            <Animatable.Text animation="slideInDown" iterationCount={1} direction="alternate">
+                                <Ionicons
+                                    name="ios-sad-outline"
+                                    size={39}
+                                    color="#58595a"
+                                    style={{ marginTop: 10 }}
+                                />
+                            </Animatable.Text>
+                        </View> :
+                        <ScrollView
+                            style={styles.scrollView}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    getNotices={getNotices}
+                                />
+                            }
+                        >
+                            {
+                                // refreshing ? <Loading /> :
+                                showingNotices.map((notice, index) => {
+                                    return (
+                                        <View key={index}>
+                                            <NoticeCard notice={notice} />
+                                            <HorizontalLine />
+                                        </View>
+                                    )
+                                })
+                            }
+                            <View style={{ height: 90 }} />
+                        </ScrollView>
+                    }
                 </>
             }
         </SafeAreaView>
@@ -101,6 +121,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
+    },
+    emptyText: {
+        fontSize: 20,
+        fontWeight: 900,
+        color: primaryColors.darkGrey,
+        marginTop: 5,
     },
 });
 
