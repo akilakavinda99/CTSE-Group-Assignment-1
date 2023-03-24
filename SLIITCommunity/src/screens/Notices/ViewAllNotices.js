@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SearchBar from "react-native-dynamic-search-bar";
-import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from "react-native";
-import Loading from '../../components/commonComponents/loading';
+import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
+import Loading from '../../components/commonComponents/AppLoader';
 import NoticeCard from '../../components/notices/noticeCard';
 import { getDocumentOrderBy } from '../../services/firebaseServices';
 import { primaryColors } from '../../styles/colors';
@@ -11,20 +11,26 @@ const ViewAllNotices = () => {
     const [notices, setNotices] = useState([]);
     const [showingNotices, setShowingNotices] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [searchText, setSearchText] = useState("");
 
-    const getNotices = () => {
+    const getNotices = async () => {
+        setRefreshing(true);
         getDocumentOrderBy('notices', 'dateTime', 'desc')
             .then((res) => {
                 setNotices(res);
                 setShowingNotices(res);
                 // console.log(res);
+                setRefreshing(false);
             })
             .catch((err) => {
                 console.log(err);
+                setRefreshing(false);
             });
+
     }
 
     const onSearch = (text) => {
+        setSearchText(text);
         const filteredNotices = notices.filter((notice) => {
             // fileter by subject and community
             return notice.subject.toLowerCase().includes(text.toLowerCase()) ||
@@ -34,42 +40,45 @@ const ViewAllNotices = () => {
         setShowingNotices(filteredNotices);
     }
 
-    const onRefresh = () => {
-        setRefreshing(true);
-        getNotices();
-        setRefreshing(false);
-    }
 
     useEffect(() => {
-        onRefresh();
+        getNotices();
     }, []);
 
     return (
         <SafeAreaView style={styles.mainView}>
             <NetCheck />
-            <SearchBar
-                placeholder="Search here"
-                // onPress={() => alert("onPress")}
-                onChangeText={onSearch}
-            />
-            <ScrollView
-                style={styles.scrollView}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
+            {refreshing ? <Loading /> :
+                <>
+                    <SearchBar
+                        placeholder="Search here"
+                        // onPress={() => alert("onPress")}
+                        onChangeText={onSearch}
+                        clearIconComponent={searchText == "" ? <View /> : <Text>Clear</Text>}
+                        onClearPress={() => onSearch("")}
+                        placeholderTextColor={"#8e8e8e"}
                     />
-                }
-            >
-                {refreshing ? <Loading /> :
-                    showingNotices.map((notice, index) => {
-                        return (
-                            <NoticeCard key={index} notice={notice} />
-                        )
-                    })
-                }
-                <View style={{ height: 90 }} />
-            </ScrollView>
+                    <ScrollView
+                        style={styles.scrollView}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                getNotices={getNotices}
+                            />
+                        }
+                    >
+                        {
+                            // refreshing ? <Loading /> :
+                            showingNotices.map((notice, index) => {
+                                return (
+                                    <NoticeCard key={index} notice={notice} />
+                                )
+                            })
+                        }
+                        <View style={{ height: 90 }} />
+                    </ScrollView>
+                </>
+            }
         </SafeAreaView>
     );
 }

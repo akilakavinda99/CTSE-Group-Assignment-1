@@ -3,7 +3,7 @@ import { View, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollVi
 import { RichEditor, RichToolbar } from "react-native-pell-rich-editor";
 import { SelectList } from 'react-native-dropdown-select-list'
 import ButtonComponent from "../../components/commonComponents/buttonComponent";
-import Loading from "../../components/commonComponents/loading";
+import Loading from "../../components/commonComponents/AppLoader";
 import { toastComponent } from "../../components/commonComponents/toastComponent";
 import { getDataFromAsync } from "../../constants/asyncStore";
 import asyncStoreKeys from "../../constants/asyncStoreKeys";
