@@ -8,8 +8,8 @@ const EventCard = ({ events }) => {
     return (
         <TouchableOpacity style={styles.mainView}
         onPress={() => {
-            navigation.navigate("", {
-                // communities: communities,
+            navigation.navigate("ViewEvent", {
+                events: events,
             });
         }}>
             <Text style={styles.title}>{events.title}</Text>
