@@ -7,7 +7,7 @@ import Loading from "../../components/commonComponents/loading";
 import { toastComponent } from "../../components/commonComponents/toastComponent";
 import { getDataFromAsync } from "../../constants/asyncStore";
 import asyncStoreKeys from "../../constants/asyncStoreKeys";
-import { filterFields, getDateAndTime } from "../../services/commonFunctions";
+import { getDateAndTime } from "../../services/commonFunctions";
 import { addDocument, getDocumentsByField } from "../../services/firebaseServices";
 import { sendNotification } from "../../services/notificationServices";
 import { primaryColors } from '../../styles/colors';
@@ -54,7 +54,7 @@ const NewNotice = ({ navigation }) => {
 
     const selectCommunity = (val) => {
         const com = communities.filter((item) => item.key === val);
-        setCommunity(com[0].value);
+        setCommunity(com[0]?.value);
     }
 
     useEffect(() => {
@@ -178,7 +178,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         fontSize: 16,
     },
-
 });
 
 export default NewNotice;
