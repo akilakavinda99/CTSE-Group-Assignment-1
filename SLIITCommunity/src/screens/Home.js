@@ -12,7 +12,8 @@ import ViewAllCommunities from './Community/ViewAllCommunities';
 import ViewAllEvents from './EventManagement/ViewAllEvents';
 import NewNotice from './Notices/NewNotice';
 import ViewAllNotices from './Notices/ViewAllNotices';
-import Profile from './Profile';
+import * as Animatable from 'react-native-animatable';
+
 
 const Screen1 = () => {
   return <View style={styles.screen1} />;
@@ -74,30 +75,32 @@ export default function Home({ screen }) {
         switch (selectedTab) {
           case 'Notices':
             return (
-              <Animated.View style={styles.btnCircleUp}>
+              <Animatable.View animation="bounceIn" iterationCount={"infinite"} direction="alternate" style={styles.btnCircleUp}>
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
                     navigate('New Notice');
                   }}
                 >
-                  <Ionicons name={'add-outline'} color="gray" size={40} />
+                  <Ionicons name={'add-outline'} color="white" size={40} />
                 </TouchableOpacity>
-              </Animated.View>
+              </Animatable.View>
             );
-          case 'Communities':
-            return (
-              <Animated.View style={styles.btnCircleUp}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    navigate('NewCommunity');
-                  }}
-                >
-                  <Ionicons name={'add-outline'} color="gray" size={40} />
-                </TouchableOpacity>
-              </Animated.View>
-            );
+            
+            case 'Communities':
+              return (
+                <Animatable.View animation="bounceIn" iterationCount={"infinite"} direction="alternate" style={styles.btnCircleUp}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      navigate('New Community');
+                    }}
+                  >
+                    <Ionicons name={'add-outline'} color="white" size={40} />
+                  </TouchableOpacity>
+                </Animatable.View>
+              );  
+
           case 'Events':
             return (
               <Animated.View style={styles.btnCircleUp}>
@@ -111,6 +114,7 @@ export default function Home({ screen }) {
                 </TouchableOpacity>
               </Animated.View>
             );
+            
           default:
             return (
               <Animated.View style={styles.btnCircleUp}>
@@ -118,7 +122,7 @@ export default function Home({ screen }) {
                   style={styles.button}
                   onPress={() => Alert.alert('Click Action')}
                 >
-                  <Ionicons name={'apps-sharp'} color="gray" size={25} />
+                  <Ionicons name={'apps-sharp'} color="white" size={25} />
                 </TouchableOpacity>
               </Animated.View>
             );
@@ -126,7 +130,7 @@ export default function Home({ screen }) {
       }}
       tabBar={renderTabBar}
     >
-      <CurvedBottomBar.Screen
+      <CurvedBottomBar.Screen style={backgroundColor="red"}
         name="Notices"
         position="LEFT"
         component={() => <ViewAllNotices />}
@@ -175,7 +179,7 @@ export const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#E8E8E8',
+    backgroundColor: '#242D66',
     bottom: 18,
     shadowColor: '#000',
     shadowOffset: {

@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, Dimensions } from "react-native";
-import Loading from '../../components/commonComponents/loading';
+import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, Dimensions, Animated } from "react-native";
 import CommunityCard from '../../components/communities/communityCard';
 import { getDocumentOrderBy } from '../../services/firebaseServices';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { primaryColors } from '../../styles/colors';
 import AppLoader from '../../components/commonComponents/AppLoader';
+import NetCheck from '../../components/commonComponents/netCheck';
+import SearchBar from "react-native-dynamic-search-bar";
+import * as Animatable from 'react-native-animatable';
 
 const ViewAllCommunities = () => {
   const [communities, setCommunities] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showingCommunities, setShowingCommunities] = useState([]);
 
   const getCommunities = () => {
     getDocumentOrderBy('communities', 'created_at', 'desc')
       .then((res) => {
         setCommunities(res);
+        setShowingCommunities(res);
       })
       .catch((err) => {
         console.log(err);
@@ -24,6 +28,16 @@ const ViewAllCommunities = () => {
         setLoading(false);
       });
   };
+
+  const onSearch = (text) => {
+    const filteredCommunities = communities.filter((communities) => {
+        return communities.title.toLowerCase().includes(text.toLowerCase()) ||
+            communities.faculty.toLowerCase().includes(text.toLowerCase()) ||
+            communities.description.toLowerCase().includes(text.toLowerCase());
+    });
+
+    setShowingCommunities(filteredCommunities);
+}
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -39,9 +53,18 @@ const ViewAllCommunities = () => {
 
   return (
     <SafeAreaView style={styles.mainView}>
+      <NetCheck />
+      <Animatable.View animation="pulse" iterationCount={"infinite"} direction="alternate">
+            <SearchBar
+                placeholder="Search Communities"
+                style={{marginTop:10, marginBottom:10}}
+                onChangeText={onSearch}
+            />
+            </Animatable.View>
       {loading ? (
         <AppLoader />
       ) : (
+      
         <ScrollView
           style={styles.scrollView}
           refreshControl={
@@ -55,9 +78,11 @@ const ViewAllCommunities = () => {
             }
           ]}
         >
+          
           {communities.length > 0 ? (
-            <View style={{ flexWrap: 'wrap', flexDirection: 'row' }}>
-              {communities.map((community, index) => {
+            <View style={{ flexWrap: 'wrap', flexDirection: 'row', marginBottom:80 }}>
+              {loading ? <AppLoader /> :
+                    showingCommunities.map((community, index) => {
                 return (
                   <CommunityCard
                     key={index}
@@ -68,15 +93,17 @@ const ViewAllCommunities = () => {
               })}
             </View>
           ) : (
-            <View style={styles.emptyView}>
-              <Text style={styles.emptyText}>Oops!</Text>
-              <Text style={styles.emptyText}>No communities available</Text>
+            <View style={[styles.emptyView]}>
+              <Animatable.Text animation="slideInDown" iterationCount={"infinite"} direction="alternate" style={styles.emptyText}>Oops!</Animatable.Text>
+              <Animatable.Text animation="slideInDown" iterationCount={"infinite"} direction="alternate" style={styles.emptyText}>No communities available</Animatable.Text>
+              <Animatable.Text animation="slideInDown" iterationCount={"infinite"} direction="alternate">
               <Ionicons
                 name="ios-sad-outline"
                 size={39}
                 color="#58595a"
                 style={{ marginTop: 10 }}
               />
+              </Animatable.Text>
             </View>
           )}
         </ScrollView>
@@ -87,7 +114,7 @@ const ViewAllCommunities = () => {
 
 const styles = StyleSheet.create({
   mainView: {
-    backgroundColor: "#cae3eb",
+    // backgroundColor: "#cae3eb",
     height: "100%",
   },
   scrollView: {

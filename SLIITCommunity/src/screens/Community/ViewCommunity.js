@@ -8,17 +8,17 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import { RichEditor } from 'react-native-pell-rich-editor';
+import {RichEditor} from 'react-native-pell-rich-editor';
+import AppLoader from '../../components/commonComponents/AppLoader';
 import ButtonComponent from '../../components/commonComponents/buttonComponent';
-import Loading from '../../components/commonComponents/loading';
-import { toastComponent } from '../../components/commonComponents/toastComponent';
-import { getDataFromAsync } from '../../constants/asyncStore';
+import {toastComponent} from '../../components/commonComponents/toastComponent';
+import {getDataFromAsync} from '../../constants/asyncStore';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
-import { deleteDocument, getDocument } from '../../services/firebaseServices';
-import { primaryColors } from '../../styles/colors';
-import { subscribeCommunity, unsubscribeCommunity } from '../../services/notificationServices';
+import {deleteDocument} from '../../services/firebaseServices';
+import {primaryColors} from '../../styles/colors';
+import * as Animatable from 'react-native-animatable';
 
-const ViewCommunity = ({ route, navigation: { goBack } }) => {
+const ViewCommunity = ({route}) => {
   const [signedInUser, setSignedInUser] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
@@ -41,12 +41,7 @@ const ViewCommunity = ({ route, navigation: { goBack } }) => {
   }, [isLoading, signedInUser]);
 
   const editCommunity = () => {
-    navigation.navigate('UpdateCommunity', { communities });
-  };
-
-  const gohome = () => {
-    navigation.navigate('Home');
-  };
+    navigation.navigate('Update Community', {communities});
 
   const handleDelete = () => {
     setIsLoading(true);
@@ -91,7 +86,7 @@ const ViewCommunity = ({ route, navigation: { goBack } }) => {
   return (
     <SafeAreaView style={styles.mainView}>
       {isLoading ? (
-        <Loading />
+        <AppLoader />
       ) : (
         <View style={styles.bodyCard}>
           <Text style={styles.title}>{communities.title.substring(0, 40)}</Text>
@@ -101,10 +96,13 @@ const ViewCommunity = ({ route, navigation: { goBack } }) => {
             style={{
               borderBottomWidth: 1,
               borderStyle: 'dashed',
+              marginBottom:10
             }}
           />
-          <ScrollView contentContainerStyle={styles.scrollView}>
-            <View style={styles.textEditorView}>
+          
+          <ScrollView contentContainerStyle={styles.scrollView}
+          showsVerticalScrollIndicator={false}>
+            <Animatable.View animation="fadeInUp"  iterationCount={1} direction="alternate" style={styles.textEditorView}>
               <RichEditor
                 initialHeight={150}
                 disabled={true}
@@ -112,7 +110,7 @@ const ViewCommunity = ({ route, navigation: { goBack } }) => {
                 editorStyle={styles.textEditor}
                 containerStyle={styles.textEditorContainer}
               />
-            </View>
+            </Animatable.View>
           </ScrollView>
           <View>
             {signedInUser === itNumber ? (
@@ -144,15 +142,10 @@ const ViewCommunity = ({ route, navigation: { goBack } }) => {
                 }
               </View>
             )}
-            <View style={styles.modifyButtonsback}>
-              <ButtonComponent
-                backgroundColor="#58595a"
-                onPress={gohome}
-                buttonText="Back"
-              />
-            </View>
+  
           </View>
         </View>
+        
       )}
     </SafeAreaView>
   );
@@ -166,7 +159,10 @@ const styles = StyleSheet.create({
   bodyCard: {
     backgroundColor: '#fff',
     // borderRadius: 8,
-    padding: 16,
+    paddingBottom: 16,
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingTop: 5,
     width: '100%',
     height: '100%',
   },
@@ -176,7 +172,6 @@ const styles = StyleSheet.create({
   },
   textEditorContainer: {
     borderRadius: 8,
-    marginTop: 10,
     justifyContent: 'center',
   },
   textEditor: {
@@ -186,7 +181,7 @@ const styles = StyleSheet.create({
     width: '100%',
     fontSize: 25,
     fontWeight: 900,
-    marginBottom: 10,
+    marginBottom: 0,
     marginTop: 20,
     textAlign: 'center',
     color: primaryColors.primaryBlue,
@@ -209,10 +204,6 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 16,
   },
-  modifyButtonsback: {
-    marginTop: 11,
-  },
-  scrollView: {},
 });
 
 export default ViewCommunity;
