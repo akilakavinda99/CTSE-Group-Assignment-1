@@ -1,7 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   TextInput,
   Image,
@@ -24,9 +23,9 @@ import {SelectList} from 'react-native-dropdown-select-list';
 import {addDocument} from '../../services/firebaseServices';
 import {toastComponent} from '../../components/commonComponents/toastComponent';
 import AppLoader from '../../components/commonComponents/AppLoader';
+import * as Animatable from 'react-native-animatable';
 
 const NewCommunity = ({navigation}) => {
-
   const [image, setImage] = useState('');
   const richText = useRef();
   const [title, setTitle] = useState('');
@@ -35,10 +34,6 @@ const NewCommunity = ({navigation}) => {
   const [itNumber, setItNumber] = useState();
   const [selected, setSelected] = React.useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const gohome = () => {
-    navigation.navigate('Home');
-  };
 
   const launchAlert = () => {
     createTwoButtonAlert(
@@ -142,18 +137,17 @@ const NewCommunity = ({navigation}) => {
     });
     setIsLoading(false);
     if (res) {
-    toastComponent('Community added successfully!');
-    navigation.navigate('Home', {screen: 'Communities'});
-  } else {
-    toastComponent('Error creating Community!', true);
-  }
-};
+      toastComponent('Community added successfully!');
+      navigation.navigate('Home', {screen: 'Communities'});
+    } else {
+      toastComponent('Error creating Community!', true);
+    }
+  };
 
   return (
     <>
       <View style={styles.container}>
         <SafeAreaView style={[AppLayout.flexColumnCentered, styles.mainView]}>
-          <Text style={styles.headingStyle}>Create a Community</Text>
           <TextInput
             value={title}
             onChangeText={setTitle}
@@ -179,25 +173,26 @@ const NewCommunity = ({navigation}) => {
             save="value"
           />
           <View style={{marginBottom: 20}}></View>
-          <ScrollView contentContainerStyle={styles.scrollView}>
+          <ScrollView contentContainerStyle={styles.scrollView}
+          showsVerticalScrollIndicator={false}>
             {/* <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               style={{width: '100%'}}> */}
-              <View style={styles.textEditorView }>
-                <RichEditor
-                  ref={richText}
-                  onChange={text => {
-                    setDescription(text);
-                  }}
-                  initialHeight={150}
-                  placeholder={'Enter Community Description'}
-                  initialContentHTML={''}
-                  editorStyle={styles.textEditor}
-                  containerStyle={styles.textEditorContainer}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                />
-              </View>
+            <View style={styles.textEditorView}>
+              <RichEditor
+                ref={richText}
+                onChange={text => {
+                  setDescription(text);
+                }}
+                initialHeight={150}
+                placeholder={'Enter Community Description'}
+                initialContentHTML={''}
+                editorStyle={styles.textEditor}
+                containerStyle={styles.textEditorContainer}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+              />
+            </View>
             {/* </KeyboardAvoidingView> */}
 
             {isFocused && (
@@ -228,19 +223,18 @@ const NewCommunity = ({navigation}) => {
               )}
             </TouchableOpacity>
 
-
-            <View style={{marginBottom: 10}}>
-              <ButtonComponent backgroundColor="#242D66" buttonText="Create Community" onPress={handleSubmit} />
-            </View>
-            <View style={{marginBottom: 10}}> 
-              <ButtonComponent backgroundColor="#58595a" buttonText="Cancel" onPress={gohome} />
-            </View>
-            
+            <Animatable.View animation="bounce" duration={3000} iterationCount={1} direction="alternate">
+              <ButtonComponent
+                backgroundColor="#242D66"
+                buttonText="Create Community"
+                onPress={handleSubmit}
+              />
+            </Animatable.View>
           </ScrollView>
         </SafeAreaView>
         <Toast />
       </View>
-      {isLoading ? <AppLoader/> : null}
+      {isLoading ? <AppLoader /> : null}
     </>
   );
 };
@@ -252,10 +246,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mainView: {
-    // height: SCREEN_HEIGHT,
-    marginLeft: 16,
-    marginRight: 16,
-    marginTop: SCREEN_HEIGHT / 15,
+    paddingHorizontal: 10,
+    paddingVertical: 30,
+    height: '100%',
   },
   headingStyle: {
     fontSize: 30,
@@ -269,7 +262,7 @@ const styles = StyleSheet.create({
   },
   textEditorContainer: {
     width: '100%',
-    
+
     borderRadius: 8,
   },
   textEditor: {
@@ -277,7 +270,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: '100%',
-    marginBottom: 0,
   },
   title: {
     width: 330,
@@ -289,8 +281,9 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   imagePicker: {
-    height: 175,
-    margin:16,
+    height: 225,
+    marginBottom: 30,
+    marginTop: 20,
     borderStyle: 'dashed',
     borderWidth: 1,
     borderColor: 'black',

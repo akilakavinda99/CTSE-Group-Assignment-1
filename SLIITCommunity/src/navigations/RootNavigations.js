@@ -51,24 +51,19 @@ const RootNavigations = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="NewCommunity"
+        name="New Community"
         component={NewCommunity}
-        options={{ headerShown: false }}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
-        name="ViewAllCommunities"
-        component={ViewAllCommunities}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="UpdateCommunity"
+        name="Update Community"
         component={UpdateCommunity}
-        options={{ headerShown: false }}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
-        name="ViewCommunity"
+        name="View Community"
         component={ViewCommunity}
-        options={{ headerShown: false }}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
         name="New Notice"
