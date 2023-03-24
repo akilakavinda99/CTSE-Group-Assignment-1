@@ -1,17 +1,18 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import Loading from '../../components/commonComponents/loading';
-import { getDocumentOrderBy } from '../../components/firebase/firebase';
+import EventCard from '../../components/EventManagement/EventCard';
+import { getDocumentOrderBy } from '../../services/firebaseServices';
 
 const ViewAllEvents = () => {
     const [events, setEvents] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
     const getEvents = () => {
-        getDocumentOrderBy('events', 'dateTime', 'desc')
+        getDocumentOrderBy('events', 'created_at', 'desc')
             .then((res) => {
                 setEvents(res);
-                // console.log(res);
+                console.log(res);
             })
             .catch((err) => {
                 console.log(err);
