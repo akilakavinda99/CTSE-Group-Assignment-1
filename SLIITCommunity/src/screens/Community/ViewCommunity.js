@@ -32,6 +32,10 @@ const ViewCommunity = ({route, navigation: {goBack}}) => {
     navigation.navigate('UpdateCommunity', {communities});
   };
 
+  const gohome = () => {
+    navigation.navigate('Home');
+  };
+
   const handleDelete = () => {
     setIsLoading(true);
     deleteDocument('communities', communities.id)
@@ -104,7 +108,7 @@ const ViewCommunity = ({route, navigation: {goBack}}) => {
             <View style={styles.modifyButtonsback}>
               <ButtonComponent
                 backgroundColor="#58595a"
-                onPress={() => goBack()}
+                onPress={gohome}
                 buttonText="Back"
               />
             </View>

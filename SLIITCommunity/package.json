@@ -23,6 +23,7 @@
     "@react-navigation/native-stack": "^6.9.12",
     "cloudinary": "^1.35.0",
     "js-base64": "^3.7.5",
+    "lottie-react-native": "^5.1.5",
     "react": "18.2.0",
     "react-native": "0.71.1",
     "react-native-curved-bottom-bar": "^3.2.2",
