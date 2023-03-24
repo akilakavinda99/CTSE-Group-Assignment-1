@@ -3,6 +3,8 @@ import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from 'reac
 import Loading from '../../components/commonComponents/loading';
 import EventCard from '../../components/EventManagement/EventCard';
 import { getDocumentOrderBy } from '../../services/firebaseServices';
+import { primaryColors } from '../../styles/colors';
+import SearchBar from "react-native-dynamic-search-bar";
 
 const ViewAllEvents = () => {
     const [events, setEvents] = useState([]);
@@ -12,11 +14,20 @@ const ViewAllEvents = () => {
         getDocumentOrderBy('events', 'created_at', 'desc')
             .then((res) => {
                 setEvents(res);
-                console.log(res);
+                // console.log(res);
             })
             .catch((err) => {
                 console.log(err);
             });
+    }
+
+    const onSearch = (text) => {
+        const filteredEvents = events.filter((event) => {
+            return event.title.toLowerCase().includes(text.toLowerCase()) ||
+                event.venue.toLowerCase().includes(text.toLowerCase());
+        });
+
+        setEvents(filteredEvents);
     }
 
     const onRefresh = () => {
@@ -31,6 +42,11 @@ const ViewAllEvents = () => {
 
     return (
         <SafeAreaView style={styles.mainView}>
+            <SearchBar
+                placeholder="Search here"
+                // onPress={() => alert("onPress")}
+                onChangeText={onSearch}
+            />
             <ScrollView
                 style={styles.scrollView}
                 refreshControl={
@@ -55,12 +71,14 @@ const ViewAllEvents = () => {
 
 const styles = StyleSheet.create({
     mainView: {
-        flex: 1,
-        backgroundColor: '#fff',
+        height: "100%",
+        paddingTop: 10,
+        backgroundColor: primaryColors.background,
     },
     scrollView: {
-        flex: 1,
-        backgroundColor: '#fff',
+        width: '100%',
+        paddingHorizontal: 16,
+        marginTop: 10,
     },
 });
 
