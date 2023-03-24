@@ -1,36 +1,80 @@
-import React from 'react';
+import {BlurView} from '@react-native-community/blur';
+import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
 import {
   View,
   Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 const LostOrFoundPost = ({post, id}) => {
+  const [showButtons, setShowButtons] = useState(false);
+
+  const handleCardPress = () => {
+    setShowButtons(true);
+  };
+
+  const handleDeletePress = () => {
+    // TODO: Handle delete functionality
+  };
+
+  const handleEditPress = () => {
+    // TODO: Handle edit functionality
+  };
+
+  const navigation = useNavigation();
   return (
-    <View style={[lostOrFoundPostStyles.mainView]}>
-      <View>
-        <Image
-          source={{uri: post.ItemImage}}
-          resizeMode="cover"
-          style={lostOrFoundPostStyles.imageStyle}
-        />
+    <TouchableWithoutFeedback
+      onPress={() =>
+        navigation.navigate('ViewSingleLostorFound', {
+          post: post,
+        })
+      }>
+      <View style={[lostOrFoundPostStyles.mainView]}>
+        <BlurView
+          blurType="light"
+          blurAmount={100}
+          reducedTransparencyFallbackColor="white">
+          <View>
+            <View>
+              <Image
+                source={{uri: post.ItemImage}}
+                resizeMode="cover"
+                style={lostOrFoundPostStyles.imageStyle}
+              />
+            </View>
+            <View style={lostOrFoundPostStyles.secondaryView}>
+              <View style={lostOrFoundPostStyles.nameView}>
+                <Text style={lostOrFoundPostStyles.itemName}>
+                  {post.ItemName}
+                </Text>
+                <Text
+                  style={[
+                    lostOrFoundPostStyles.type,
+                    post.type == 'Lost'
+                      ? {
+                          color: 'red',
+                        }
+                      : {
+                          color: 'green',
+                        },
+                  ]}>
+                  {post.Type.toUpperCase()}
+                </Text>
+              </View>
+              <View>
+                <Text numberOfLines={3} ellipsizeMode="tail">
+                  {post.ItemDescription}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </BlurView>
+        {showButtons && <Text>Blurred</Text>}
       </View>
-      <View style={lostOrFoundPostStyles.secondaryView}>
-        <View style={lostOrFoundPostStyles.nameView}>
-          <Text style={lostOrFoundPostStyles.itemName}>{post.ItemName}</Text>
-          <Text style={lostOrFoundPostStyles.type}>
-            {post.Type.toUpperCase()}
-          </Text>
-        </View>
-        <View>
-          <Text>{post.ItemDescription}</Text>
-        </View>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -50,7 +94,8 @@ const lostOrFoundPostStyles = StyleSheet.create({
     },
     shadowOpacity: 0.29,
     shadowRadius: 4.65,
-
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
     elevation: 7,
   },
   imageStyle: {
@@ -75,7 +120,6 @@ const lostOrFoundPostStyles = StyleSheet.create({
   type: {
     fontWeight: 'bold',
     fontSize: 20,
-    color: 'red',
   },
 });
 
