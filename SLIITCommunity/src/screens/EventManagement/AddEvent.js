@@ -1,12 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   View,
   Text,
-  Alert,
-  StatusBar,
-  Button,
   TextInput,
   Platform,
+  Image,
   KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
@@ -16,29 +14,82 @@ import {
 import { RichEditor, RichToolbar } from 'react-native-pell-rich-editor';
 import { AppLayout, SCREEN_HEIGHT } from '../../styles/appStyles';
 import Toast from 'react-native-toast-message';
+import asyncStoreKeys from '../../constants/asyncStoreKeys';
+import { getDataFromAsync } from '../../constants/asyncStore';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { createTwoButtonAlert } from '../../components/commonComponents/alertComponent';
+import { imageUploadService } from '../../services/imageUploadService';
 import { primaryColors } from '../../styles/colors';
+import Header from '../../components/commonComponents/header';
 import MyDateTimePicker from '../../components/commonComponents/datepicker';
 import TimePicker from '../../components/commonComponents/timepicker';
 import Loading from '../../components/commonComponents/loading';
 import { addDocument } from '../../services/firebaseServices';
 import { toastComponent } from '../../components/commonComponents/toastComponent';
+import ButtonComponent from '../../components/commonComponents/buttonComponent';
+import AppLoader from '../../components/commonComponents/AppLoader';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const AddEvent = () => {
 
   const richText = useRef();
+  const [image, setImage] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [venue, setVenue] = useState('');
-  const [selected, setSelected] = useState('');
+  const [itNumber, setItNumber] = useState();
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const launchAlert = () => {
+    createTwoButtonAlert(
+      'Select Camera or Gallery',
+      'Where do you want to select a image?',
+      'From Gallery',
+      'From Camera',
+      fromGallery,
+      fromCamera,
+    );
+  };
+
+  const fromCamera = async () => {
+    const options = {
+      mediaType: 'photo',
+      cameraType: 'back',
+      includeBase64: true,
+      maxWidth: 1080,
+      maxHeight: 960,
+      quality: 0.5,
+    };
+    const result = await launchCamera(options);
+    setImage(result.assets[0].uri);
+  };
+
+  const fromGallery = async () => {
+    const options = {
+      mediaType: 'photo',
+      includeBase64: true,
+      maxWidth: 1080,
+      maxHeight: 960,
+      quality: 0.5,
+    };
+    const result = await launchImageLibrary(options);
+    setImage(result.assets[0].uri);
+  };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
+  useEffect(() => {
+    async function getItnumber() {
+      const itNumber = await getDataFromAsync(asyncStoreKeys.IT_NUMBER);
+      setItNumber(itNumber);
+    }
+    getItnumber();
+  }, []);
 
   const handleSubmit = async () => {
     if (title.trim() === '') {
@@ -65,6 +116,14 @@ const AddEvent = () => {
       });
       return;
     }
+    if (image.trim() === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Image can not be empty❗',
+      });
+      return;
+    }
     // if (selectedDate === null) {
     //   Toast.show({
     //     type: 'error',
@@ -81,23 +140,37 @@ const AddEvent = () => {
     //   });
     //   return;
     // }
+    setIsLoading(true);
+    const url = await imageUploadService(title, image);
     const res = addDocument('events', {
       title,
       venue,
       description: description,
       date: selectedDate,
       time: selectedTime,
+      itNumber,
+      image: url,
       created_at: new Date().toDateString(),
     });
-    toastComponent('Event Created Successfully', 'success');
+    setIsLoading(false);
+    if (res) {
+      toastComponent('Event added successfully!');
+      // navigation.navigate('Home', {screen: 'Communities'});
+    } else {
+      toastComponent('Error creating Community!', true);
+    }
+    // toastComponent('Event Created Successfully', 'success');
   };
 
   return (
     <SafeAreaView style={{ width: "100%", height: "100%" }}>
+
+
+      <Header title={"Create Event"} />
       {isLoading ? <Loading /> :
         <View style={styles.container}>
           <SafeAreaView style={[AppLayout.flexColumnCentered, styles.mainView]}>
-            <Text style={styles.headingStyle}>Create an Event</Text>
+            
 
             <TextInput
               value={title}
@@ -123,28 +196,51 @@ const AddEvent = () => {
               style={styles.title}
             />
             <ScrollView contentContainerStyle={styles.scrollView}>
-              <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ width: '100%' }}>
-                <View style={styles.textEditorView}>
-                  <RichEditor
-                    ref={richText}
-                    onChange={setDescription}
-                    initialHeight={250}
-                    placeholder={'Enter Event Description'}
-                    initialContentHTML={''}
-                    editorStyle={styles.textEditor}
-                    containerStyle={styles.textEditorContainer}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
+              <View style={styles.textEditorView}>
+                <RichEditor
+                  ref={richText}
+                  onChange={setDescription}
+                  initialHeight={250}
+                  placeholder={'Enter Event Description'}
+                  initialContentHTML={''}
+                  editorStyle={styles.textEditor}
+                  containerStyle={styles.textEditorContainer}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                />
+
+              </View>
+
+              <TouchableOpacity
+                style={[
+                  styles.imagePicker,
+                  image == ''
+                    ? {
+                      flex: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }
+                    : {},
+                ]}
+                onPress={launchAlert}>
+                {image == '' ? <Icon name="image-area" size={50} /> : <></>}
+                {image && (
+                  <Image
+                    key={new Date().getTime()}
+                    source={{ uri: image }}
+                    style={styles.image}
+                    resizeMode="cover"
                   />
-
-                </View>
-              </KeyboardAvoidingView>
-
-              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Create Event</Text>
+                )}
               </TouchableOpacity>
+
+              <View style={{ marginBottom: 10 }}>
+                <ButtonComponent backgroundColor="#242D66" buttonText="Create Event" onPress={handleSubmit} />
+              </View>
+
+              {/* <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Create Event</Text>
+              </TouchableOpacity> */}
 
             </ScrollView>
             {isFocused && (
@@ -166,6 +262,7 @@ const AddEvent = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // backgroundColor: primaryColors.primaryBlue,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -173,7 +270,12 @@ const styles = StyleSheet.create({
     // height: SCREEN_HEIGHT,
     marginLeft: 16,
     marginRight: 16,
+    // backgroundColor: primaryColors.primaryBlue,
     marginTop: SCREEN_HEIGHT / 15,
+  },
+  header: {
+    width: "100%",
+    color: primaryColors.primaryBlue,
   },
   text: {
     fontSize: 30,
@@ -236,6 +338,14 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#fff',
     letterSpacing: 0.6,
+  },
+  imagePicker: {
+    height: 175,
+    margin: 16,
+    borderStyle: 'dashed',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 30,
   },
 });
 

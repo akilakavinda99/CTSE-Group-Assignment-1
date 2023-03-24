@@ -83,12 +83,12 @@ const ViewEvent = ({ route }) => {
                         signedInUser === owner &&
                         <View style={styles.modifyButtons}>
                             <ButtonComponent
-                                onPress={editNotice}
+                                // onPress={editNotice}
                                 buttonText="Edit"
                                 backgroundColor={primaryColors.primaryBlue}
                                 width={"48%"} />
                             <ButtonComponent
-                                onPress={removeNotice}
+                                // onPress={removeNotice}
                                 buttonText="Remove"
                                 backgroundColor={primaryColors.primaryBlue}
                                 width={"48%"} />
