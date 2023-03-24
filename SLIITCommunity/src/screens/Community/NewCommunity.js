@@ -5,8 +5,6 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
-  Platform,
-  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -25,6 +23,7 @@ import ButtonComponent from '../../components/commonComponents/buttonComponent';
 import {SelectList} from 'react-native-dropdown-select-list';
 import {addDocument} from '../../services/firebaseServices';
 import {toastComponent} from '../../components/commonComponents/toastComponent';
+import AppLoader from '../../components/commonComponents/AppLoader';
 
 const NewCommunity = ({navigation}) => {
 
@@ -35,6 +34,7 @@ const NewCommunity = ({navigation}) => {
   const [isFocused, setIsFocused] = useState(false);
   const [itNumber, setItNumber] = useState();
   const [selected, setSelected] = React.useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const gohome = () => {
     navigation.navigate('Home');
@@ -140,9 +140,14 @@ const NewCommunity = ({navigation}) => {
       image: url,
       created_at: new Date().toDateString(),
     });
+    setIsLoading(false);
+    if (res) {
     toastComponent('Community added successfully!');
     navigation.navigate('Home', {screen: 'Communities'});
-  };
+  } else {
+    toastComponent('Error creating Community!', true);
+  }
+};
 
   return (
     <>
@@ -235,6 +240,7 @@ const NewCommunity = ({navigation}) => {
         </SafeAreaView>
         <Toast />
       </View>
+      {isLoading ? <AppLoader/> : null}
     </>
   );
 };
@@ -283,7 +289,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   imagePicker: {
-    height: 150,
+    height: 175,
     margin:16,
     borderStyle: 'dashed',
     borderWidth: 1,

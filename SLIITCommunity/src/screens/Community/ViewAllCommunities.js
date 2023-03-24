@@ -5,6 +5,7 @@ import CommunityCard from '../../components/communities/communityCard';
 import { getDocumentOrderBy } from '../../services/firebaseServices';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { primaryColors } from '../../styles/colors';
+import AppLoader from '../../components/commonComponents/AppLoader';
 
 const ViewAllCommunities = () => {
   const [communities, setCommunities] = useState([]);
@@ -39,7 +40,7 @@ const ViewAllCommunities = () => {
   return (
     <SafeAreaView style={styles.mainView}>
       {loading ? (
-        <Loading />
+        <AppLoader />
       ) : (
         <ScrollView
           style={styles.scrollView}
