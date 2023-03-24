@@ -1,6 +1,9 @@
 import { PermissionsAndroid } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
+import firestore from '@react-native-firebase/firestore';
 import { MESSAGE_API_URL, MESSAGE_API_KEY } from '@env'
+import { getDataFromAsync } from '../constants/asyncStore';
+import asyncStoreKeys from '../constants/asyncStoreKeys';
 
 /***********
 Reffered from:
@@ -13,7 +16,7 @@ Reffered from:
 export const getMessagingToken = async () => {
     const fcmToken = await messaging().getToken();
     if (fcmToken) {
-        console.log('Your Firebase Token is:', fcmToken);
+        // console.log('Your Firebase Token is:', fcmToken);
         return fcmToken;
     } else {
         console.log('Failed', 'No token received');
@@ -21,6 +24,62 @@ export const getMessagingToken = async () => {
     }
 };
 
+// Update messaging token
+export const updateMessagingToken = async (token, itNumber) => {
+    try {
+        const ref = firestore()
+            .collection('Users')
+            .doc(itNumber)
+        const doc = await ref.get();
+        if (doc._exists) {
+            await ref.update({
+                messagingToken: token
+            });
+        } 
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// Subscribe to a community
+export const subscribeCommunity = async (communityId, itNumber) => {
+    try {
+        const ref = firestore()
+            .collection('subscriptions')
+            .doc(communityId)
+        const doc = await ref.get();
+        if (doc._exists) {
+            await ref.update({
+                users: firestore.FieldValue.arrayUnion(itNumber)
+            });
+        } else {
+            await ref.set({
+                users: [itNumber]
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// Unsubscribe from a community
+export const unsubscribeCommunity = async (communityId, itNumber) => {
+    try {
+        const ref = firestore()
+            .collection('subscriptions')
+            .doc(communityId)
+        const doc = await ref.get();
+        if (doc._exists) {
+            await ref.update({
+                users: firestore.FieldValue.arrayRemove(itNumber)
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// Send notification to the device
 export const sendNotification = async (title, body, users) => {
     try {
         const res = await fetch(MESSAGE_API_URL, {
@@ -94,5 +153,12 @@ export const notificationSetup = async () => {
             'Message handled in the background!',
             remoteMessage
         );
+    });
+
+    // Token refresh
+    messaging().onTokenRefresh(fcmToken => {
+        getDataFromAsync(asyncStoreKeys.IT_NUMBER).then(userId => {
+            updateMessagingToken(fcmToken, userId)
+        });
     });
 };
