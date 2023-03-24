@@ -12,6 +12,7 @@ import { getDocumentsByField } from '../services/firebaseServices';
 import collectionNames from '../constants/collectionNames';
 import { getDataFromAsync, storeDataInAsync } from '../constants/asyncStore';
 import asyncStoreKeys from '../constants/asyncStoreKeys';
+import { getMessagingToken, updateMessagingToken } from '../services/notificationServices';
 
 const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
@@ -50,6 +51,9 @@ const Login = ({ navigation }) => {
           asyncStoreKeys.IT_NUMBER,
           userDocument[0].itNumber,
         );
+        
+        const token = await getMessagingToken();
+        await updateMessagingToken(token, itNumber);
 
         navigation.navigate('Home');
       }
@@ -62,8 +66,10 @@ const Login = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getDataFromAsync(asyncStoreKeys.IT_NUMBER).then(itNumber => {
+    getDataFromAsync(asyncStoreKeys.IT_NUMBER).then(async (itNumber) => {
       if (itNumber) {
+        const token = await getMessagingToken();
+        await updateMessagingToken(token, itNumber);
         navigation.navigate('Home');
       }
     });

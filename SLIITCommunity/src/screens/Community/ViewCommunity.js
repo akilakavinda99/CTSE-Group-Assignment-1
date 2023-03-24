@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   View,
@@ -8,28 +8,40 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import {RichEditor} from 'react-native-pell-rich-editor';
+import { RichEditor } from 'react-native-pell-rich-editor';
 import ButtonComponent from '../../components/commonComponents/buttonComponent';
 import Loading from '../../components/commonComponents/loading';
-import {toastComponent} from '../../components/commonComponents/toastComponent';
-import {getDataFromAsync} from '../../constants/asyncStore';
+import { toastComponent } from '../../components/commonComponents/toastComponent';
+import { getDataFromAsync } from '../../constants/asyncStore';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
-import {deleteDocument} from '../../services/firebaseServices';
-import {primaryColors} from '../../styles/colors';
+import { deleteDocument, getDocument } from '../../services/firebaseServices';
+import { primaryColors } from '../../styles/colors';
+import { subscribeCommunity, unsubscribeCommunity } from '../../services/notificationServices';
 
-const ViewCommunity = ({route, navigation: {goBack}}) => {
+const ViewCommunity = ({ route, navigation: { goBack } }) => {
   const [signedInUser, setSignedInUser] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const communities = route.params.communities;
   const itNumber = communities.itNumber;
+  const [subscribers, setSubscribers] = useState([]);
 
   getDataFromAsync(asyncStoreKeys.IT_NUMBER).then(data => {
     setSignedInUser(data);
   });
 
+  useEffect(() => {
+    getDocument('communities', communities.id)
+      .then(doc => {
+        setSubscribers(doc.subscribers ? doc.subscribers : []);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, [isLoading, signedInUser]);
+
   const editCommunity = () => {
-    navigation.navigate('UpdateCommunity', {communities});
+    navigation.navigate('UpdateCommunity', { communities });
   };
 
   const gohome = () => {
@@ -42,7 +54,7 @@ const ViewCommunity = ({route, navigation: {goBack}}) => {
       .then(() => {
         setIsLoading(false);
         toastComponent('Community deleted successfully!', false);
-        navigation.navigate('Home', {screen: 'Communities'});
+        navigation.navigate('Home', { screen: 'Communities' });
       })
       .catch(err => {
         setIsLoading(false);
@@ -59,9 +71,21 @@ const ViewCommunity = ({route, navigation: {goBack}}) => {
           text: 'Cancel',
           style: 'cancel',
         },
-        {text: 'Yes', onPress: () => handleDelete()},
+        { text: 'Yes', onPress: () => handleDelete() },
       ],
     );
+  };
+
+  const subscribe = async () => {
+    setIsLoading(true);
+    await subscribeCommunity(communities.id, signedInUser);
+    setIsLoading(false);
+  };
+
+  const unsubscribe = async () => {
+    setIsLoading(true);
+    await unsubscribeCommunity(communities.id, signedInUser);
+    setIsLoading(false);
   };
 
   return (
@@ -91,7 +115,7 @@ const ViewCommunity = ({route, navigation: {goBack}}) => {
             </View>
           </ScrollView>
           <View>
-            {signedInUser === itNumber && (
+            {signedInUser === itNumber ? (
               <View style={styles.modifyButtons}>
                 <ButtonComponent
                   backgroundColor="#242D66"
@@ -103,6 +127,21 @@ const ViewCommunity = ({route, navigation: {goBack}}) => {
                   onPress={removeCommunity}
                   buttonText="Remove"
                 />
+              </View>
+            ) : (
+              <View style={styles.modifyButtons}>
+                {subscribers?.includes(signedInUser) ?
+                  <ButtonComponent
+                    backgroundColor="#58595a"
+                    onPress={unsubscribe}
+                    buttonText="Unsubscribe"
+                  /> :
+                  <ButtonComponent
+                    backgroundColor="#242D66"
+                    onPress={subscribe}
+                    buttonText="Subscribe"
+                  />
+                }
               </View>
             )}
             <View style={styles.modifyButtonsback}>

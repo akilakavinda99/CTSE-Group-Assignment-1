@@ -34,7 +34,7 @@ export const getDocuments = async collectionName => {
 
 export const getDocument = async (collectionName, docId) => {
   try {
-    const getDoc = firestore().collection(collectionName).doc(docId).get();
+    const getDoc = await firestore().collection(collectionName).doc(docId).get();
     return {...getDoc.data(), id: getDoc.id};
   } catch (error) {
     console.log(error);
@@ -104,7 +104,9 @@ export const getDocumentsByField = async (collectionName, fieldName, value) => {
       .collection(collectionName)
       .where(fieldName, '==', value)
       .get();
-    return getDocs.docs.map(doc => doc.data());
+    return getDocs.docs.map(doc => {
+      return {...doc.data(), id: doc.id};
+    });
   } catch (error) {
     console.log(error);
     return [];

@@ -12,6 +12,7 @@ import ViewAllCommunities from './Community/ViewAllCommunities';
 import ViewAllEvents from './EventManagement/ViewAllEvents';
 import NewNotice from './Notices/NewNotice';
 import ViewAllNotices from './Notices/ViewAllNotices';
+import Profile from './Profile';
 
 const Screen1 = () => {
   return <View style={styles.screen1} />;
@@ -27,13 +28,16 @@ export default function Home({ screen }) {
 
     switch (routeName) {
       case 'Notices':
-        icon = 'notifications-outline';
+        icon = 'chatbubble-outline';
         break;
       case 'Communities':
         icon = 'people-outline';
         break;
       case 'Events':
         icon = 'calendar-outline';
+        break;
+      case 'Profile':
+        icon = 'person-outline';
         break;
     }
 
@@ -81,32 +85,32 @@ export default function Home({ screen }) {
                 </TouchableOpacity>
               </Animated.View>
             );
-            case 'Communities':
-              return (
-                <Animated.View style={styles.btnCircleUp}>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                      navigate('NewCommunity');
-                    }}
-                  >
-                    <Ionicons name={'add-outline'} color="gray" size={40} />
-                  </TouchableOpacity>
-                </Animated.View>
-              );
-              case 'Events':
-                return (
-                  <Animated.View style={styles.btnCircleUp}>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => {
-                        navigate('NewEvent');
-                      }}
-                    >
-                      <Ionicons name={'add-outline'} color="gray" size={40} />
-                    </TouchableOpacity>
-                  </Animated.View>
-                );
+          case 'Communities':
+            return (
+              <Animated.View style={styles.btnCircleUp}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    navigate('NewCommunity');
+                  }}
+                >
+                  <Ionicons name={'add-outline'} color="gray" size={40} />
+                </TouchableOpacity>
+              </Animated.View>
+            );
+          case 'Events':
+            return (
+              <Animated.View style={styles.btnCircleUp}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    navigate('NewEvent');
+                  }}
+                >
+                  <Ionicons name={'add-outline'} color="gray" size={40} />
+                </TouchableOpacity>
+              </Animated.View>
+            );
           default:
             return (
               <Animated.View style={styles.btnCircleUp}>
@@ -128,14 +132,19 @@ export default function Home({ screen }) {
         component={() => <ViewAllNotices />}
       />
       <CurvedBottomBar.Screen
+        name="Events"
+        component={() => <ViewAllEvents />}
+        position="LEFT"
+      />
+      <CurvedBottomBar.Screen
         name="Communities"
         component={() => <ViewAllCommunities />}
         position="RIGHT"
       />
       <CurvedBottomBar.Screen
-        name="Events"
-        component={() => <ViewAllEvents />}
+        name="Profile"
         position="RIGHT"
+        component={() => <Profile />}
       />
     </CurvedBottomBar.Navigator>
   );
