@@ -6,6 +6,7 @@ import NewNotice from '../screens/Notices/NewNotice';
 import OnboardingScreen from '../screens/onboardingScreens/onboardingScreen';
 import Home from '../screens/Home';
 import NewEvent from '../screens/EventManagement/AddEvent';
+import ViewAllEvents from '../screens/EventManagement/ViewAllEvents';
 import ViewNotice from '../screens/Notices/ViewNotice';
 import AddLostOrFound from '../screens/lostAndFoundScreens/addLostOrFound';
 import UpdateNotice from '../screens/Notices/UpdateNotice';
@@ -37,6 +38,11 @@ const RootNavigations = () => {
       <Stack.Screen
         name="NewEvent"
         component={NewEvent}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ViewAllEvents"
+        component={ViewAllEvents}
         options={{headerShown: false}}
       />
       <Stack.Screen
