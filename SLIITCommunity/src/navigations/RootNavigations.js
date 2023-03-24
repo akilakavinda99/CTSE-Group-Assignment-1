@@ -42,7 +42,7 @@ const RootNavigations = () => {
       <Stack.Screen
         name="NewEvent"
         component={NewEvent}
-        options={{ headerShown: false }}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
         name="ViewAllEvents"
