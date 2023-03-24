@@ -65,28 +65,29 @@ const AddEvent = () => {
       });
       return;
     }
-    if (selectedDate === null) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please select a date',
-      });
-      return;
-    }
-    if (selectedTime === null) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please select a time',
-      });
-      return;
-    }
+    // if (selectedDate === null) {
+    //   Toast.show({
+    //     type: 'error',
+    //     text1: 'Error',
+    //     text2: 'Please select a date',
+    //   });
+    //   return;
+    // }
+    // if (selectedTime === null) {
+    //   Toast.show({
+    //     type: 'error',
+    //     text1: 'Error',
+    //     text2: 'Please select a time',
+    //   });
+    //   return;
+    // }
     const res = addDocument('events', {
       title,
       venue,
       description: description,
       date: selectedDate,
       time: selectedTime,
+      created_at: new Date().toDateString(),
     });
     toastComponent('Event Created Successfully', 'success');
   };
@@ -105,7 +106,7 @@ const AddEvent = () => {
               style={styles.title}
             />
 
-            <MyDateTimePicker
+            {/* <MyDateTimePicker
               value={selectedDate}
               onchange={setSelectedDate}
             />
@@ -113,7 +114,7 @@ const AddEvent = () => {
             <TimePicker
               value={selectedTime}
               onchange={setSelectedTime}
-            />
+            /> */}
 
             <TextInput
               value={venue}
@@ -128,10 +129,7 @@ const AddEvent = () => {
                 <View style={styles.textEditorView}>
                   <RichEditor
                     ref={richText}
-                    onchange={text => {
-                      setDescription(text);
-                    }}
-
+                    onChange={setDescription}
                     initialHeight={250}
                     placeholder={'Enter Event Description'}
                     initialContentHTML={''}
@@ -140,11 +138,7 @@ const AddEvent = () => {
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                   />
-                  {/* {isFocused && (
-                    <RichToolbar
-                      editor={richText}
-                     />
-                  )} */}
+
                 </View>
               </KeyboardAvoidingView>
 
@@ -153,6 +147,13 @@ const AddEvent = () => {
               </TouchableOpacity>
 
             </ScrollView>
+            {isFocused && (
+              <RichToolbar
+                editor={richText}
+              // actions={[actions.setBold, actions.setItalic, actions.setUnderline, actions.heading1,]}
+              // iconMap={{ [actions.heading1]: ({ tintColor }) => (<Text style={[{ color: tintColor }]}>H1</Text>), }}
+              />
+            )}
 
           </SafeAreaView>
           <Toast />
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
   //   color: 'black',
   // },
   button: {
-    width: 330,
+    width: 343,
     height: 45,
     paddingLeft: 15,
     marginBottom: 16,
