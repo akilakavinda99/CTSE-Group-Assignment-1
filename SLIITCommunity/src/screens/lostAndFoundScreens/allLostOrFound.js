@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -9,14 +9,28 @@ import {
   RefreshControl,
 } from 'react-native';
 import LostOrFoundPost from '../../components/lostOrFoundComponents/lostOrFoundPost';
-import {getDocuments} from '../../services/firebaseServices';
+import {getDataFromAsync} from '../../constants/asyncStore';
+import asyncStoreKeys from '../../constants/asyncStoreKeys';
+import collectionNames from '../../constants/collectionNames';
+import {
+  getDocumentOrderBy,
+  getDocuments,
+} from '../../services/firebaseServices';
+import {primaryColors} from '../../styles/colors';
 
 const AllLostOrFound = () => {
   const [posts, setPosts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [id, setid] = useState('');
 
   const getMyLostOrFound = async () => {
-    const posts = await getDocuments(collectionNames.LOST_FOUND_COLLECTION);
+    const itNumber = await getDataFromAsync(asyncStoreKeys.IT_NUMBER);
+    setid(itNumber);
+    const posts = await getDocumentOrderBy(
+      collectionNames.LOST_FOUND_COLLECTION,
+      'PostedDate',
+      'asc',
+    );
     console.log(posts);
     setPosts(posts);
   };
@@ -32,19 +46,34 @@ const AllLostOrFound = () => {
   }, []);
 
   return (
-    <View>
+    <View style={allLostOrFoundStyles.container}>
+      <Text style={allLostOrFoundStyles.headingStyle}>All Lost Or Found</Text>
       <FlatList
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         data={posts}
         renderItem={({item}) => (
-          <LostOrFoundPost post={item.data} id={item.id} key={item.id} />
+          <LostOrFoundPost post={item} id={id} key={item.id} />
         )}
         keyExtractor={item => item.id}
       />
     </View>
   );
 };
+
+const allLostOrFoundStyles = StyleSheet.create({
+  container: {
+    paddingBottom: 150, // add padding to the bottom of the container
+  },
+  headingStyle: {
+    fontSize: 30,
+    textAlign: 'center',
+    marginTop: 20,
+    color: primaryColors.primaryBlue,
+    fontWeight: 600,
+    marginBottom: 30,
+  },
+});
 
 export default AllLostOrFound;

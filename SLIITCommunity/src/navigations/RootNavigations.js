@@ -1,5 +1,5 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import NewNotice from '../screens/Notices/NewNotice';
@@ -18,6 +18,8 @@ import UpdateCommunity from '../screens/Community/UpdateCommunity';
 import MyNotices from '../screens/Profile/MyNotices';
 import MyCommunities from '../screens/Profile/MyCommunities';
 import Profile from '../screens/Profile';
+import ViewSingleLostorFOund from '../screens/lostAndFoundScreens/viewSingleLostorFOund';
+import AllLostOrFound from '../screens/lostAndFoundScreens/allLostOrFound';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,17 +39,17 @@ const RootNavigations = () => {
       <Stack.Screen
         name="Register"
         component={Register}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="NewEvent"
         component={NewEvent}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="ViewAllEvents"
         component={ViewAllEvents}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="ViewEvent"
@@ -77,37 +79,47 @@ const RootNavigations = () => {
       <Stack.Screen
         name="New Notice"
         component={NewNotice}
-        options={{ headerShown: true }}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="View Notice"
         component={ViewNotice}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Edit Notice"
         component={UpdateNotice}
-        options={{ headerShown: true }}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="My Notices"
         component={MyNotices}
-        options={{ headerShown: true }}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="My Communities"
         component={MyCommunities}
-        options={{ headerShown: true }}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="AddLostOrFound"
         component={AddLostOrFound}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Profile"
         component={Profile}
-        options={{ headerShown: true }}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ViewSingleLostorFound"
+        component={ViewSingleLostorFOund}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AllLostOrFound"
+        component={AllLostOrFound}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
