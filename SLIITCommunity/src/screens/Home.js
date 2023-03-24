@@ -11,6 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ViewAllCommunities from './Community/ViewAllCommunities';
 import NewNotice from './Notices/NewNotice';
 import ViewAllNotices from './Notices/ViewAllNotices';
+import * as Animatable from 'react-native-animatable';
 
 const Screen1 = () => {
   return <View style={styles.screen1} />;
@@ -66,29 +67,29 @@ export default function Home({ screen }) {
         switch (selectedTab) {
           case 'Notices':
             return (
-              <Animated.View style={styles.btnCircleUp}>
+              <Animatable.View animation="bounceIn" iterationCount={"infinite"} direction="alternate" style={styles.btnCircleUp}>
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
                     navigate('New Notice');
                   }}
                 >
-                  <Ionicons name={'add-outline'} color="gray" size={40} />
+                  <Ionicons name={'add-outline'} color="white" size={40} />
                 </TouchableOpacity>
-              </Animated.View>
+              </Animatable.View>
             );
             case 'Communities':
               return (
-                <Animated.View style={styles.btnCircleUp}>
+                <Animatable.View animation="bounceIn" iterationCount={"infinite"} direction="alternate" style={styles.btnCircleUp}>
                   <TouchableOpacity
                     style={styles.button}
                     onPress={() => {
-                      navigate('NewCommunity');
+                      navigate('New Community');
                     }}
                   >
-                    <Ionicons name={'add-outline'} color="gray" size={40} />
+                    <Ionicons name={'add-outline'} color="white" size={40} />
                   </TouchableOpacity>
-                </Animated.View>
+                </Animatable.View>
               );  
           default:
             return (
@@ -97,7 +98,7 @@ export default function Home({ screen }) {
                   style={styles.button}
                   onPress={() => Alert.alert('Click Action')}
                 >
-                  <Ionicons name={'apps-sharp'} color="gray" size={25} />
+                  <Ionicons name={'apps-sharp'} color="white" size={25} />
                 </TouchableOpacity>
               </Animated.View>
             );
@@ -105,7 +106,7 @@ export default function Home({ screen }) {
       }}
       tabBar={renderTabBar}
     >
-      <CurvedBottomBar.Screen
+      <CurvedBottomBar.Screen style={backgroundColor="red"}
         name="Notices"
         position="LEFT"
         component={() => <ViewAllNotices />}
@@ -144,7 +145,7 @@ export const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#E8E8E8',
+    backgroundColor: '#242D66',
     bottom: 18,
     shadowColor: '#000',
     shadowOffset: {

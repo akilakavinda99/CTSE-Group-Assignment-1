@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import {RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import ButtonComponent from '../../components/commonComponents/buttonComponent';
-import Loading from '../../components/commonComponents/loading';
 import {toastComponent} from '../../components/commonComponents/toastComponent';
 import Toast from 'react-native-toast-message';
 import {getDateAndTime} from '../../services/commonFunctions';
@@ -24,7 +23,7 @@ import {primaryColors} from '../../styles/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppLoader from '../../components/commonComponents/AppLoader';
 
-const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
+const UpdateCommunity = ({route, navigation}) => {
   const communities = route.params.communities;
   const [image, setImage] = useState(communities.image);
   const richText = useRef();
@@ -121,7 +120,7 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
     const res = await updateDocument('communities', communities.id, {
       title,
       faculty: faculty,
-      image: url,
+      // image: url,
       description: newDescription,
       created_at: getDateAndTime(),
     });
@@ -138,7 +137,6 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
     <>
     <SafeAreaView style={{width: '100%', height: '100%'}}>
       <View style={styles.mainView}>
-          <Text style={styles.headingStyle}>Update Community</Text>
           <TextInput
             value={title}
             onChangeText={setTitle}
@@ -166,7 +164,8 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
           />
 
           <View style={{marginBottom: 20}}></View>
-          <ScrollView contentContainerStyle={styles.scrollView}>
+          <ScrollView contentContainerStyle={styles.scrollView}
+          showsVerticalScrollIndicator={false}>
             {/* <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               style={{width: '100%'}}> */}
@@ -215,23 +214,17 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
               )}
             </TouchableOpacity>
 
-            <View style={{marginBottom: 10}}>
+            
+
+            {/* </KeyboardAvoidingView> */}
+          </ScrollView>
+          <View style={{marginTop: 20}}>
               <ButtonComponent
                 backgroundColor="#ffad00"
                 buttonText="Update Community"
                 onPress={handleSubmit}
               />
             </View>
-            <View style={{marginBottom: 15}}>
-              <ButtonComponent
-                backgroundColor="#58595a"
-                buttonText="Cancel"
-                onPress={() => goBack()}
-              />
-            </View>
-
-            {/* </KeyboardAvoidingView> */}
-          </ScrollView>
         </View>
       <Toast />
       {isLoading ? <AppLoader/> : null}
@@ -248,8 +241,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mainView: {
-    // height: SCREEN_HEIGHT,
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
+    paddingTop: 30,
+    paddingBottom: 20,
     height: '100%',
   },
   headingStyle: {
@@ -286,8 +280,9 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   imagePicker: {
-    height: 175,
-    margin: 16,
+    height: 225,
+    marginBottom: 20,
+    marginTop: 20,
     borderStyle: 'dashed',
     borderWidth: 1,
     borderColor: 'black',

@@ -1,15 +1,17 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Text, StyleSheet, TouchableOpacity, View, Image } from "react-native";
+import * as Animatable from 'react-native-animatable';
 import { primaryColors } from '../../styles/colors';
 
-const CommunityCard = ({ communities }) => {
+const CommunityCard = ({ communities, index }) => {
     const navigation = useNavigation();
 
     return (
-        <TouchableOpacity style={styles.mainView}
+        <Animatable.View animation="fadeInUp"  iterationCount={1} delay={index *300} direction="alternate" style={styles.mainView}>
+        <TouchableOpacity
         onPress={() => {
-            navigation.navigate("ViewCommunity", {
+            navigation.navigate("View Community", {
                 communities: communities,
             });
         }}>
@@ -20,6 +22,7 @@ const CommunityCard = ({ communities }) => {
                 {/* <Text style={styles.created_at}>{communities.created_at}</Text> */}
             </View>
         </TouchableOpacity>
+        </Animatable.View>
     );
 }
 
@@ -43,7 +46,7 @@ const styles = StyleSheet.create({
             shadowRadius: 2,
           },
           android: {
-            elevation: 5,
+            elevation: 3,
           },
         }),
       },
@@ -58,6 +61,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 10,
+        marginTop:5
+        
     },
     title: {
         width: "100%",
