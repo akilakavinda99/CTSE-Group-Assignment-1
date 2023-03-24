@@ -9,6 +9,7 @@ import {
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ViewAllCommunities from './Community/ViewAllCommunities';
+import ViewAllEvents from './EventManagement/ViewAllEvents';
 import NewNotice from './Notices/NewNotice';
 import ViewAllNotices from './Notices/ViewAllNotices';
 
@@ -30,6 +31,9 @@ export default function Home({ screen }) {
         break;
       case 'Communities':
         icon = 'people-outline';
+        break;
+      case 'Events':
+        icon = 'calendar-outline';
         break;
     }
 
@@ -89,7 +93,20 @@ export default function Home({ screen }) {
                     <Ionicons name={'add-outline'} color="gray" size={40} />
                   </TouchableOpacity>
                 </Animated.View>
-              );  
+              );
+              case 'Events':
+                return (
+                  <Animated.View style={styles.btnCircleUp}>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        navigate('NewEvent');
+                      }}
+                    >
+                      <Ionicons name={'add-outline'} color="gray" size={40} />
+                    </TouchableOpacity>
+                  </Animated.View>
+                );
           default:
             return (
               <Animated.View style={styles.btnCircleUp}>
@@ -113,6 +130,11 @@ export default function Home({ screen }) {
       <CurvedBottomBar.Screen
         name="Communities"
         component={() => <ViewAllCommunities />}
+        position="RIGHT"
+      />
+      <CurvedBottomBar.Screen
+        name="Events"
+        component={() => <ViewAllEvents />}
         position="RIGHT"
       />
     </CurvedBottomBar.Navigator>
