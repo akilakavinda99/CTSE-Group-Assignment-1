@@ -1,5 +1,5 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import NewNotice from '../screens/Notices/NewNotice';
@@ -14,6 +14,8 @@ import NewCommunity from '../screens/Community/NewCommunity';
 import ViewAllCommunities from '../screens/Community/ViewAllCommunities';
 import ViewCommunity from '../screens/Community/ViewCommunity';
 import UpdateCommunity from '../screens/Community/UpdateCommunity';
+import MyNotices from '../screens/Profile/MyNotices';
+import MyCommunities from '../screens/Profile/MyCommunities';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,17 +35,17 @@ const RootNavigations = () => {
       <Stack.Screen
         name="Register"
         component={Register}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="NewEvent"
         component={NewEvent}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ViewAllEvents"
         component={ViewAllEvents}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Home"
@@ -73,22 +75,32 @@ const RootNavigations = () => {
       <Stack.Screen
         name="New Notice"
         component={NewNotice}
-        options={{headerShown: true}}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
         name="View Notice"
         component={ViewNotice}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Edit Notice"
         component={UpdateNotice}
-        options={{headerShown: true}}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="My Notices"
+        component={MyNotices}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="My Communities"
+        component={MyCommunities}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
         name="AddLostOrFound"
         component={AddLostOrFound}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

@@ -3,21 +3,32 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { primaryColors } from "../styles/colors";
 import sliitLogo from '../assets/images/sliit-logo.png';
-import { getDataFromAsync } from "../constants/asyncStore";
+import { getDataFromAsync, removeDataFromAsync } from "../constants/asyncStore";
 import asyncStoreKeys from "../constants/asyncStoreKeys";
 import { getDocument } from "../services/firebaseServices";
 import AppLoader from "../components/commonComponents/AppLoader";
 import { useNavigation } from "@react-navigation/native";
+import { toastComponent } from "../components/commonComponents/toastComponent";
 
-const ProfileButton = ({ name }) => {
+const ProfileButton = ({ name, logout }) => {
     const navigate = useNavigation();
 
     const goToScreen = () => {
         navigate.navigate(name);
     }
 
+    const pressLogout = async () => {
+        await removeDataFromAsync(asyncStoreKeys.IT_NUMBER);
+        toastComponent('Loggin out...')
+
+        navigate.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+        });
+    }
+
     return (
-        <TouchableOpacity style={styles.profileButton} onPress={goToScreen}>
+        <TouchableOpacity style={styles.profileButton} onPress={logout ? pressLogout : goToScreen}>
             <Text style={styles.profileButtonText}>{name}</Text>
             <Ionicons name="chevron-forward-outline" size={30} color={primaryColors.primaryBlue} />
         </TouchableOpacity>
@@ -47,13 +58,16 @@ const Profile = () => {
                             style={styles.profileImage}
                             source={sliitLogo}
                         />
-                        <Text style={styles.profileName}>{user.name}</Text>
-                        <Text style={styles.profileName}>({user.id})</Text>
-                        <Text style={styles.profileEmail}>{user.email}</Text>
+                        <View>
+                            <Text style={styles.profileName}>{user.name}</Text>
+                            <Text style={styles.profileName}>({user.id})</Text>
+                            <Text style={styles.profileEmail}>{user.email}</Text>
+                        </View>
                     </View>
                     <View style={styles.profileButtonsView}>
-                        <ProfileButton name="My Notices"/>
-                        <ProfileButton name="My Communities"/>
+                        <ProfileButton name="My Notices" />
+                        <ProfileButton name="My Communities" />
+                        <ProfileButton name="Logout" logout={true} />
                     </View>
                 </>
             }
@@ -64,12 +78,13 @@ const Profile = () => {
 const styles = StyleSheet.create({
     mainView: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: primaryColors.primaryBlue,
     },
     profileView: {
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
+        flexDirection: "row",
+        // alignItems: "center",
+        // justifyContent: "center",
         backgroundColor: primaryColors.primary,
         padding: 20,
     },
@@ -81,16 +96,17 @@ const styles = StyleSheet.create({
         backgroundColor: primaryColors.background,
         borderWidth: 3,
         borderColor: primaryColors.primaryBlue,
+        marginRight: 20,
     },
     profileName: {
         fontSize: 20,
         fontWeight: "bold",
-        color: primaryColors.white,
+        color: "#fff",
         marginTop: 10,
     },
     profileEmail: {
         fontSize: 14,
-        color: primaryColors.white,
+        color: "#fff",
         marginTop: 5,
     },
     profileDetailsView: {
@@ -113,8 +129,12 @@ const styles = StyleSheet.create({
         color: primaryColors.primary,
     },
     profileButtonsView: {
-        flex: 1,
+        flex: 3,
         padding: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        backgroundColor: "#fff",
+        paddingTop: 50,
     },
     profileButton: {
         backgroundColor: primaryColors.background,
@@ -124,7 +144,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingLeft: 30,
         paddingRight: 20,
-        borderRadius: 5,
+        borderRadius: 20,
         marginBottom: 10,
     },
     profileButtonText: {
