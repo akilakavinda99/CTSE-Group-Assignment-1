@@ -72,7 +72,7 @@ const RootNavigations = () => {
       <Stack.Screen
         name="View Notice"
         component={ViewNotice}
-        options={{headerShown: true}}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Edit Notice"

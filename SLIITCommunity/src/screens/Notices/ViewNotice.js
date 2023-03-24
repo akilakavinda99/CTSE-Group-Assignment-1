@@ -1,9 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import { Alert, View, Text, SafeAreaView, StyleSheet, ScrollView } from 'react-native'
+import { Alert, Image, View, Text, StyleSheet, ScrollView } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RichEditor } from 'react-native-pell-rich-editor';
 import ButtonComponent from '../../components/commonComponents/buttonComponent';
+import Header from '../../components/commonComponents/header';
 import Loading from '../../components/commonComponents/loading';
+import sliitLogo from '../../assets/images/sliit-logo.png';
 import { toastComponent } from '../../components/commonComponents/toastComponent';
 import { getDataFromAsync } from '../../constants/asyncStore';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
@@ -53,9 +56,13 @@ const ViewNotice = ({ route }) => {
     }
 
     return (
-        <SafeAreaView style={styles.mainView}>
+        <SafeAreaProvider style={styles.mainView}>
+            <Header title={"View Notice"} />
             {isLoading ? <Loading /> :
                 <View style={styles.bodyCard}>
+                    <View style={styles.imageContainer}>
+                        <Image source={sliitLogo} style={styles.image} />
+                    </View>
                     <Text style={styles.subject}>{notice.subject}</Text>
                     <Text style={styles.community}>{notice.community}</Text>
                     <Text style={styles.dateTime}>{notice.dateTime}</Text>
@@ -72,32 +79,70 @@ const ViewNotice = ({ route }) => {
                                 containerStyle={styles.textEditorContainer}
                             />
                         </View>
-                    </ScrollView>
                     {
                         signedInUser === owner &&
                         <View style={styles.modifyButtons}>
-                            <ButtonComponent onPress={editNotice} buttonText="Edit" />
-                            <ButtonComponent onPress={removeNotice} buttonText="Remove" />
+                            <ButtonComponent
+                                onPress={editNotice}
+                                buttonText="Edit"
+                                backgroundColor={primaryColors.primaryBlue}
+                                width={"48%"} />
+                            <ButtonComponent
+                                onPress={removeNotice}
+                                buttonText="Remove"
+                                backgroundColor={primaryColors.primaryBlue}
+                                width={"48%"} />
                         </View>
 
                     }
+                    </ScrollView>
                 </View>
             }
-        </SafeAreaView>
+        </SafeAreaProvider>
     )
 }
 
 const styles = StyleSheet.create({
     mainView: {
-        backgroundColor: primaryColors.background,
+        backgroundColor: primaryColors.primaryBlue,
+        marginBottom: 100,
         height: "100%",
+        justifyContent: "space-between",
     },
     bodyCard: {
         backgroundColor: "#fff",
-        // borderRadius: 8,
-        padding: 16,
+        padding: 20,
+        paddingTop: 75,
         width: "100%",
-        height: "100%",
+        height: "95%",
+        flexWrap: 'wrap',
+        justifyContent: "space-between",
+        marginTop: 100,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        // marginBottom: 10,
+    },
+    scrollView: {
+        paddingBottom: 30,
+    },
+    imageContainer: {
+        position: "absolute",
+        top: -50,
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: primaryColors.background,
+        alignSelf: "center",
+        flex: 1,
+        marginBottom: 16,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+    },
+    image: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        resizeMode: 'contain',
     },
     textEditorView: {
         width: "100%",
@@ -132,8 +177,11 @@ const styles = StyleSheet.create({
         color: "#888"
     },
     modifyButtons: {
+        backgroundColor: "#fff",
+        justifyContent: "space-between",
         gap: 10,
         marginTop: 16,
+        flexDirection: 'row',
     },
 });
 
