@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RichEditor } from 'react-native-pell-rich-editor';
 import ButtonComponent from '../../components/commonComponents/buttonComponent';
 import Header from '../../components/commonComponents/header';
-import Loading from '../../components/commonComponents/loading';
+import Loading from '../../components/commonComponents/AppLoader';
 import sliitLogo from '../../assets/images/sliit-logo.png';
 import { toastComponent } from '../../components/commonComponents/toastComponent';
 import { getDataFromAsync } from '../../constants/asyncStore';
@@ -137,6 +137,9 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         flexDirection: 'row',
         flexWrap: 'wrap',
+        borderWidth: 2,
+        borderColor: "#fff",
+        elevation: 10,
     },
     image: {
         width: 100,

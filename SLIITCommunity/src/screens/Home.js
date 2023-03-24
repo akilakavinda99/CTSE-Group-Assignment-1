@@ -9,9 +9,11 @@ import {
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ViewAllCommunities from './Community/ViewAllCommunities';
+import ViewAllEvents from './EventManagement/ViewAllEvents';
 import NewNotice from './Notices/NewNotice';
 import ViewAllNotices from './Notices/ViewAllNotices';
 import * as Animatable from 'react-native-animatable';
+
 
 const Screen1 = () => {
   return <View style={styles.screen1} />;
@@ -27,10 +29,16 @@ export default function Home({ screen }) {
 
     switch (routeName) {
       case 'Notices':
-        icon = 'notifications-outline';
+        icon = 'chatbubble-outline';
         break;
       case 'Communities':
         icon = 'people-outline';
+        break;
+      case 'Events':
+        icon = 'calendar-outline';
+        break;
+      case 'Profile':
+        icon = 'person-outline';
         break;
     }
 
@@ -78,6 +86,7 @@ export default function Home({ screen }) {
                 </TouchableOpacity>
               </Animatable.View>
             );
+            
             case 'Communities':
               return (
                 <Animatable.View animation="bounceIn" iterationCount={"infinite"} direction="alternate" style={styles.btnCircleUp}>
@@ -91,6 +100,21 @@ export default function Home({ screen }) {
                   </TouchableOpacity>
                 </Animatable.View>
               );  
+
+          case 'Events':
+            return (
+              <Animated.View style={styles.btnCircleUp}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    navigate('NewEvent');
+                  }}
+                >
+                  <Ionicons name={'add-outline'} color="gray" size={40} />
+                </TouchableOpacity>
+              </Animated.View>
+            );
+            
           default:
             return (
               <Animated.View style={styles.btnCircleUp}>
@@ -112,9 +136,19 @@ export default function Home({ screen }) {
         component={() => <ViewAllNotices />}
       />
       <CurvedBottomBar.Screen
+        name="Events"
+        component={() => <ViewAllEvents />}
+        position="LEFT"
+      />
+      <CurvedBottomBar.Screen
         name="Communities"
         component={() => <ViewAllCommunities />}
         position="RIGHT"
+      />
+      <CurvedBottomBar.Screen
+        name="Profile"
+        position="RIGHT"
+        component={() => <Profile />}
       />
     </CurvedBottomBar.Navigator>
   );

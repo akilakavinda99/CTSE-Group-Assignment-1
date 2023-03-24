@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   View,
@@ -24,14 +24,24 @@ const ViewCommunity = ({route}) => {
   const navigation = useNavigation();
   const communities = route.params.communities;
   const itNumber = communities.itNumber;
+  const [subscribers, setSubscribers] = useState([]);
 
   getDataFromAsync(asyncStoreKeys.IT_NUMBER).then(data => {
     setSignedInUser(data);
   });
 
+  useEffect(() => {
+    getDocument('communities', communities.id)
+      .then(doc => {
+        setSubscribers(doc.subscribers ? doc.subscribers : []);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, [isLoading, signedInUser]);
+
   const editCommunity = () => {
     navigation.navigate('Update Community', {communities});
-  };
 
   const handleDelete = () => {
     setIsLoading(true);
@@ -39,7 +49,7 @@ const ViewCommunity = ({route}) => {
       .then(() => {
         setIsLoading(false);
         toastComponent('Community deleted successfully!', false);
-        navigation.navigate('Home', {screen: 'Communities'});
+        navigation.navigate('Home', { screen: 'Communities' });
       })
       .catch(err => {
         setIsLoading(false);
@@ -56,9 +66,21 @@ const ViewCommunity = ({route}) => {
           text: 'Cancel',
           style: 'cancel',
         },
-        {text: 'Yes', onPress: () => handleDelete()},
+        { text: 'Yes', onPress: () => handleDelete() },
       ],
     );
+  };
+
+  const subscribe = async () => {
+    setIsLoading(true);
+    await subscribeCommunity(communities.id, signedInUser);
+    setIsLoading(false);
+  };
+
+  const unsubscribe = async () => {
+    setIsLoading(true);
+    await unsubscribeCommunity(communities.id, signedInUser);
+    setIsLoading(false);
   };
 
   return (
@@ -91,7 +113,7 @@ const ViewCommunity = ({route}) => {
             </Animatable.View>
           </ScrollView>
           <View>
-            {signedInUser === itNumber && (
+            {signedInUser === itNumber ? (
               <View style={styles.modifyButtons}>
                 <ButtonComponent
                   backgroundColor="#242D66"
@@ -103,6 +125,21 @@ const ViewCommunity = ({route}) => {
                   onPress={removeCommunity}
                   buttonText="Remove"
                 />
+              </View>
+            ) : (
+              <View style={styles.modifyButtons}>
+                {subscribers?.includes(signedInUser) ?
+                  <ButtonComponent
+                    backgroundColor="#58595a"
+                    onPress={unsubscribe}
+                    buttonText="Unsubscribe"
+                  /> :
+                  <ButtonComponent
+                    backgroundColor="#242D66"
+                    onPress={subscribe}
+                    buttonText="Subscribe"
+                  />
+                }
               </View>
             )}
   
