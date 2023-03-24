@@ -13,6 +13,7 @@ import ViewAllEvents from './EventManagement/ViewAllEvents';
 import ViewAllNotices from './Notices/ViewAllNotices';
 import Profile from './Profile';
 import * as Animatable from 'react-native-animatable';
+import ViewLostOrFound from './lostAndFoundScreens/viewLostOrFound';
 
 export default function Home({ screen }) {
   const [showingTab, setShowingTab] = useState(screen ? screen : 'Notices');
@@ -32,6 +33,9 @@ export default function Home({ screen }) {
         break;
       case 'Profile':
         icon = 'person-outline';
+        break;
+      case 'LostOrFound':
+        icon = 'home-outline';
         break;
     }
 
@@ -136,6 +140,11 @@ export default function Home({ screen }) {
         name="Events"
         component={() => <ViewAllEvents />}
         position="LEFT"
+      />
+      <CurvedBottomBar.Screen
+        name="LostOrFound"
+        component={() => <ViewLostOrFound />}
+        position="RIGHT"
       />
       <CurvedBottomBar.Screen
         name="Communities"
