@@ -15,10 +15,10 @@ export const checkForDocument = async (collectionName, docId) => {
 export const addDocument = async (collectionName, data) => {
   try {
     const addDoc = await firestore().collection(collectionName).add(data);
-    return { status: true, id: addDoc.id };
+    return {status: true, id: addDoc.id};
   } catch (error) {
     console.log(error);
-    return { status: false, error: error };
+    return {status: false, error: error};
   }
 };
 
@@ -34,8 +34,11 @@ export const getDocuments = async collectionName => {
 
 export const getDocument = async (collectionName, docId) => {
   try {
-    const getDoc = await firestore().collection(collectionName).doc(docId).get();
-    return { ...getDoc.data(), id: getDoc.id };
+    const getDoc = await firestore()
+      .collection(collectionName)
+      .doc(docId)
+      .get();
+    return {...getDoc.data(), id: getDoc.id};
   } catch (error) {
     console.log(error);
     return {};
@@ -49,7 +52,7 @@ export const getDocumentOrderBy = async (collectionName, orderBy, arrange) => {
       .orderBy(orderBy, arrange)
       .get();
     return getDocs.docs.map(doc => {
-      return { ...doc.data(), id: doc.id };
+      return {...doc.data(), id: doc.id};
     });
   } catch (error) {
     console.log(error);
@@ -64,7 +67,7 @@ export const getDocumentGroupBy = async (collectionName, groupBy) => {
       .groupBy(groupBy)
       .get();
     return getDocs.docs.map(doc => {
-      return { ...doc.data(), id: doc.id };
+      return {...doc.data(), id: doc.id};
     });
   } catch (error) {
     console.log(error);
@@ -105,7 +108,7 @@ export const getDocumentsByField = async (collectionName, fieldName, value) => {
       .where(fieldName, '==', value)
       .get();
     return getDocs.docs.map(doc => {
-      return { ...doc.data(), id: doc.id };
+      return {...doc.data(), id: doc.id};
     });
   } catch (error) {
     console.log(error);
@@ -141,7 +144,8 @@ export const getDocumentsByFieldWithId = async (
       .where(fieldName, '==', value)
       .get();
     return getDocs.docs.map(doc => {
-      return { ...doc.data(), id: doc.id };
+      console.log('THis is doc id', doc.id);
+      return {...doc.data(), id: doc.id};
     });
   } catch (error) {
     console.log(error);
