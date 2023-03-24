@@ -4,7 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import TextInputComponent from './textInputComponent';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const MyDateTimePicker = () => {
+const MyDateTimePicker = ({onchange, value}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -20,7 +20,10 @@ const MyDateTimePicker = () => {
     if (Platform.OS === 'android') {
       hideDatePicker();
     }
+    console.log("date", date)
     setSelectedDate(date || selectedDate);
+    onchange(date || selectedDate);
+
   };
 
   return (

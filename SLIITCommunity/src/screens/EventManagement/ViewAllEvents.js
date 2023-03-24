@@ -1,27 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
-import Loading from '../../components/commonComponents/loading';
+import Loading from '../../components/commonComponents/AppLoader';
 import EventCard from '../../components/EventManagement/EventCard';
 import { getDocumentOrderBy } from '../../services/firebaseServices';
 import { primaryColors } from '../../styles/colors';
 import SearchBar from "react-native-dynamic-search-bar";
+import Header from '../../components/commonComponents/header';
 
 const ViewAllEvents = () => {
     const [events, setEvents] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [searchText, setSearchText] = useState("");
 
     const getEvents = () => {
+        setRefreshing(true);
         getDocumentOrderBy('events', 'created_at', 'desc')
             .then((res) => {
                 setEvents(res);
-                // console.log(res);
+                setRefreshing(false);
             })
             .catch((err) => {
                 console.log(err);
+                setRefreshing(false);
             });
     }
 
     const onSearch = (text) => {
+        setSearchText(text);
         const filteredEvents = events.filter((event) => {
             return event.title.toLowerCase().includes(text.toLowerCase()) ||
                 event.venue.toLowerCase().includes(text.toLowerCase());
@@ -31,9 +36,7 @@ const ViewAllEvents = () => {
     }
 
     const onRefresh = () => {
-        setRefreshing(true);
         getEvents();
-        setRefreshing(false);
     }
 
     useEffect(() => {
@@ -42,17 +45,22 @@ const ViewAllEvents = () => {
 
     return (
         <SafeAreaView style={styles.mainView}>
+            {refreshing ? <Loading /> : 
+            <>
+            <Header title={'Events'} enableBack={false} />
             <SearchBar
                 placeholder="Search here"
-                // onPress={() => alert("onPress")}
-                onChangeText={onSearch}
+                clearIconComponent={searchText == "" ? <View /> : <Text>Clear</Text>}
+                onClearPress={() => onSearch("")}
+                placeholderTextColor={"#8e8e8e"}
             />
             <ScrollView
                 style={styles.scrollView}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
-                        onRefresh={onRefresh}
+                        // onRefresh={onRefresh}
+                        getEvents={getEvents}
                     />
                 }
             >
@@ -65,6 +73,8 @@ const ViewAllEvents = () => {
                 }
                 <View style={{ height: 90 }} />
             </ScrollView>
+            </>
+            }
         </SafeAreaView>
     );
 }
@@ -72,12 +82,12 @@ const ViewAllEvents = () => {
 const styles = StyleSheet.create({
     mainView: {
         height: "100%",
-        paddingTop: 10,
-        backgroundColor: primaryColors.background,
+        backgroundColor: primaryColors.primaryBlue,
     },
     scrollView: {
         width: '100%',
         paddingHorizontal: 16,
+        backgroundColor: "#fff",
         marginTop: 10,
     },
 });

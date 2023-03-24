@@ -1,11 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import {
   View,
-  Text,
   TextInput,
-  Platform,
   Image,
-  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
@@ -20,7 +17,6 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { createTwoButtonAlert } from '../../components/commonComponents/alertComponent';
 import { imageUploadService } from '../../services/imageUploadService';
 import { primaryColors } from '../../styles/colors';
-import Header from '../../components/commonComponents/header';
 import MyDateTimePicker from '../../components/commonComponents/datepicker';
 import TimePicker from '../../components/commonComponents/timepicker';
 import Loading from '../../components/commonComponents/loading';
@@ -124,14 +120,14 @@ const AddEvent = () => {
       });
       return;
     }
-    // if (selectedDate === null) {
-    //   Toast.show({
-    //     type: 'error',
-    //     text1: 'Error',
-    //     text2: 'Please select a date',
-    //   });
-    //   return;
-    // }
+    if (selectedDate === null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please select a date',
+      });
+      return;
+    }
     // if (selectedTime === null) {
     //   Toast.show({
     //     type: 'error',
@@ -140,6 +136,8 @@ const AddEvent = () => {
     //   });
     //   return;
     // }
+      console.log("selectedDate", selectedDate);
+
     setIsLoading(true);
     const url = await imageUploadService(title, image);
     const res = addDocument('events', {
@@ -155,23 +153,27 @@ const AddEvent = () => {
     setIsLoading(false);
     if (res) {
       toastComponent('Event added successfully!');
-      // navigation.navigate('Home', {screen: 'Communities'});
     } else {
       toastComponent('Error creating Community!', true);
     }
-    // toastComponent('Event Created Successfully', 'success');
   };
+
+  const DateChange = (selectedDate) => {
+    console.log("Date", selectedDate);
+    setSelectedDate(selectedDate);
+  }
+
+  const TimeChange = (selectedTime) => {
+    console.log("Time", selectedTime);
+    setSelectedTime(selectedTime);
+  }
 
   return (
     <SafeAreaView style={{ width: "100%", height: "100%" }}>
-
-
-      <Header title={"Create Event"} />
       {isLoading ? <Loading /> :
         <View style={styles.container}>
           <SafeAreaView style={[AppLayout.flexColumnCentered, styles.mainView]}>
-            
-
+            <ScrollView contentContainerStyle={styles.scrollView}>
             <TextInput
               value={title}
               onChangeText={setTitle}
@@ -179,14 +181,14 @@ const AddEvent = () => {
               style={styles.title}
             />
 
-            {/* <MyDateTimePicker
+            <MyDateTimePicker
               value={selectedDate}
-              onchange={setSelectedDate}
+              onchange={DateChange}
             />
 
-            <TimePicker
+            {/* <TimePicker
               value={selectedTime}
-              onchange={setSelectedTime}
+              onchange={TimeChange}
             /> */}
 
             <TextInput
@@ -195,7 +197,6 @@ const AddEvent = () => {
               placeholder={'Enter Event Venue'}
               style={styles.title}
             />
-            <ScrollView contentContainerStyle={styles.scrollView}>
               <View style={styles.textEditorView}>
                 <RichEditor
                   ref={richText}
@@ -238,10 +239,6 @@ const AddEvent = () => {
                 <ButtonComponent backgroundColor="#242D66" buttonText="Create Event" onPress={handleSubmit} />
               </View>
 
-              {/* <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Create Event</Text>
-              </TouchableOpacity> */}
-
             </ScrollView>
             {isFocused && (
               <RichToolbar
@@ -262,7 +259,6 @@ const AddEvent = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: primaryColors.primaryBlue,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -270,8 +266,7 @@ const styles = StyleSheet.create({
     // height: SCREEN_HEIGHT,
     marginLeft: 16,
     marginRight: 16,
-    // backgroundColor: primaryColors.primaryBlue,
-    marginTop: SCREEN_HEIGHT / 15,
+    marginTop: SCREEN_HEIGHT / 35,
   },
   header: {
     width: "100%",
@@ -302,7 +297,7 @@ const styles = StyleSheet.create({
   textEditorView: {
     width: 343,
     borderRadius: 8,
-    marginBottom: 30,
+    marginBottom: 10,
   },
   textEditorContainer: {
     width: '100%',
@@ -345,6 +340,12 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderWidth: 1,
     borderColor: 'black',
+    borderRadius: 30,
+    marginBottom: 20,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
     borderRadius: 30,
   },
 });

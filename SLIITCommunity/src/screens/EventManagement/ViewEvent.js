@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { Alert, Image, View, Text, StyleSheet, ScrollView } from 'react-native'
 import { RichEditor } from 'react-native-pell-rich-editor';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Header from '../../components/commonComponents/header';
-import Loading from '../../components/commonComponents/loading';
 import sliitLogo from '../../assets/images/sliit-logo.png';
 import { toastComponent } from '../../components/commonComponents/toastComponent';
 import { getDataFromAsync } from '../../constants/asyncStore';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
 import { deleteDocument } from '../../services/firebaseServices';
 import { primaryColors } from '../../styles/colors';
+import Loading from '../../components/commonComponents/AppLoader';
 
 const ViewEvent = ({ route }) => {
     const [signedInUser, setSignedInUser] = useState("");
@@ -22,7 +22,7 @@ const ViewEvent = ({ route }) => {
     getDataFromAsync(asyncStoreKeys.IT_NUMBER)
         .then((data) => {
             setSignedInUser(data);
-            console.log(data);
+            // console.log(data);
         });
 
     const editEvent = () => {
@@ -57,8 +57,9 @@ const ViewEvent = ({ route }) => {
 
     return (
         <SafeAreaProvider style={styles.mainView}>
-            <Header title={"View Event"} />
+            <Header title={"View Event"} enableBack={true} />
             {isLoading ? <Loading /> :
+            <>
                 <View style={styles.bodyCard}>
                     <View style={styles.imageContainer}>
                         <Image source={sliitLogo} style={styles.image} />
@@ -93,10 +94,11 @@ const ViewEvent = ({ route }) => {
                                 backgroundColor={primaryColors.primaryBlue}
                                 width={"48%"} />
                         </View>
-
+                    
                     } 
                     </ScrollView>
                 </View>
+                </>
             }
         </SafeAreaProvider>
     )
