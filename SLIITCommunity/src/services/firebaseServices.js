@@ -104,7 +104,9 @@ export const getDocumentsByField = async (collectionName, fieldName, value) => {
       .collection(collectionName)
       .where(fieldName, '==', value)
       .get();
-    return getDocs.docs.map(doc => doc.data());
+    return getDocs.docs.map(doc => {
+      return {...doc.data(), id: doc.id};
+    });
   } catch (error) {
     console.log(error);
     return [];

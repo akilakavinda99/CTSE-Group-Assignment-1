@@ -9,7 +9,7 @@ import { getDataFromAsync } from "../../constants/asyncStore";
 import asyncStoreKeys from "../../constants/asyncStoreKeys";
 import { getDateAndTime } from "../../services/commonFunctions";
 import { addDocument, getDocumentsByField } from "../../services/firebaseServices";
-import { sendNotification } from "../../services/notificationServices";
+import { getSubscribedUsers, requestNotificationPermission, sendNotification, updateMessagingToken } from "../../services/notificationServices";
 import { primaryColors } from '../../styles/colors';
 
 const NewNotice = ({ navigation }) => {
@@ -22,6 +22,7 @@ const NewNotice = ({ navigation }) => {
     const [subject, setSubject] = useState("");
     const [newNotice, setNewNotice] = useState("");
     const [community, setCommunity] = useState("");
+    const [communityId, setCommunityId] = useState("");
 
     getDataFromAsync(asyncStoreKeys.IT_NUMBER)
         .then((data) => {
@@ -37,14 +38,13 @@ const NewNotice = ({ navigation }) => {
             notice: newNotice,
             dateTime: getDateAndTime(),
         });
-        // console.log(res);
 
         setIsLoading(false);
         if (res.status) {
-            // sendNotification('New Notice from ' + community, subject, [
-            //     "cSNI_a9bRl632Bjvi_2daC:APA91bHHaQa0WxyoJNp5zrXUwLhXz3AMTqVqbYBaK4w5hq8vOlXIMkWMFJEJ1OGWMj3RCKg9Yg-11_8kmuYHGygLHn4MD0hZUTE3iwU5MJRtFMYcL2jCRP21DWv4qSf2ZvVpYLxewYuW",
-            //     "cXXikM7cSFe-gvbyNvAD8A:APA91bGe0u9MJVhzFX7ESIwXycx05a7ZD1hGFGal29KFtHb6h3auJQVbG9xYNK8gkH7Re4LrcaNSdYDz5v0RIP7C6B4-7k3mo_V6QMAeGKlguu6Rc0YZDGMHLZhreBZVr8mC8HlrnzgJ"
-            // ])
+            const head = "New Notice from " + community;
+            const body = subject;
+            const tokens = await getSubscribedUsers(communityId);
+            sendNotification(head, body, tokens);
             toastComponent("Notice added successfully!", false);
             navigation.navigate('Home', { screen: 'Notices' });
         } else {
@@ -55,19 +55,23 @@ const NewNotice = ({ navigation }) => {
     const selectCommunity = (val) => {
         const com = communities.filter((item) => item.key === val);
         setCommunity(com[0]?.value);
+        setCommunityId(com[0]?.id);
     }
 
     useEffect(() => {
+        setIsLoading(true);
         getDocumentsByField("communities", "itNumber", signedInUser)
             .then((res) => {
                 let filtered = [];
                 res.forEach((item, key) => {
                     filtered.push({
                         key: key,
+                        id: item.id,
                         value: item.title,
                     });
                 });
                 setCommunities(filtered);
+                setIsLoading(false);
             });
     }, [signedInUser]);
 

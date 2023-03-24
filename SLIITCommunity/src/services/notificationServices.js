@@ -76,6 +76,23 @@ export const unsubscribeCommunity = async (communityId, itNumber) => {
     }
 };
 
+// Get the messaging tokens of the subscribed users
+export const getSubscribedUsers = async (communityId) => {
+    try {
+        const doc = await communityRef.doc(communityId).get();
+        if (doc._exists) {
+            const subscribers = doc.data().subscribers;
+            const users = await userRef.where(firestore.FieldPath.documentId(), 'in', subscribers).get();
+            const tokens = users.docs.map(doc => doc.data().messagingToken);
+            return tokens;
+        } else {
+            return [];
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 // Send notification to the device
 export const sendNotification = async (title, body, users) => {
     try {
