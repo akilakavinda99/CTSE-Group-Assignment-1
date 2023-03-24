@@ -48,7 +48,6 @@ const NewNotice = ({ navigation }) => {
             dateTime: getDateAndTime(),
         });
 
-        setIsLoading(false);
         if (res.status) {
             const head = "New Notice from " + community;
             const body = subject;
@@ -57,6 +56,7 @@ const NewNotice = ({ navigation }) => {
             toastComponent("Notice added successfully!", false);
             navigation.navigate('Home', { screen: 'Notices' });
         } else {
+            setIsLoading(false);
             toastComponent("Error while adding notice!", true);
         }
     }
@@ -85,7 +85,7 @@ const NewNotice = ({ navigation }) => {
     }, [signedInUser]);
 
     return (
-        <SafeAreaView style={{ width: "100%", height: "100%" }}>
+        <SafeAreaView style={{ width: "100%", height: "100%", backgroundColor:primaryColors.background }}>
             {isLoading ? <Loading /> :
                 <ScrollView contentContainerStyle={styles.mainView}>
                     <TextInput
@@ -94,6 +94,7 @@ const NewNotice = ({ navigation }) => {
                         placeholder={"Subject"}
                         style={styles.subject}
                     />
+                    {errors.subject && <Text style={styles.error}>{errors.subject}</Text>}
                     <SelectList
                         setSelected={selectCommunity}
                         data={communities}
@@ -113,7 +114,7 @@ const NewNotice = ({ navigation }) => {
                                 initialHeight={250}
                                 // height={100}
                                 placeholder={"Notice..."}
-                                initialContentHTML={""}
+                                initialContentHTML={newNotice}
                                 editorStyle={styles.textEditor}
                                 containerStyle={styles.textEditorContainer}
                                 onFocus={() => setIsFocused(true)}
@@ -152,10 +153,12 @@ const styles = StyleSheet.create({
     textEditorView: {
         width: "100%",
         borderRadius: 8,
+        backgroundColor: '#fff',
+        marginTop: 16,
+        padding: 4,
     },
     textEditorContainer: {
         borderRadius: 8,
-        marginTop: 16,
     },
     textEditor: {
         backgroundColor: '#fff',

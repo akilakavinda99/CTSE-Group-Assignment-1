@@ -58,13 +58,11 @@ const MyCommunities = () => {
 
   return (
     <SafeAreaView style={styles.mainView}>
-      <Animatable.View animation="pulse" iterationCount={"infinite"} direction="alternate">
-        <SearchBar
-          placeholder="Search Communities"
-          style={{ marginTop: 10, marginBottom: 10 }}
-          onChangeText={onSearch}
-        />
-      </Animatable.View>
+      <SearchBar
+        placeholder="Search Communities"
+        style={{ marginTop: 10, marginBottom: 10 }}
+        onChangeText={onSearch}
+      />
       {loading ? (
         <AppLoader />
       ) : (

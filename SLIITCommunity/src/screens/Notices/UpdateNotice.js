@@ -49,11 +49,11 @@ const UpdateNotice = ({ route, navigation }) => {
         });
         // console.log(res);
 
-        setIsLoading(false);
         if (res) {
             toastComponent("Notice updated successfully!", false);
             navigation.navigate('Home', { screen: 'Notices' });
         } else {
+            setIsLoading(false);
             toastComponent("Error updating notice!", true);
         }
     }
@@ -82,7 +82,7 @@ const UpdateNotice = ({ route, navigation }) => {
     }, [signedInUser]);
 
     return (
-        <SafeAreaView style={{ width: "100%", height: "100%" }}>
+        <SafeAreaView style={{ width: "100%", height: "100%", backgroundColor: primaryColors.background }}>
             {isLoading ? <Loading /> :
                 <ScrollView contentContainerStyle={styles.mainView}>
                     <TextInput
@@ -150,10 +150,12 @@ const styles = StyleSheet.create({
     textEditorView: {
         width: "100%",
         borderRadius: 8,
+        backgroundColor: '#fff',
+        marginTop: 16,
+        padding: 4,
     },
     textEditorContainer: {
         borderRadius: 8,
-        marginTop: 16,
     },
     textEditor: {
         backgroundColor: '#fff',

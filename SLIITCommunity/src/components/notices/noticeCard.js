@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     },
     subject: {
         width: "100%",
-        fontSize: 16,
-        fontWeight: "bold",
+        fontSize: 18,
+        fontWeight: "500",
     },
     addedDate: {
         width: "100%",
