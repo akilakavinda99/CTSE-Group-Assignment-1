@@ -3,8 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  Platform,
-  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -24,6 +22,7 @@ import {SelectList} from 'react-native-dropdown-select-list';
 import {updateDocument} from '../../services/firebaseServices';
 import {primaryColors} from '../../styles/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AppLoader from '../../components/commonComponents/AppLoader';
 
 const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
   const communities = route.params.communities;
@@ -34,7 +33,7 @@ const UpdateCommunity = ({route, navigation, navigation: {goBack}}) => {
   const [faculty, setFaculty] = React.useState(communities.faculty);
   const [isFocused, setIsFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-console.log(communities)
+
   const data = [
     {key: '1', value: 'All'},
     {key: '2', value: 'Computing'},
@@ -136,11 +135,9 @@ console.log(communities)
   };
 
   return (
+    <>
     <SafeAreaView style={{width: '100%', height: '100%'}}>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <View style={styles.mainView}>
+      <View style={styles.mainView}>
           <Text style={styles.headingStyle}>Update Community</Text>
           <TextInput
             value={title}
@@ -236,9 +233,11 @@ console.log(communities)
             {/* </KeyboardAvoidingView> */}
           </ScrollView>
         </View>
-      )}
       <Toast />
+      {isLoading ? <AppLoader/> : null}
     </SafeAreaView>
+    
+   </>
   );
 };
 
@@ -287,7 +286,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   imagePicker: {
-    height: 150,
+    height: 175,
     margin: 16,
     borderStyle: 'dashed',
     borderWidth: 1,

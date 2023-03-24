@@ -13,54 +13,153 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import { RichEditor, RichToolbar } from 'react-native-pell-rich-editor';
 import { AppLayout, SCREEN_HEIGHT } from '../../styles/appStyles';
-import { actions, RichEditor, RichToolbar } from 'react-native-pell-rich-editor';
+import Toast from 'react-native-toast-message';
 import { primaryColors } from '../../styles/colors';
 import MyDateTimePicker from '../../components/commonComponents/datepicker';
 import TimePicker from '../../components/commonComponents/timepicker';
+import Loading from '../../components/commonComponents/loading';
+import { addDocument } from '../../services/firebaseServices';
+import { toastComponent } from '../../components/commonComponents/toastComponent';
 
 const AddEvent = () => {
+
   const richText = useRef();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [venue, setVenue] = useState('');
+  const [selected, setSelected] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  // const [selectedDate, setSelectedDate] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
+  const handleSubmit = async () => {
+    if (title.trim() === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter a title',
+      });
+      return;
+    }
+    if (venue.trim() === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter a venue',
+      });
+      return;
+    }
+    if (description.trim() === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter a description',
+      });
+      return;
+    }
+    // if (selectedDate === null) {
+    //   Toast.show({
+    //     type: 'error',
+    //     text1: 'Error',
+    //     text2: 'Please select a date',
+    //   });
+    //   return;
+    // }
+    // if (selectedTime === null) {
+    //   Toast.show({
+    //     type: 'error',
+    //     text1: 'Error',
+    //     text2: 'Please select a time',
+    //   });
+    //   return;
+    // }
+    const res = addDocument('events', {
+      title,
+      venue,
+      description: description,
+      date: selectedDate,
+      time: selectedTime,
+      created_at: new Date().toDateString(),
+    });
+    toastComponent('Event Created Successfully', 'success');
+  };
 
   return (
-    <>
-      <View style={styles.container}>
-        <SafeAreaView style={[AppLayout.flexColumnCentered, styles.mainView]}>
-          <Text style={styles.headingStyle}>Create an Event</Text>
+    <SafeAreaView style={{ width: "100%", height: "100%" }}>
+      {isLoading ? <Loading /> :
+        <View style={styles.container}>
+          <SafeAreaView style={[AppLayout.flexColumnCentered, styles.mainView]}>
+            <Text style={styles.headingStyle}>Create an Event</Text>
 
-          <TextInput
-            placeholder={'Enter Event Title'}
-            style={styles.title}
-          />
+            <TextInput
+              value={title}
+              onChangeText={setTitle}
+              placeholder={'Enter Event Title'}
+              style={styles.title}
+            />
 
-          <MyDateTimePicker />
+            {/* <MyDateTimePicker
+              value={selectedDate}
+              onchange={setSelectedDate}
+            />
 
-          <TimePicker />
+            <TimePicker
+              value={selectedTime}
+              onchange={setSelectedTime}
+            /> */}
 
-          <TextInput
-            placeholder={'Enter Event Venue'}
-            style={styles.title}
-          />
+            <TextInput
+              value={venue}
+              onChangeText={setVenue}
+              placeholder={'Enter Event Venue'}
+              style={styles.title}
+            />
+            <ScrollView contentContainerStyle={styles.scrollView}>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={{ width: '100%' }}>
+                <View style={styles.textEditorView}>
+                  <RichEditor
+                    ref={richText}
+                    onChange={setDescription}
+                    initialHeight={250}
+                    placeholder={'Enter Event Description'}
+                    initialContentHTML={''}
+                    editorStyle={styles.textEditor}
+                    containerStyle={styles.textEditorContainer}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                  />
 
-          <TextInput
-            placeholder={'Enter Event Description'}
-            style={styles.description}
-          />
+                </View>
+              </KeyboardAvoidingView>
 
-          <TouchableOpacity style={styles.button} onPress={() => Alert.alert('Simple Button pressed')}>
-            <Text style={styles.buttonText}>Create Event</Text>
-          </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Create Event</Text>
+              </TouchableOpacity>
 
-        </SafeAreaView>
-      </View>
-    </>
+            </ScrollView>
+            {isFocused && (
+              <RichToolbar
+                editor={richText}
+              // actions={[actions.setBold, actions.setItalic, actions.setUnderline, actions.heading1,]}
+              // iconMap={{ [actions.heading1]: ({ tintColor }) => (<Text style={[{ color: tintColor }]}>H1</Text>), }}
+              />
+            )}
+
+          </SafeAreaView>
+          <Toast />
+        </View>
+      }
+    </SafeAreaView>
   );
 };
 
@@ -69,6 +168,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  mainView: {
+    // height: SCREEN_HEIGHT,
+    marginLeft: 16,
+    marginRight: 16,
+    marginTop: SCREEN_HEIGHT / 15,
   },
   text: {
     fontSize: 30,
@@ -79,7 +184,7 @@ const styles = StyleSheet.create({
   headingStyle: {
     fontSize: 30,
     color: primaryColors.primaryBlue,
-    fontWeight: 800,
+    fontWeight: 900,
     marginBottom: 50,
   },
   title: {
@@ -92,16 +197,28 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     color: 'black',
   },
-  description: {
+  textEditorView: {
     width: 343,
-    height: 200,
-    paddingLeft: 15,
-    marginBottom: 16,
-    backgroundColor: '#E8E8E8',
     borderRadius: 8,
-    borderColor: 'red',
-    color: 'black',
+    marginBottom: 30,
   },
+  textEditorContainer: {
+    width: '100%',
+    borderRadius: 8,
+  },
+  textEditor: {
+    backgroundColor: '#E8E8E8',
+  },
+  // description: {
+  //   width: 343,
+  //   height: 200,
+  //   paddingLeft: 15,
+  //   marginBottom: 16,
+  //   backgroundColor: '#E8E8E8',
+  //   borderRadius: 8,
+  //   borderColor: 'red',
+  //   color: 'black',
+  // },
   button: {
     width: 343,
     height: 45,
