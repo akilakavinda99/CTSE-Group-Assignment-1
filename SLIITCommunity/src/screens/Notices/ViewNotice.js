@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Image, View, Text, StyleSheet, ScrollView } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RichEditor } from 'react-native-pell-rich-editor';
@@ -10,12 +10,13 @@ import sliitLogo from '../../assets/images/sliit-logo.png';
 import { toastComponent } from '../../components/commonComponents/toastComponent';
 import { getDataFromAsync } from '../../constants/asyncStore';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
-import { deleteDocument } from '../../services/firebaseServices';
+import { deleteDocument, getDocument } from '../../services/firebaseServices';
 import { primaryColors } from '../../styles/colors';
 
 const ViewNotice = ({ route }) => {
     const [signedInUser, setSignedInUser] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [communityLogo, setCommunityLogo] = useState("");
     const navigation = useNavigation();
     const notice = route.params.notice;
     const owner = notice.owner;
@@ -55,48 +56,71 @@ const ViewNotice = ({ route }) => {
         ]);
     }
 
-    return (
-        <SafeAreaProvider style={styles.mainView}>
-            <Header title={"View Notice"} />
-            {isLoading ? <Loading /> :
-                <View style={styles.bodyCard}>
-                    <View style={styles.imageContainer}>
-                        <Image source={sliitLogo} style={styles.image} />
-                    </View>
-                    <Text style={styles.subject}>{notice.subject}</Text>
-                    <Text style={styles.community}>{notice.community}</Text>
-                    <Text style={styles.dateTime}>{notice.dateTime}</Text>
-                    <ScrollView contentContainerStyle={styles.scrollView}>
-                        <View style={styles.textEditorView}>
-                            <RichEditor
-                                onChange={text => {
-                                    setNewNotice(text);
-                                }}
-                                initialHeight={250}
-                                disabled={true}
-                                initialContentHTML={notice.notice}
-                                editorStyle={styles.textEditor}
-                                containerStyle={styles.textEditorContainer}
-                            />
-                        </View>
-                    {
-                        signedInUser === owner &&
-                        <View style={styles.modifyButtons}>
-                            <ButtonComponent
-                                onPress={editNotice}
-                                buttonText="Edit"
-                                backgroundColor={primaryColors.primaryBlue}
-                                width={"48%"} />
-                            <ButtonComponent
-                                onPress={removeNotice}
-                                buttonText="Remove"
-                                backgroundColor={primaryColors.primaryBlue}
-                                width={"48%"} />
-                        </View>
+    useEffect(() => {
+        setIsLoading(true);
+        getDocument('communities', notice.communityId)
+            .then((res) => {
+                if (res.image)
+                    setCommunityLogo(res.image);
+                setIsLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setIsLoading(false);
+            });
+    }, []);
 
-                    }
-                    </ScrollView>
-                </View>
+
+    return (
+        <SafeAreaProvider style={[
+            styles.mainView,
+            isLoading ? { backgroundColor: '#d7d7d7' } : { backgroundColor: primaryColors.primaryBlue }
+        ]}>
+            {isLoading ? <Loading /> :
+                <>
+                    <Header title={"View Notice"} enableBack={true} />
+                    <View style={styles.bodyCard}>
+                        <View style={styles.imageContainer}>
+                            {communityLogo === "" ?
+                                <Image source={sliitLogo} style={styles.image} /> :
+                                <Image source={{ uri: communityLogo }} style={styles.image} />
+                            }
+                        </View>
+                        <Text style={styles.subject}>{notice.subject}</Text>
+                        <Text style={styles.community}>{notice.community}</Text>
+                        <Text style={styles.dateTime}>{notice.dateTime}</Text>
+                        <ScrollView contentContainerStyle={styles.scrollView}>
+                            <View style={styles.textEditorView}>
+                                <RichEditor
+                                    onChange={text => {
+                                        setNewNotice(text);
+                                    }}
+                                    initialHeight={250}
+                                    disabled={true}
+                                    initialContentHTML={notice.notice}
+                                    editorStyle={styles.textEditor}
+                                    containerStyle={styles.textEditorContainer}
+                                />
+                            </View>
+                            {
+                                signedInUser === owner &&
+                                <View style={styles.modifyButtons}>
+                                    <ButtonComponent
+                                        onPress={editNotice}
+                                        buttonText="Edit"
+                                        backgroundColor={primaryColors.primaryBlue}
+                                        width={"48%"} />
+                                    <ButtonComponent
+                                        onPress={removeNotice}
+                                        buttonText="Remove"
+                                        backgroundColor={primaryColors.primaryBlue}
+                                        width={"48%"} />
+                                </View>
+
+                            }
+                        </ScrollView>
+                    </View>
+                </>
             }
         </SafeAreaProvider>
     )
@@ -104,7 +128,6 @@ const ViewNotice = ({ route }) => {
 
 const styles = StyleSheet.create({
     mainView: {
-        backgroundColor: primaryColors.primaryBlue,
         marginBottom: 100,
         height: "100%",
         justifyContent: "space-between",

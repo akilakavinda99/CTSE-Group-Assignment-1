@@ -6,6 +6,8 @@ import NoticeCard from '../../components/notices/noticeCard';
 import { getDocumentOrderBy } from '../../services/firebaseServices';
 import { primaryColors } from '../../styles/colors';
 import NetCheck from '../../components/commonComponents/netCheck';
+import HorizontalLine from '../../components/commonComponents/horizontalLine';
+import Header from '../../components/commonComponents/header';
 
 const ViewAllNotices = () => {
     const [notices, setNotices] = useState([]);
@@ -50,6 +52,7 @@ const ViewAllNotices = () => {
             <NetCheck />
             {refreshing ? <Loading /> :
                 <>
+                    <Header title={'Notices'} enableBack={false} />
                     <SearchBar
                         placeholder="Search here"
                         // onPress={() => alert("onPress")}
@@ -71,7 +74,10 @@ const ViewAllNotices = () => {
                             // refreshing ? <Loading /> :
                             showingNotices.map((notice, index) => {
                                 return (
-                                    <NoticeCard key={index} notice={notice} />
+                                    <View key={index}>
+                                        <NoticeCard notice={notice} />
+                                        <HorizontalLine />
+                                    </View>
                                 )
                             })
                         }
@@ -85,14 +91,16 @@ const ViewAllNotices = () => {
 
 const styles = StyleSheet.create({
     mainView: {
-        backgroundColor: primaryColors.background,
+        backgroundColor: primaryColors.primaryBlue,
         height: "100%",
-        paddingTop: 10,
     },
     scrollView: {
         width: "100%",
         paddingHorizontal: 16,
         marginTop: 10,
+        backgroundColor: "#fff",
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
     },
 });
 

@@ -16,6 +16,7 @@ import ViewCommunity from '../screens/Community/ViewCommunity';
 import UpdateCommunity from '../screens/Community/UpdateCommunity';
 import MyNotices from '../screens/Profile/MyNotices';
 import MyCommunities from '../screens/Profile/MyCommunities';
+import Profile from '../screens/Profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -95,6 +96,11 @@ const RootNavigations = () => {
       <Stack.Screen
         name="AddLostOrFound"
         component={AddLostOrFound}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={Profile}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
