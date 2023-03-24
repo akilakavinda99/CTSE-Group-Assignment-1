@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { View, TextInput, Platform, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
 import { RichEditor, RichToolbar } from "react-native-pell-rich-editor";
 import { SelectList } from 'react-native-dropdown-select-list'
 import ButtonComponent from "../../components/commonComponents/buttonComponent";
@@ -11,6 +11,7 @@ import { getDateAndTime } from "../../services/commonFunctions";
 import { addDocument, getDocumentsByField } from "../../services/firebaseServices";
 import { getSubscribedUsers, sendNotification } from "../../services/notificationServices";
 import { primaryColors } from '../../styles/colors';
+import { validateNewNotice } from "./formValidation";
 
 const NewNotice = ({ navigation }) => {
     const richText = useRef();
@@ -18,6 +19,7 @@ const NewNotice = ({ navigation }) => {
     const [signedInUser, setSignedInUser] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [communities, setCommunities] = useState([]);
+    const [errors, setErrors] = useState({});
 
     const [subject, setSubject] = useState("");
     const [newNotice, setNewNotice] = useState("");
@@ -31,6 +33,12 @@ const NewNotice = ({ navigation }) => {
 
     const handleSubmit = async () => {
         setIsLoading(true);
+        const errors = validateNewNotice({ subject, community });
+        setErrors(errors);
+        if (Object.keys(errors).length > 0) {
+            setIsLoading(false);
+            return;
+        }
         const res = await addDocument("notices", {
             owner: signedInUser,
             community: community,
@@ -79,7 +87,7 @@ const NewNotice = ({ navigation }) => {
     return (
         <SafeAreaView style={{ width: "100%", height: "100%" }}>
             {isLoading ? <Loading /> :
-                <View style={styles.mainView}>
+                <ScrollView contentContainerStyle={styles.mainView}>
                     <TextInput
                         value={subject}
                         onChangeText={setSubject}
@@ -89,31 +97,30 @@ const NewNotice = ({ navigation }) => {
                     <SelectList
                         setSelected={selectCommunity}
                         data={communities}
-                        placeholder="Select Community"
+                        placeholder={community == "" ? "Select Community" : community}
                         boxStyles={styles.selectListBox}
                         inputStyles={{ fontSize: 16, color: community == "" ? '#999' : '#000' }}
                         dropdownStyles={styles.selectListDropdown}
                     />
-                    <ScrollView contentContainerStyle={styles.scrollView}>
-                        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ width: "100%" }}>
-                            <View style={styles.textEditorView}>
-                                <RichEditor
-                                    ref={richText}
-                                    onChange={text => {
-                                        setNewNotice(text);
-                                    }}
-                                    initialHeight={250}
-                                    // height={100}
-                                    placeholder={"Notice..."}
-                                    initialContentHTML={""}
-                                    editorStyle={styles.textEditor}
-                                    containerStyle={styles.textEditorContainer}
-                                    onFocus={() => setIsFocused(true)}
-                                    onBlur={() => setIsFocused(false)}
-                                />
-                            </View>
-                        </KeyboardAvoidingView>
-                    </ScrollView>
+                    {errors.community && <Text style={styles.error}>{errors.community}</Text>}
+                    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ width: "100%" }}>
+                        <View style={styles.textEditorView}>
+                            <RichEditor
+                                ref={richText}
+                                onChange={text => {
+                                    setNewNotice(text);
+                                }}
+                                initialHeight={250}
+                                // height={100}
+                                placeholder={"Notice..."}
+                                initialContentHTML={""}
+                                editorStyle={styles.textEditor}
+                                containerStyle={styles.textEditorContainer}
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={() => setIsFocused(false)}
+                            />
+                        </View>
+                    </KeyboardAvoidingView>
 
                     {isFocused &&
                         <RichToolbar
@@ -124,7 +131,7 @@ const NewNotice = ({ navigation }) => {
                     }
                     {!isFocused && <View style={{ height: 40 }} />}
                     <ButtonComponent buttonText="Post" onPress={handleSubmit} backgroundColor={primaryColors.primaryBlue} />
-                </View>
+                </ScrollView>
             }
         </SafeAreaView>
     );
@@ -135,8 +142,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 40,
         backgroundColor: primaryColors.background,
-        height: "100%",
-        // alignItems: "center",
     },
     headingStyle: {
         fontSize: 30,
@@ -150,6 +155,7 @@ const styles = StyleSheet.create({
     },
     textEditorContainer: {
         borderRadius: 8,
+        marginTop: 16,
     },
     textEditor: {
         backgroundColor: '#fff',
@@ -158,7 +164,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 40,
         paddingLeft: 10,
-        marginBottom: 16,
+        // marginBottom: 16,
         borderRadius: 8,
         fontSize: 16,
         backgroundColor: "#fff",
@@ -171,7 +177,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 0,
         alignItems: 'center',
-        marginBottom: 16,
+        // marginBottom: 16,
+        marginTop: 16,
         borderRadius: 8,
         fontSize: 16,
     },
@@ -182,6 +189,11 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         borderRadius: 8,
         fontSize: 16,
+    },
+    error: {
+        color: 'red',
+        fontSize: 12,
+        marginLeft: 5,
     },
 });
 
