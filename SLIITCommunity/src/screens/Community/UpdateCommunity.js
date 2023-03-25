@@ -120,7 +120,7 @@ const UpdateCommunity = ({route, navigation}) => {
     const res = await updateDocument('communities', communities.id, {
       title,
       faculty: faculty,
-      // image: url,
+      image: url,
       description: newDescription,
       created_at: getDateAndTime(),
     });
