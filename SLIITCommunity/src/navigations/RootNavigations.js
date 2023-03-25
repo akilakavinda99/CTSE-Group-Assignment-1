@@ -27,11 +27,11 @@ const Stack = createNativeStackNavigator();
 const RootNavigations = () => {
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen
+      <Stack.Screen
         name="Onboarding"
         component={OnboardingScreen}
         options={{headerShown: false}}
-      /> */}
+      />
       <Stack.Screen
         name="Login"
         component={Login}

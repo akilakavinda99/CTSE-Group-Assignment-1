@@ -8,6 +8,7 @@ import AppLoader from '../../components/commonComponents/AppLoader';
 import NetCheck from '../../components/commonComponents/netCheck';
 import SearchBar from "react-native-dynamic-search-bar";
 import * as Animatable from 'react-native-animatable';
+import Header from '../../components/commonComponents/header';
 
 const ViewAllCommunities = () => {
   const [communities, setCommunities] = useState([]);
@@ -54,7 +55,9 @@ const ViewAllCommunities = () => {
   return (
     <SafeAreaView style={styles.mainView}>
       <NetCheck />
-      <Animatable.View animation="pulse" iterationCount={"infinite"} direction="alternate">
+      <Header title={'Communities'} enableBack={false} />
+      <Animatable.View animation="pulse" iterationCount={1} direction="alternate">
+      
             <SearchBar
                 placeholder="Search Communities"
                 style={{marginTop:10, marginBottom:10}}
