@@ -5,6 +5,7 @@ import { RichEditor } from 'react-native-pell-rich-editor';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Header from '../../components/commonComponents/header';
 import sliitLogo from '../../assets/images/sliit-logo.png';
+import ButtonComponent from '../../components/commonComponents/buttonComponent';
 import { toastComponent } from '../../components/commonComponents/toastComponent';
 import { getDataFromAsync } from '../../constants/asyncStore';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
@@ -17,16 +18,17 @@ const ViewEvent = ({ route }) => {
     const [isLoading, setIsLoading] = useState(false);
     const navigation = useNavigation();
     const events = route.params.events;
-    const owner = events.owner;
+    const itNumber = events.itNumber;
 
     getDataFromAsync(asyncStoreKeys.IT_NUMBER)
         .then((data) => {
             setSignedInUser(data);
             // console.log(data);
         });
+    // console.log(events);
 
     const editEvent = () => {
-        navigation.navigate('Edit Event', { events });
+        navigation.navigate('Update Event', { events });
     }
 
     const handleDelete = () => {
@@ -59,45 +61,45 @@ const ViewEvent = ({ route }) => {
         <SafeAreaProvider style={styles.mainView}>
             <Header title={"View Event"} enableBack={true} />
             {isLoading ? <Loading /> :
-            <>
-                <View style={styles.bodyCard}>
+                <>
                     <View style={styles.imageContainer}>
-                        <Image source={sliitLogo} style={styles.image} />
+                        <Image source={{ uri: events.image }} style={styles.image} />
                     </View>
-                    <Text style={styles.subject}>{events.title}</Text>
-                    {/* <Text style={styles.community}>{notice.community}</Text>
-                    <Text style={styles.dateTime}>{notice.dateTime}</Text> */}
-                    <ScrollView contentContainerStyle={styles.scrollView}>
-                        <View style={styles.textEditorView}>
-                            <RichEditor
-                                onChange={text => {
-                                    setNewNotice(text);
-                                }}
-                                initialHeight={250}
-                                disabled={true}
-                                initialContentHTML={events.description}
-                                editorStyle={styles.textEditor}
-                                containerStyle={styles.textEditorContainer}
-                            />
-                        </View>
-                     {
-                        signedInUser === owner &&
-                        <View style={styles.modifyButtons}>
-                            <ButtonComponent
-                                // onPress={editNotice}
-                                buttonText="Edit"
-                                backgroundColor={primaryColors.primaryBlue}
-                                width={"48%"} />
-                            <ButtonComponent
-                                // onPress={removeNotice}
-                                buttonText="Remove"
-                                backgroundColor={primaryColors.primaryBlue}
-                                width={"48%"} />
-                        </View>
-                    
-                    } 
-                    </ScrollView>
-                </View>
+                    <View style={styles.bodyCard}>
+                        <Text style={styles.subject}>{events.title}</Text>
+                        <Text style={styles.community}>{events.venue}</Text>
+                        <Text style={styles.dateTime}>{events.created_at}</Text>
+                        <ScrollView contentContainerStyle={styles.scrollView}>
+                            <View style={styles.textEditorView}>
+                                <RichEditor
+                                    onChange={text => {
+                                        setNewNotice(text);
+                                    }}
+                                    initialHeight={250}
+                                    disabled={true}
+                                    initialContentHTML={events.description}
+                                    editorStyle={styles.textEditor}
+                                    containerStyle={styles.textEditorContainer}
+                                />
+                            </View>
+                            {
+                                signedInUser === itNumber &&
+                                <View style={styles.modifyButtons}>
+                                    <ButtonComponent
+                                        onPress={editEvent}
+                                        buttonText="Edit"
+                                        backgroundColor={primaryColors.primaryBlue}
+                                        width={"48%"} />
+                                    <ButtonComponent
+                                        onPress={removeEvent}
+                                        buttonText="Remove"
+                                        backgroundColor={primaryColors.primaryBlue}
+                                        width={"48%"} />
+                                </View>
+
+                            }
+                        </ScrollView>
+                    </View>
                 </>
             }
         </SafeAreaProvider>
@@ -114,12 +116,12 @@ const styles = StyleSheet.create({
     bodyCard: {
         backgroundColor: "#fff",
         padding: 20,
-        paddingTop: 75,
+        paddingTop: 15,
         width: "100%",
         height: "95%",
         flexWrap: 'wrap',
         justifyContent: "space-between",
-        marginTop: 100,
+        marginTop: 230,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         // marginBottom: 10,
@@ -128,11 +130,11 @@ const styles = StyleSheet.create({
         paddingBottom: 30,
     },
     imageContainer: {
-        position: "absolute",
-        top: -50,
-        width: 100,
+        // position: "absolute",
+        // top: 55,
+        width: "100%",
         height: 100,
-        borderRadius: 50,
+        borderRadius: 5,
         backgroundColor: primaryColors.background,
         alignSelf: "center",
         flex: 1,
@@ -141,10 +143,10 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
     },
     image: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        resizeMode: 'contain',
+        width: "100%",
+        height: 300,
+        borderRadius: 5,
+        resizeMode: 'cover',
     },
     textEditorView: {
         width: "100%",
@@ -179,7 +181,6 @@ const styles = StyleSheet.create({
         color: "#888"
     },
     modifyButtons: {
-        backgroundColor: "#fff",
         justifyContent: "space-between",
         gap: 10,
         marginTop: 16,
@@ -188,4 +189,4 @@ const styles = StyleSheet.create({
 });
 
 export default ViewEvent;
-        
+
