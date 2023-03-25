@@ -19,7 +19,7 @@ import {updateDocument} from '../../services/firebaseServices';
 import {AppLayout, SCREEN_HEIGHT} from '../../styles/appStyles';
 import {primaryColors} from '../../styles/colors';
 
-const EditLostOrFound = ({route}) => {
+const EditLostOrFound = ({route, navigation}) => {
   const post = route.params.post;
   const [image, setImage] = useState(post.ItemImage);
   const [imageUrl, setImageUrl] = useState(undefined);
@@ -91,7 +91,7 @@ const EditLostOrFound = ({route}) => {
     // setIsLoading(false);
     if (res) {
       toastComponent('Post successfully updated!', false);
-      //   navigation.navigate('Home', {screen: 'Notices'});
+      navigation.navigate('Home', {screen: 'LostOrFound'});
     } else {
       toastComponent('Error updating !', true);
     }

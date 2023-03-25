@@ -52,8 +52,8 @@ const AddLostOrFound = () => {
       'Where do you want to select a image',
       'From Gallery',
       'From Camera',
-      fromCamera,
       fromGallery,
+      fromCamera,
     );
     // setModalVisible(true);
   };
@@ -214,7 +214,11 @@ const AddLostOrFound = () => {
               )}
             </TouchableOpacity>
 
-            <ButtonComponent buttonText="Submit" onPress={addLostOrFound} />
+            <ButtonComponent
+              buttonText="Submit"
+              onPress={addLostOrFound}
+              backgroundColor={primaryColors.primaryBlue}
+            />
           </ScrollView>
         </>
       )}
