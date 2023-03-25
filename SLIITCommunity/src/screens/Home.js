@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   Animated,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {CurvedBottomBar} from 'react-native-curved-bottom-bar';
+import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ViewAllCommunities from './Community/ViewAllCommunities';
 import ViewAllEvents from './EventManagement/ViewAllEvents';
@@ -16,7 +16,7 @@ import * as Animatable from 'react-native-animatable';
 import ViewLostOrFound from './lostAndFoundScreens/viewLostOrFound';
 import AllLostOrFound from './lostAndFoundScreens/allLostOrFound';
 
-export default function Home({screen}) {
+export default function Home({ screen }) {
   const [showingTab, setShowingTab] = useState(screen ? screen : 'Notices');
 
   const _renderIcon = (routeName, selectedTab) => {
@@ -48,7 +48,7 @@ export default function Home({screen}) {
       />
     );
   };
-  const renderTabBar = ({routeName, selectedTab, navigate}) => {
+  const renderTabBar = ({ routeName, selectedTab, navigate }) => {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -71,8 +71,8 @@ export default function Home({screen}) {
       bgColor="white"
       initialRouteName={screen}
       borderTopLeftRight
-      screenOptions={{headerShown: false}}
-      renderCircle={({selectedTab, navigate}) => {
+      screenOptions={{ headerShown: false }}
+      renderCircle={({ selectedTab, navigate }) => {
         switch (selectedTab) {
           case 'Notices':
             return (

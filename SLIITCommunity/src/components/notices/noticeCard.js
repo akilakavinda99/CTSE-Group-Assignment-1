@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { SCREEN_WIDTH } from '../../styles/appStyles';
 
 const NoticeCard = ({ notice}) => {
     const navigation = useNavigation();
@@ -33,8 +32,8 @@ const styles = StyleSheet.create({
     },
     subject: {
         width: "100%",
-        fontSize: 16,
-        fontWeight: "bold",
+        fontSize: 18,
+        fontWeight: "500",
     },
     addedDate: {
         width: "100%",

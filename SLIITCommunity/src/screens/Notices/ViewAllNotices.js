@@ -85,7 +85,7 @@ const ViewAllNotices = () => {
                             refreshControl={
                                 <RefreshControl
                                     refreshing={refreshing}
-                                    getNotices={getNotices}
+                                    onRefresh={getNotices}
                                 />
                             }
                         >

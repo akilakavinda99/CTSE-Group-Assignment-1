@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Image,
@@ -11,14 +11,14 @@ import {
 } from 'react-native';
 import Header from '../../components/commonComponents/header';
 import LostOrFoundPost from '../../components/lostOrFoundComponents/lostOrFoundPost';
-import {getDataFromAsync} from '../../constants/asyncStore';
+import { getDataFromAsync } from '../../constants/asyncStore';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
 import collectionNames from '../../constants/collectionNames';
 import {
   getDocumentOrderBy,
   getDocuments,
 } from '../../services/firebaseServices';
-import {primaryColors} from '../../styles/colors';
+import { primaryColors } from '../../styles/colors';
 
 const AllLostOrFound = () => {
   const [posts, setPosts] = useState([]);
@@ -33,7 +33,7 @@ const AllLostOrFound = () => {
       'PostedDate',
       'asc',
     );
-    console.log('THeeeeeeeee', posts);
+    // console.log('THeeeeeeeee', posts);
     setPosts(posts);
   };
 

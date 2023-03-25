@@ -88,7 +88,7 @@ const MyNotices = () => {
                             refreshControl={
                                 <RefreshControl
                                     refreshing={refreshing}
-                                    getNotices={getNotices}
+                                    onRefresh={getNotices}
                                 />
                             }
                         >
