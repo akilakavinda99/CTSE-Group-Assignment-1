@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import ButtonComponent from '../components/commonComponents/buttonComponent';
 import TextInputComponent from '../components/commonComponents/textInputComponent';
-import { toastComponent } from '../components/commonComponents/toastComponent';
+import {toastComponent} from '../components/commonComponents/toastComponent';
 import TwoText from '../components/loginRegisterComponents/twoText';
 import collectionNames from '../constants/collectionNames';
 import {
@@ -15,11 +15,11 @@ import {
   addDocumentWithCustomID,
   checkForDocument,
 } from '../services/firebaseServices';
-import { registerationService } from '../services/registerationService';
-import { AppLayout, SCREEN_HEIGHT } from '../styles/appStyles';
-import { primaryColors } from '../styles/colors';
+import {registerationService} from '../services/registerationService';
+import {AppLayout, SCREEN_HEIGHT} from '../styles/appStyles';
+import {primaryColors} from '../styles/colors';
 
-const Register = ({ navigation }) => {
+const Register = ({navigation}) => {
   const [itNumber, setItNumber] = useState('');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -72,6 +72,10 @@ const Register = ({ navigation }) => {
     }
   };
 
+  const goToLogin = () => {
+    navigation.navigate('Login');
+  };
+
   return (
     <View style={[AppLayout.flexColumnCentered, registerStyles.mainView]}>
       <Text style={registerStyles.headingStyle}>Sign Up</Text>
@@ -101,8 +105,16 @@ const Register = ({ navigation }) => {
         onChange={handlePasswordChange}
       />
 
-      <ButtonComponent buttonText="Sign Up" onPress={handleRegister} />
-      <TwoText firstText="Already have an account? " secondText="Login" />
+      <ButtonComponent
+        buttonText="Sign Up"
+        onPress={handleRegister}
+        backgroundColor={primaryColors.primaryBlue}
+      />
+      <TwoText
+        firstText="Already have an account? "
+        secondText="Login"
+        onPress={goToLogin}
+      />
     </View>
   );
 };

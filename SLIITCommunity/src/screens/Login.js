@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, Button, StyleSheet, ActivityIndicator } from 'react-native';
-import { toastComponent } from '../components/commonComponents/toastComponent';
+import React, {useEffect, useState} from 'react';
+import {Text, View, Button, StyleSheet, ActivityIndicator} from 'react-native';
+import {toastComponent} from '../components/commonComponents/toastComponent';
 import TextInputComponent from '../components/commonComponents/textInputComponent';
-import { validateEmail, validatePassword } from '../constants/validations';
-import { loginService } from '../services/loginService';
+import {validateEmail, validatePassword} from '../constants/validations';
+import {loginService} from '../services/loginService';
 import ButtonComponent from '../components/commonComponents/buttonComponent';
 import TwoText from '../components/loginRegisterComponents/twoText';
-import { AppLayout, SCREEN_HEIGHT } from '../styles/appStyles';
-import { primaryColors } from '../styles/colors';
-import { getDocumentsByField } from '../services/firebaseServices';
+import {AppLayout, SCREEN_HEIGHT} from '../styles/appStyles';
+import {primaryColors} from '../styles/colors';
+import {getDocumentsByField} from '../services/firebaseServices';
 import collectionNames from '../constants/collectionNames';
-import { getDataFromAsync, storeDataInAsync } from '../constants/asyncStore';
+import {getDataFromAsync, storeDataInAsync} from '../constants/asyncStore';
 import asyncStoreKeys from '../constants/asyncStoreKeys';
-import { getMessagingToken, updateMessagingToken } from '../services/notificationServices';
+import {
+  getMessagingToken,
+  updateMessagingToken,
+} from '../services/notificationServices';
+import * as Animatable from 'react-native-animatable';
+import AppLoader from '../components/commonComponents/AppLoader';
 
-const Login = ({ navigation }) => {
+const Login = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -36,7 +41,7 @@ const Login = ({ navigation }) => {
     ) {
       setLoading(true);
       const login = await loginService(email, password);
-      setLoading(false);
+      // setLoading(false);
       if (login.error) {
         toastComponent(login.message, true);
       } else {
@@ -46,14 +51,15 @@ const Login = ({ navigation }) => {
           'email',
           email,
         );
-        // console.log('THis is user', userDocument);
+        console.log('THis is user', userDocument);
         await storeDataInAsync(
           asyncStoreKeys.IT_NUMBER,
           userDocument[0].itNumber,
         );
-        
+
         const token = await getMessagingToken();
-        await updateMessagingToken(token, itNumber);
+        await updateMessagingToken(token, userDocument[0].itNumber);
+        setLoading(false);
 
         navigation.navigate('Home');
       }
@@ -66,10 +72,11 @@ const Login = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getDataFromAsync(asyncStoreKeys.IT_NUMBER).then(async (itNumber) => {
+    getDataFromAsync(asyncStoreKeys.IT_NUMBER).then(async itNumber => {
       if (itNumber) {
         const token = await getMessagingToken();
         await updateMessagingToken(token, itNumber);
+        toastComponent('Logged successfully');
         navigation.navigate('Home');
       }
     });
@@ -78,24 +85,28 @@ const Login = ({ navigation }) => {
   return (
     <View style={[AppLayout.flexColumnCentered, loginStyles.mainView]}>
       {loading ? (
-        <ActivityIndicator size="large" color={primaryColors.primaryBlue} />
+        <AppLoader />
       ) : (
         <>
           <Text style={loginStyles.headingStyle}>Login</Text>
 
-          <TextInputComponent
-            placeholder="Password"
-            validator={validatePassword}
-            marginBottom={20}
-            onChange={handlePasswordChange}
-          />
           <TextInputComponent
             placeholder="Email"
             marginBottom={20}
             validator={validateEmail}
             onChange={handleEmailChange}
           />
-          <ButtonComponent buttonText="Sign In" onPress={handleSubmit} />
+          <TextInputComponent
+            placeholder="Password"
+            validator={validatePassword}
+            marginBottom={20}
+            onChange={handlePasswordChange}
+          />
+          <ButtonComponent
+            buttonText="Sign In"
+            onPress={handleSubmit}
+            backgroundColor={primaryColors.primaryBlue}
+          />
           <TwoText
             firstText="Do not have an account?"
             secondText="Create one"
