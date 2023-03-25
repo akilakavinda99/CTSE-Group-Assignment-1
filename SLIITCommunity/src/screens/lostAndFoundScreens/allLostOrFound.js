@@ -31,7 +31,7 @@ const AllLostOrFound = () => {
       'PostedDate',
       'asc',
     );
-    console.log(posts);
+    console.log('THeeeeeeeee', posts);
     setPosts(posts);
   };
 
@@ -54,7 +54,12 @@ const AllLostOrFound = () => {
         }
         data={posts}
         renderItem={({item}) => (
-          <LostOrFoundPost post={item} id={id} key={item.id} />
+          <LostOrFoundPost
+            post={item}
+            id={id}
+            key={item.id}
+            itNumber={item.itNumber}
+          />
         )}
         keyExtractor={item => item.id}
       />

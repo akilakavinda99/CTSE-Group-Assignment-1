@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-const LostOrFoundPost = ({post, id}) => {
+const LostOrFoundPost = ({post, id, itNumber}) => {
   console.log('This is post', post);
   const [showButtons, setShowButtons] = useState(false);
 
@@ -36,6 +36,7 @@ const LostOrFoundPost = ({post, id}) => {
           navigation.navigate('ViewSingleLostorFound', {
             post: post,
             id: id,
+            itNumber,
           })
         }>
         <View style={[lostOrFoundPostStyles.mainView]}>
@@ -59,7 +60,7 @@ const LostOrFoundPost = ({post, id}) => {
                   <Text
                     style={[
                       lostOrFoundPostStyles.type,
-                      post.type == 'Lost'
+                      post.Type == 'Lost'
                         ? {
                             color: 'red',
                           }

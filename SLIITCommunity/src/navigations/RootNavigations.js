@@ -20,6 +20,7 @@ import MyCommunities from '../screens/Profile/MyCommunities';
 import Profile from '../screens/Profile';
 import ViewSingleLostorFOund from '../screens/lostAndFoundScreens/viewSingleLostorFOund';
 import AllLostOrFound from '../screens/lostAndFoundScreens/allLostOrFound';
+import EditLostOrFound from '../screens/lostAndFoundScreens/editLostOrFound';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,7 +45,8 @@ const RootNavigations = () => {
       <Stack.Screen
         name="NewEvent"
         component={NewEvent}
-        options={{ headerShown: true }}
+        options={{headerShown: true}}
+      />
       <Stack.Screen
         name="ViewAllEvents"
         component={ViewAllEvents}
@@ -118,6 +120,11 @@ const RootNavigations = () => {
       <Stack.Screen
         name="AllLostOrFound"
         component={AllLostOrFound}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EditLostOrFound"
+        component={EditLostOrFound}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

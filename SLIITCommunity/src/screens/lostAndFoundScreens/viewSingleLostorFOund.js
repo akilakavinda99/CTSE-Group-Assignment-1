@@ -8,13 +8,51 @@ import {
   ActivityIndicator,
   View,
 } from 'react-native';
+import {createTwoButtonAlert} from '../../components/commonComponents/alertComponent';
 import ButtonComponent from '../../components/commonComponents/buttonComponent';
+import {toastComponent} from '../../components/commonComponents/toastComponent';
+import collectionNames from '../../constants/collectionNames';
+import {deleteDocument} from '../../services/firebaseServices';
 import {AppLayout, SCREEN_HEIGHT} from '../../styles/appStyles';
 
-const ViewSingleLostorFOund = ({route}) => {
+const ViewSingleLostorFOund = ({route, navigation}) => {
   const post = route.params.post;
   const id = route.params.id;
 
+  console.log('THis is the post ', post);
+  console.log('This si id ', id);
+  const navigateToEdit = () => {
+    navigation.navigate('EditLostOrFound', {
+      post,
+    });
+  };
+
+  const launchAlert = () => {
+    createTwoButtonAlert(
+      'Are you sure you want to delete?',
+      '',
+      'Yes',
+      'No',
+      deletePost,
+      cancelDelete,
+    );
+  };
+
+  const deletePost = async () => {
+    const res = await deleteDocument(
+      collectionNames.LOST_FOUND_COLLECTION,
+      post.id,
+    );
+    if (res) {
+      toastComponent('Post deleted Successfully');
+    } else {
+      toastComponent('Error deleting');
+    }
+  };
+
+  const cancelDelete = () => {
+    console.log('Deleted');
+  };
   return (
     <ScrollView>
       <Image
@@ -41,9 +79,17 @@ const ViewSingleLostorFOund = ({route}) => {
         </View>
         {post.itNumber == id ? (
           <View style={viewSingleLostorFOundStyles.buttonWrapper}>
-            <ButtonComponent backgroundColor="blue" buttonText="Edit" />
+            <ButtonComponent
+              backgroundColor="blue"
+              buttonText="Edit"
+              onPress={navigateToEdit}
+            />
 
-            <ButtonComponent backgroundColor="red" buttonText="Delete" />
+            <ButtonComponent
+              backgroundColor="red"
+              buttonText="Delete"
+              onPress={launchAlert}
+            />
           </View>
         ) : (
           <></>
