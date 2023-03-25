@@ -120,7 +120,7 @@ const RootNavigations = () => {
       <Stack.Screen
         name="AllLostOrFound"
         component={AllLostOrFound}
-        options={{headerShown: false}}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="EditLostOrFound"

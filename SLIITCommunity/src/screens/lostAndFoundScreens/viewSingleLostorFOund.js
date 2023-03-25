@@ -109,7 +109,7 @@ const viewSingleLostorFOundStyles = StyleSheet.create({
     // paddingRight: 30,
   },
   title: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
     // paddingLeft: 18,

@@ -17,13 +17,14 @@ const ButtonComponent = ({onPress, buttonText, backgroundColor, width}) => {
           height: 50,
           borderRadius: 100,
           backgroundColor: backgroundColor,
+          marginBottom: 10,
         },
       ]}>
       <Text
         style={{
           fontSize: 16,
           color: 'white',
-          fontWeight: 800
+          fontWeight: 800,
         }}>
         {buttonText}
       </Text>
