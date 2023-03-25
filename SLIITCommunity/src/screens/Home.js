@@ -119,7 +119,7 @@ export default function Home({screen}) {
                   onPress={() => {
                     navigate('NewEvent');
                   }}>
-                  <Ionicons name={'add-outline'} color="gray" size={40} />
+                  <Ionicons name={'add-outline'} color="white" size={40} />
                 </TouchableOpacity>
               </Animated.View>
             );
@@ -134,7 +134,7 @@ export default function Home({screen}) {
                   onPress={() => {
                     navigate('AddLostOrFound');
                   }}>
-                  <Ionicons name={'add-outline'} color="gray" size={40} />
+                  <Ionicons name={'add-outline'} color="white" size={40} />
                 </TouchableOpacity>
               </Animated.View>
             );
