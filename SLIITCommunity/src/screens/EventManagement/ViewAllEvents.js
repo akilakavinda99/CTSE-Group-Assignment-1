@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { View, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
 import Loading from '../../components/commonComponents/AppLoader';
 import EventCard from '../../components/EventManagement/EventCard';
 import { getDocumentOrderBy } from '../../services/firebaseServices';
@@ -9,6 +9,7 @@ import Header from '../../components/commonComponents/header';
 
 const ViewAllEvents = () => {
     const [events, setEvents] = useState([]);
+    const [showingNotices, setShowingNotices] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
     const [searchText, setSearchText] = useState("");
 
@@ -17,6 +18,7 @@ const ViewAllEvents = () => {
         getDocumentOrderBy('events', 'created_at', 'desc')
             .then((res) => {
                 setEvents(res);
+                setShowingNotices(res);
                 setRefreshing(false);
             })
             .catch((err) => {
@@ -32,7 +34,7 @@ const ViewAllEvents = () => {
                 event.venue.toLowerCase().includes(text.toLowerCase());
         });
 
-        setEvents(filteredEvents);
+        setShowingNotices(filteredEvents);
     }
 
     const onRefresh = () => {
@@ -41,6 +43,7 @@ const ViewAllEvents = () => {
 
     useEffect(() => {
         onRefresh();
+        // console.log(events);
     }, []);
 
     return (
@@ -50,6 +53,7 @@ const ViewAllEvents = () => {
             <Header title={'Events'} enableBack={false} />
             <SearchBar
                 placeholder="Search here"
+                onChangeText={onSearch}
                 clearIconComponent={searchText == "" ? <View /> : <Text>Clear</Text>}
                 onClearPress={() => onSearch("")}
                 placeholderTextColor={"#8e8e8e"}
@@ -65,11 +69,14 @@ const ViewAllEvents = () => {
                 }
             >
                 {refreshing ? <Loading /> :
-                    events.map((events, index) => {
+                    showingNotices.map((event, index) => {
+                        console.log(events);
                         return (
-                            <EventCard key={index} events={events} />
+                            <EventCard key={index} events={event} />
+                           
                         )
                     })
+                    
                 }
                 <View style={{ height: 90 }} />
             </ScrollView>

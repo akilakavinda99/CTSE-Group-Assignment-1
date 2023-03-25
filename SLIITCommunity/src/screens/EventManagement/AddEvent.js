@@ -136,7 +136,7 @@ const AddEvent = () => {
     //   });
     //   return;
     // }
-      console.log("selectedDate", selectedDate);
+      // console.log("selectedDate", selectedDate);
 
     setIsLoading(true);
     const url = await imageUploadService(title, image);
