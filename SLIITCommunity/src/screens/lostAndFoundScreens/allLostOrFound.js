@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Image,
@@ -9,14 +9,14 @@ import {
   RefreshControl,
 } from 'react-native';
 import LostOrFoundPost from '../../components/lostOrFoundComponents/lostOrFoundPost';
-import {getDataFromAsync} from '../../constants/asyncStore';
+import { getDataFromAsync } from '../../constants/asyncStore';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
 import collectionNames from '../../constants/collectionNames';
 import {
   getDocumentOrderBy,
   getDocuments,
 } from '../../services/firebaseServices';
-import {primaryColors} from '../../styles/colors';
+import { primaryColors } from '../../styles/colors';
 
 const AllLostOrFound = () => {
   const [posts, setPosts] = useState([]);
@@ -31,7 +31,7 @@ const AllLostOrFound = () => {
       'PostedDate',
       'asc',
     );
-    console.log('THeeeeeeeee', posts);
+    // console.log('THeeeeeeeee', posts);
     setPosts(posts);
   };
 
@@ -53,7 +53,7 @@ const AllLostOrFound = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         data={posts}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <LostOrFoundPost
             post={item}
             id={id}

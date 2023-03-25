@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 const LostOrFoundPost = ({post, id, itNumber}) => {
-  console.log('This is post', post);
+  // console.log('This is post', post);
   const [showButtons, setShowButtons] = useState(false);
 
   const handleCardPress = () => {
@@ -40,10 +40,10 @@ const LostOrFoundPost = ({post, id, itNumber}) => {
           })
         }>
         <View style={[lostOrFoundPostStyles.mainView]}>
-          <BlurView
+          {/* <BlurView
             blurType="light"
             blurAmount={100}
-            reducedTransparencyFallbackColor="white">
+            reducedTransparencyFallbackColor="white"> */}
             <View>
               <View>
                 <Image
@@ -78,7 +78,7 @@ const LostOrFoundPost = ({post, id, itNumber}) => {
                 </View>
               </View>
             </View>
-          </BlurView>
+          {/* </BlurView> */}
           {showButtons && <Text>Blurred</Text>}
         </View>
       </TouchableWithoutFeedback>
