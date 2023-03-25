@@ -85,7 +85,7 @@ const NewNotice = ({ navigation }) => {
     }, [signedInUser]);
 
     return (
-        <SafeAreaView style={{ width: "100%", height: "100%", backgroundColor:primaryColors.background }}>
+        <SafeAreaView style={{ width: "100%", height: "100%", backgroundColor: primaryColors.background }}>
             {isLoading ? <Loading /> :
                 <ScrollView contentContainerStyle={styles.mainView}>
                     <TextInput
@@ -111,14 +111,14 @@ const NewNotice = ({ navigation }) => {
                                 onChange={text => {
                                     setNewNotice(text);
                                 }}
-                                initialHeight={250}
+                                initialHeight={150}
                                 // height={100}
                                 placeholder={"Notice..."}
                                 initialContentHTML={newNotice}
                                 editorStyle={styles.textEditor}
                                 containerStyle={styles.textEditorContainer}
-                                onFocus={() => setIsFocused(true)}
-                                onBlur={() => setIsFocused(false)}
+                            // onFocus={() => setIsFocused(true)}
+                            // onBlur={() => setIsFocused(false)}
                             />
                         </View>
                     </KeyboardAvoidingView>
@@ -130,7 +130,7 @@ const NewNotice = ({ navigation }) => {
                         // iconMap={{ [actions.heading1]: ({ tintColor }) => (<Text style={[{ color: tintColor }]}>H1</Text>), }}
                         />
                     }
-                    {!isFocused && <View style={{ height: 40 }} />}
+                    <View style={{ height: 40 }} />
                     <ButtonComponent buttonText="Post" onPress={handleSubmit} backgroundColor={primaryColors.primaryBlue} />
                 </ScrollView>
             }

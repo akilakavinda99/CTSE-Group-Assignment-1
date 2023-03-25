@@ -108,14 +108,14 @@ const UpdateNotice = ({ route, navigation }) => {
                                 onChange={text => {
                                     setNewNotice(text);
                                 }}
-                                initialHeight={250}
+                                initialHeight={150}
                                 // height={100}
                                 placeholder={"Notice..."}
                                 initialContentHTML={newNotice}
                                 editorStyle={styles.textEditor}
                                 containerStyle={styles.textEditorContainer}
-                                onFocus={() => setIsFocused(true)}
-                                onBlur={() => setIsFocused(false)}
+                            // onFocus={() => setIsFocused(true)}
+                            // onBlur={() => setIsFocused(false)}
                             />
                         </View>
                     </KeyboardAvoidingView>
@@ -127,7 +127,7 @@ const UpdateNotice = ({ route, navigation }) => {
                         // iconMap={{ [actions.heading1]: ({ tintColor }) => (<Text style={[{ color: tintColor }]}>H1</Text>), }}
                         />
                     }
-                    {!isFocused && <View style={{ height: 40 }} />}
+                    <View style={{ height: 40 }} />
                     <ButtonComponent buttonText="Update" onPress={handleSubmit} backgroundColor={primaryColors.primaryBlue} />
                 </ScrollView>
             }

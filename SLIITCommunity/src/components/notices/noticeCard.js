@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { SCREEN_WIDTH } from '../../styles/appStyles';
 
 const NoticeCard = ({ notice}) => {
     const navigation = useNavigation();
