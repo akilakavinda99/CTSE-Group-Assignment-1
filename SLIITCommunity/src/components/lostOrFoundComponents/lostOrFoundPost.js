@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 const LostOrFoundPost = ({post, id}) => {
+  console.log('This is post', post);
   const [showButtons, setShowButtons] = useState(false);
 
   const handleCardPress = () => {
@@ -26,55 +27,61 @@ const LostOrFoundPost = ({post, id}) => {
 
   const navigation = useNavigation();
   return (
-    <TouchableWithoutFeedback
-      onPress={() =>
-        navigation.navigate('ViewSingleLostorFound', {
-          post: post,
-        })
-      }>
-      <View style={[lostOrFoundPostStyles.mainView]}>
-        <BlurView
-          blurType="light"
-          blurAmount={100}
-          reducedTransparencyFallbackColor="white">
-          <View>
+    <View
+      style={{
+        marginBottom: 20,
+      }}>
+      <TouchableWithoutFeedback
+        onPress={() =>
+          navigation.navigate('ViewSingleLostorFound', {
+            post: post,
+            id: id,
+          })
+        }>
+        <View style={[lostOrFoundPostStyles.mainView]}>
+          <BlurView
+            blurType="light"
+            blurAmount={100}
+            reducedTransparencyFallbackColor="white">
             <View>
-              <Image
-                source={{uri: post.ItemImage}}
-                resizeMode="cover"
-                style={lostOrFoundPostStyles.imageStyle}
-              />
-            </View>
-            <View style={lostOrFoundPostStyles.secondaryView}>
-              <View style={lostOrFoundPostStyles.nameView}>
-                <Text style={lostOrFoundPostStyles.itemName}>
-                  {post.ItemName}
-                </Text>
-                <Text
-                  style={[
-                    lostOrFoundPostStyles.type,
-                    post.type == 'Lost'
-                      ? {
-                          color: 'red',
-                        }
-                      : {
-                          color: 'green',
-                        },
-                  ]}>
-                  {post.Type.toUpperCase()}
-                </Text>
-              </View>
               <View>
-                <Text numberOfLines={3} ellipsizeMode="tail">
-                  {post.ItemDescription}
-                </Text>
+                <Image
+                  source={{uri: post.ItemImage}}
+                  resizeMode="cover"
+                  style={lostOrFoundPostStyles.imageStyle}
+                />
+              </View>
+              <View style={lostOrFoundPostStyles.secondaryView}>
+                <View style={lostOrFoundPostStyles.nameView}>
+                  <Text style={lostOrFoundPostStyles.itemName}>
+                    {post.ItemName}
+                  </Text>
+                  <Text
+                    style={[
+                      lostOrFoundPostStyles.type,
+                      post.type == 'Lost'
+                        ? {
+                            color: 'red',
+                          }
+                        : {
+                            color: 'green',
+                          },
+                    ]}>
+                    {post.Type.toUpperCase()}
+                  </Text>
+                </View>
+                <View>
+                  <Text numberOfLines={3} ellipsizeMode="tail">
+                    {post.ItemDescription}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-        </BlurView>
-        {showButtons && <Text>Blurred</Text>}
-      </View>
-    </TouchableWithoutFeedback>
+          </BlurView>
+          {showButtons && <Text>Blurred</Text>}
+        </View>
+      </TouchableWithoutFeedback>
+    </View>
   );
 };
 

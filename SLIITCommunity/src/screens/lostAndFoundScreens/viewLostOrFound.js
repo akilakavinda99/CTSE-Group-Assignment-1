@@ -6,6 +6,7 @@ import {
   RefreshControl,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 
 import LostOrFoundPost from '../../components/lostOrFoundComponents/lostOrFoundPost';
@@ -24,18 +25,16 @@ const ViewLostOrFound = ({navigation}) => {
 
   const getMyLostOrFound = async () => {
     const itNumber = await getDataFromAsync(asyncStoreKeys.IT_NUMBER);
-    // const posts = await getDocumentsByField(
-    //   collectionNames.LOST_FOUND_COLLECTION,
-    //   'itNumber',
-    //   itNumber,
-    // );
+    console.log(itNumber);
     const posts = await getDocumentsByFieldWithId(
       collectionNames.LOST_FOUND_COLLECTION,
       'itNumber',
       itNumber,
     );
+    setRefreshing(true);
     console.log(posts);
     setPosts(posts);
+    setRefreshing(false);
   };
 
   const onRefresh = () => {
@@ -50,16 +49,20 @@ const ViewLostOrFound = ({navigation}) => {
   return (
     <View>
       <Text style={viewMyLostAndFoundStyles.headingStyle}>Your Items</Text>
-      <FlatList
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        data={posts}
-        renderItem={({item}) => (
-          <LostOrFoundPost post={item.data} id={item.id} key={item.id} />
-        )}
-        keyExtractor={item => item.id}
-      />
+      {posts.length == 0 ? (
+        <ActivityIndicator />
+      ) : (
+        <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          data={posts}
+          renderItem={({item}) => (
+            <LostOrFoundPost post={item} id={item.id} key={item.id} />
+          )}
+          keyExtractor={item => item.id}
+        />
+      )}
     </View>
   );
 };

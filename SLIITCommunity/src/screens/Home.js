@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Alert,
   Animated,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
+import {CurvedBottomBar} from 'react-native-curved-bottom-bar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ViewAllCommunities from './Community/ViewAllCommunities';
 import ViewAllEvents from './EventManagement/ViewAllEvents';
@@ -14,8 +14,9 @@ import ViewAllNotices from './Notices/ViewAllNotices';
 import Profile from './Profile';
 import * as Animatable from 'react-native-animatable';
 import ViewLostOrFound from './lostAndFoundScreens/viewLostOrFound';
+import AllLostOrFound from './lostAndFoundScreens/allLostOrFound';
 
-export default function Home({ screen }) {
+export default function Home({screen}) {
   const [showingTab, setShowingTab] = useState(screen ? screen : 'Notices');
 
   const _renderIcon = (routeName, selectedTab) => {
@@ -47,15 +48,14 @@ export default function Home({ screen }) {
       />
     );
   };
-  const renderTabBar = ({ routeName, selectedTab, navigate }) => {
+  const renderTabBar = ({routeName, selectedTab, navigate}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigate(routeName)
-          setShowingTab(routeName)
+          navigate(routeName);
+          setShowingTab(routeName);
         }}
-        style={styles.tabbarItem}
-      >
+        style={styles.tabbarItem}>
         {_renderIcon(routeName, selectedTab)}
       </TouchableOpacity>
     );
@@ -71,18 +71,21 @@ export default function Home({ screen }) {
       bgColor="white"
       initialRouteName={screen}
       borderTopLeftRight
-      screenOptions={{ headerShown: false }}
-      renderCircle={({ selectedTab, navigate }) => {
+      screenOptions={{headerShown: false}}
+      renderCircle={({selectedTab, navigate}) => {
         switch (selectedTab) {
           case 'Notices':
             return (
-              <Animatable.View animation="bounceIn" iterationCount={"infinite"} direction="alternate" style={styles.btnCircleUp}>
+              <Animatable.View
+                animation="bounceIn"
+                iterationCount={'infinite'}
+                direction="alternate"
+                style={styles.btnCircleUp}>
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
                     navigate('New Notice');
-                  }}
-                >
+                  }}>
                   <Ionicons name={'add-outline'} color="white" size={40} />
                 </TouchableOpacity>
               </Animatable.View>
@@ -90,13 +93,16 @@ export default function Home({ screen }) {
 
           case 'Communities':
             return (
-              <Animatable.View animation="bounceIn" iterationCount={"infinite"} direction="alternate" style={styles.btnCircleUp}>
+              <Animatable.View
+                animation="bounceIn"
+                iterationCount={'infinite'}
+                direction="alternate"
+                style={styles.btnCircleUp}>
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
                     navigate('New Community');
-                  }}
-                >
+                  }}>
                   <Ionicons name={'add-outline'} color="white" size={40} />
                 </TouchableOpacity>
               </Animatable.View>
@@ -109,8 +115,19 @@ export default function Home({ screen }) {
                   style={styles.button}
                   onPress={() => {
                     navigate('NewEvent');
-                  }}
-                >
+                  }}>
+                  <Ionicons name={'add-outline'} color="gray" size={40} />
+                </TouchableOpacity>
+              </Animated.View>
+            );
+          case 'LostOrFound':
+            return (
+              <Animated.View style={styles.btnCircleUp}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    navigate('AddLostOrFound');
+                  }}>
                   <Ionicons name={'add-outline'} color="gray" size={40} />
                 </TouchableOpacity>
               </Animated.View>
@@ -121,17 +138,16 @@ export default function Home({ screen }) {
               <Animated.View style={styles.btnCircleUp}>
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() => Alert.alert('Click Action')}
-                >
+                  onPress={() => Alert.alert('Click Action')}>
                   <Ionicons name={'apps-sharp'} color="white" size={25} />
                 </TouchableOpacity>
               </Animated.View>
             );
         }
       }}
-      tabBar={renderTabBar}
-    >
-      <CurvedBottomBar.Screen style={backgroundColor = "red"}
+      tabBar={renderTabBar}>
+      <CurvedBottomBar.Screen
+        style={(backgroundColor = 'red')}
         name="Notices"
         position="LEFT"
         component={() => <ViewAllNotices />}
@@ -143,7 +159,7 @@ export default function Home({ screen }) {
       />
       <CurvedBottomBar.Screen
         name="LostOrFound"
-        component={() => <ViewLostOrFound />}
+        component={() => <AllLostOrFound />}
         position="RIGHT"
       />
       <CurvedBottomBar.Screen

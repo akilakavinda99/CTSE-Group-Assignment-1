@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import TextInputComponent from './textInputComponent';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-const TimePickerExample = () => {
+const TimePickerExample = (onchange) => {
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
     const [selectedTime, setSelectedTime] = useState(new Date());
 
@@ -17,10 +17,13 @@ const TimePickerExample = () => {
     };
 
     const handleConfirm = (event, time) => {
-        if (Platform.OS === 'android') {
-            hideTimePicker();
-        }
+        // if (Platform.OS === 'android') {
+        //     hideTimePicker();
+        // }
+        console.log("time", time)
         setSelectedTime(time || selectedTime);
+        onchange(time || selectedTime);
+
     };
 
     return (
@@ -42,10 +45,10 @@ const TimePickerExample = () => {
                     isVisible={isTimePickerVisible}
                     mode="time"
                     display="default"
-                    value={selectedTime}
+                    // value={selectedTime}
                     onConfirm={handleConfirm}
                     onCancel={hideTimePicker}
-                    onChange={handleConfirm}
+                    // onChange={handleConfirm}
                 />
             )}
         </View>
