@@ -8,6 +8,7 @@ import Home from '../screens/Home';
 import NewEvent from '../screens/EventManagement/AddEvent';
 import ViewAllEvents from '../screens/EventManagement/ViewAllEvents';
 import ViewEvent from '../screens/EventManagement/ViewEvent';
+import UpdateEvent from '../screens/EventManagement/UpdateEvent';
 import ViewNotice from '../screens/Notices/ViewNotice';
 import AddLostOrFound from '../screens/lostAndFoundScreens/addLostOrFound';
 import UpdateNotice from '../screens/Notices/UpdateNotice';
@@ -54,6 +55,11 @@ const RootNavigations = () => {
         name="ViewEvent"
         component={ViewEvent}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Update Event"
+        component={UpdateEvent}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="Home"
@@ -108,7 +114,7 @@ const RootNavigations = () => {
       <Stack.Screen
         name="Profile"
         component={Profile}
-        options={{headerShown: false}}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="ViewSingleLostorFound"
