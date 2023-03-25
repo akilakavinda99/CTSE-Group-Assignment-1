@@ -22,12 +22,18 @@ import Profile from '../screens/Profile';
 import ViewSingleLostorFOund from '../screens/lostAndFoundScreens/viewSingleLostorFOund';
 import AllLostOrFound from '../screens/lostAndFoundScreens/allLostOrFound';
 import EditLostOrFound from '../screens/lostAndFoundScreens/editLostOrFound';
+import Splash from '../components/commonComponents/Splash';
 
 const Stack = createNativeStackNavigator();
 
 const RootNavigations = () => {
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="Splash"
+        component={Splash}
+        options={{headerShown: false}}
+      />
       <Stack.Screen
         name="Onboarding"
         component={OnboardingScreen}

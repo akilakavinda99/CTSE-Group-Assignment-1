@@ -118,7 +118,7 @@ const UpdateEvent = ({route, navigation}) => {
         const res = await updateDocument('events', events.id, {
             title,
             description: newDescription,
-            venue: "dfdf",
+            venue: newVenue,
             // date: selectedDate,
             image: url,
             });
