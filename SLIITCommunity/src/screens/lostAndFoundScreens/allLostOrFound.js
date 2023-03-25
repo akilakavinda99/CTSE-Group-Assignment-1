@@ -7,7 +7,9 @@ import {
   TouchableOpacity,
   FlatList,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
+import Header from '../../components/commonComponents/header';
 import LostOrFoundPost from '../../components/lostOrFoundComponents/lostOrFoundPost';
 import { getDataFromAsync } from '../../constants/asyncStore';
 import asyncStoreKeys from '../../constants/asyncStoreKeys';
@@ -47,22 +49,28 @@ const AllLostOrFound = () => {
 
   return (
     <View style={allLostOrFoundStyles.container}>
-      <Text style={allLostOrFoundStyles.headingStyle}>All Lost Or Found</Text>
-      <FlatList
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        data={posts}
-        renderItem={({ item }) => (
-          <LostOrFoundPost
-            post={item}
-            id={id}
-            key={item.id}
-            itNumber={item.itNumber}
-          />
-        )}
-        keyExtractor={item => item.id}
-      />
+      <Header title="Lost or found" />
+
+      {/* <Text style={allLostOrFoundStyles.headingStyle}>All Lost Or Found</Text> */}
+      {refreshing ? (
+        <ActivityIndicator />
+      ) : (
+        <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          data={posts}
+          renderItem={({item}) => (
+            <LostOrFoundPost
+              post={item}
+              id={id}
+              key={item.id}
+              itNumber={item.itNumber}
+            />
+          )}
+          keyExtractor={item => item.id}
+        />
+      )}
     </View>
   );
 };

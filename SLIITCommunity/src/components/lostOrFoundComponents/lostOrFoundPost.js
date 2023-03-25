@@ -17,19 +17,12 @@ const LostOrFoundPost = ({post, id, itNumber}) => {
     setShowButtons(true);
   };
 
-  const handleDeletePress = () => {
-    // TODO: Handle delete functionality
-  };
-
-  const handleEditPress = () => {
-    // TODO: Handle edit functionality
-  };
-
   const navigation = useNavigation();
   return (
     <View
       style={{
         marginBottom: 20,
+        marginTop: 20,
       }}>
       <TouchableWithoutFeedback
         onPress={() =>
@@ -72,7 +65,7 @@ const LostOrFoundPost = ({post, id, itNumber}) => {
                   </Text>
                 </View>
                 <View>
-                  <Text numberOfLines={3} ellipsizeMode="tail">
+                  <Text numberOfLines={3} ellipsizeMode="tail" style={{}}>
                     {post.ItemDescription}
                   </Text>
                 </View>
