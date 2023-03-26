@@ -26,7 +26,7 @@ import ButtonComponent from '../../components/commonComponents/buttonComponent';
 import AppLoader from '../../components/commonComponents/AppLoader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const AddEvent = () => {
+const AddEvent = ({navigation}) => {
 
   const richText = useRef();
   const [image, setImage] = useState('');
@@ -153,6 +153,8 @@ const AddEvent = () => {
     setIsLoading(false);
     if (res) {
       toastComponent('Event added successfully!');
+      navigation.navigate('Home', {screen: 'events'});
+
     } else {
       toastComponent('Error creating Community!', true);
     }
